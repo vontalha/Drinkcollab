@@ -48,4 +48,4 @@ Thumbs.db
 .env.production.local
 .env.local
 
-/.vscode
+.vscode/
