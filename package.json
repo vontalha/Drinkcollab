@@ -21,7 +21,6 @@
     "@angular/platform-server": "^17.3.0",
     "@angular/router": "^17.3.0",
     "@angular/ssr": "^17.3.7",
-    "@prisma/client": "^5.14.0",
     "express": "^4.18.2",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
@@ -40,7 +39,6 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "prisma": "^5.14.0",
     "ts-node": "^10.9.2",
     "typescript": "~5.4.2"
   }
