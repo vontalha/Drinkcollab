@@ -18,21 +18,10 @@ model User {
   name          String?   @unique
   email         String?   @unique
   password      String?
-  emailVerified DateTime? @map("email_verified")
   image         String?
-  isOnline      Boolean   @default(false)
   role          UserRole  @default(USER)
 
   @@map("users")
-}
-
-model VerificationToken {
-  id      String   @unique @default(cuid())
-  email   String
-  token   String   @unique
-  expires DateTime
-
-  @@unique([email, token])
 }
 
 model PasswordResetToken {
@@ -43,6 +32,16 @@ model PasswordResetToken {
 
   @@unique([email, token])
 }
+
+model RequestToken {
+  id      String   @unique @default(cuid())
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
+}
+
 
 enum UserRole {
   ADMIN
