@@ -8,20 +8,20 @@ export class UserService {
 
     getUserByEmail = async (email: string) => {
         const user = await this.prisma.user.findUnique({
-            where: {email}
+            where: { email }
         })
         return user
     }
     
-    getUserById = async (id: string | undefined) => {
+    getUserById = async (id: string) => {
         const user = await this.prisma.user.findUnique({
-            where: {id}
+            where: { id }
         })
         return user
     }
     getUserByUsername = async (name: string) => {
         const user = await this.prisma.user.findUnique({
-            where: {name}
+            where: { name }
         })
         return user
     }
