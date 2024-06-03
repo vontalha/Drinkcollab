@@ -30,6 +30,6 @@ export class UserService {
         if (login.includes("@")){
             return await this.getUserByEmail(login)
         } 
-        return await this.getUserByLogin(login)
+        return await this.getUserByUsername(login)
     }
 }
