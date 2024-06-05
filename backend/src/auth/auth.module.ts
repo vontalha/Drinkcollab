@@ -6,6 +6,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { UserModule } from 'src/user/user.module';
 import { JwtStrategy } from './jwt.strategy';
+import { JwtAuthGuard } from './jwt-auth.guard';
+import { NoAuthGuard } from './no-auth.guard';
 
 @Module({
   imports: [
@@ -18,6 +20,6 @@ import { JwtStrategy } from './jwt.strategy';
     })
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy]
+  providers: [AuthService, JwtStrategy, JwtAuthGuard, NoAuthGuard]
 })
 export class AuthModule {}
