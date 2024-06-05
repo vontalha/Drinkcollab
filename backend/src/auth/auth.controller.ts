@@ -15,6 +15,7 @@ import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { NoAuthGuard } from './no-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -22,6 +23,7 @@ export class AuthController {
 
     @HttpCode(HttpStatus.OK)
     // @UseGuards(JwtAuthGuard)
+    @UseGuards(NoAuthGuard)
     @Post("login")
     @UsePipes(new ZodValidationPipe(LoginSchema))
 
@@ -35,10 +37,11 @@ export class AuthController {
         }).send({status: "ok"})
     }
 
-
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(JwtAuthGuard)
+    @UseGuards(NoAuthGuard)
     @Get('profile')
     getProfile(@Req() req: any) {
-      return req.user;
+    //   return req.user;
+    return "ich bin auf dem profile"
     }
 }
