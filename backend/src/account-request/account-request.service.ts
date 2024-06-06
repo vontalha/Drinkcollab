@@ -48,6 +48,18 @@ export class AccountRequestService {
 		}
 	};
 
+	getRequestTokenByToken = async (token: string) => {
+		try {
+			const requestToken = await this.prismaService.requestToken.findUnique({
+				where: { token },
+			});
+			return requestToken;
+		} catch (error) {
+			console.error('Error fetching request token by given token:', error);
+			return null;
+		}
+	};
+
 	getAllRequestTokens = async () => {
 		const tokenIds = await this.prismaService.requestToken.findMany({
 			select: {
@@ -71,7 +83,7 @@ export class AccountRequestService {
 		const mailOptions: SendEmailDto = {
 			from: process.env.MAIL_FROM,
 			to: existingToken.email,
-			subject: "Drinkcollab account reques approved!",
+			subject: "Your Drinkcollab account request got approved!",
 			html: `
 				<h1>Your Account Request got approved!</h1>
 				</br> 

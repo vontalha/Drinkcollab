@@ -9,7 +9,7 @@ import { MailService } from 'src/mail/mail.service';
 
 
 @Module({
-  imports: [AuthModule, MailModule, PrismaModule],
+  imports: [MailModule, PrismaModule],
   controllers: [AccountRequestController],
   providers: [AccountRequestService, PrismaService, MailService]
 })
