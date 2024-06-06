@@ -1,9 +1,16 @@
+import { PrismaModule } from './../prisma/prisma.module';
 import { Module } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AdminController } from './admin.controller';
+import { AuthModule } from 'src/auth/auth.module';
+import { AccountRequestModule } from 'src/account-request/account-request.module';
+import { AccountRequestService } from 'src/account-request/account-request.service';
+import { MailModule } from 'src/mail/mail.module';
+import { MailService } from 'src/mail/mail.service';
 
 @Module({
-  providers: [AdminService],
-  controllers: [AdminController]
+  providers: [AdminService, AccountRequestService, MailService],
+  controllers: [AdminController],
+  imports: [PrismaModule, AuthModule, AccountRequestModule, MailModule]
 })
 export class AdminModule {}

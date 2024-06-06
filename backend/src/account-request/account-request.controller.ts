@@ -20,7 +20,11 @@ export class AccountRequestController {
     constructor(
         private accounRequestService: AccountRequestService 
     ){}
-
+    /**
+     * 
+     * @param email  gets passed the email of the unauthorized user as string
+     * uses email to create new accountRequestToken which expires after 1 day
+     */
     @UseGuards(NoAuthGuard)
     @Post()
     @HttpCode(HttpStatus.CREATED)
