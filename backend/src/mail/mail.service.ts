@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import * as nodemailer from "nodemailer"
 import { SendEmailDto } from './dto/mail.dto';
 import { Transporter } from 'nodemailer';
@@ -10,7 +10,7 @@ export class MailService {
     this.transporter = nodemailer.createTransport({
       host: process.env.MAIL_HOST,
       port: Number(process.env.MAIL_PORT),
-      secure: false, // true for 465, false for other ports
+      secure: false, 
       auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASSWORD,
@@ -24,7 +24,7 @@ export class MailService {
     const { to, subject, text, html } = sendEmailDto;
 
     const mailOptions = {
-      from: process.env.MAIL_FROM, // Sender address
+      from: process.env.MAIL_FROM, 
       to,
       subject,
       text,
@@ -38,7 +38,12 @@ export class MailService {
     //     text: 'This is a test email sent from Nodemailer', 
     //     html: '<b>This is a test email sent from Nodemailer</b>', 
     // };
-    await this.transporter.sendMail(mailOptions);
+    try {
+        await this.transporter.sendMail(mailOptions);
+      } catch (error) {
+        console.error('Error sending email:', error);
+        throw new InternalServerErrorException('Failed to send email');
+      }
   }
 
 }

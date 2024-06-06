@@ -8,9 +8,17 @@ import { UserModule } from 'src/user/user.module';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { NoAuthGuard } from './no-auth.guard';
+import { InviteGuard } from './invite.guard';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { UserService } from 'src/user/user.service';
+import { AccountRequestService } from 'src/account-request/account-request.service';
+import { AccountRequestModule } from 'src/account-request/account-request.module';
+import { MailService } from 'src/mail/mail.service';
 
 @Module({
   imports: [
+    AccountRequestModule,
+    PrismaModule,
     UserModule,
     PassportModule, 
     PrismaModule, 
@@ -20,6 +28,15 @@ import { NoAuthGuard } from './no-auth.guard';
     })
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, JwtAuthGuard, NoAuthGuard]
+  providers: [
+    AuthService, 
+    JwtStrategy, 
+    JwtAuthGuard, 
+    NoAuthGuard, 
+    InviteGuard, 
+    PrismaService,
+    AccountRequestService,
+    MailService
+  ]
 })
 export class AuthModule {}
