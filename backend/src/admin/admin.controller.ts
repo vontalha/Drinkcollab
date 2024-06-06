@@ -5,8 +5,8 @@ import { Role } from 'src/common/enums/role.enum';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { AccountRequestService } from 'src/account-request/account-request.service';
 
-// @Roles(Role.Admin)
-// @UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(Role.Admin)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('admin')
 export class AdminController {
     constructor(private accountRequestService:  AccountRequestService){}
