@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Drink" ADD COLUMN     "sales" INTEGER NOT NULL DEFAULT 0;
+
+-- AlterTable
+ALTER TABLE "Snack" ADD COLUMN     "sales" INTEGER NOT NULL DEFAULT 0;
