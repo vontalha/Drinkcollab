@@ -4,23 +4,23 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class UserService {
 
-    constructor(private prisma: PrismaService){}
+    constructor(private prismaService: PrismaService){}
 
     getUserByEmail = async (email: string) => {
-        const user = await this.prisma.user.findUnique({
+        const user = await this.prismaService.user.findUnique({
             where: { email }
         })
         return user
     }
     
     getUserById = async (id: string) => {
-        const user = await this.prisma.user.findUnique({
+        const user = await this.prismaService.user.findUnique({
             where: { id }
         })
         return user
     }
     getUserByUsername = async (name: string) => {
-        const user = await this.prisma.user.findUnique({
+        const user = await this.prismaService.user.findUnique({
             where: { name }
         })
         return user
