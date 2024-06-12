@@ -19,17 +19,4 @@ export class UserService {
         })
         return user
     }
-    getUserByUsername = async (name: string) => {
-        const user = await this.prismaService.user.findUnique({
-            where: { name }
-        })
-        return user
-    }
-    
-    getUserByLogin = async (login: string) => {
-        if (login.includes("@")){
-            return await this.getUserByEmail(login)
-        } 
-        return await this.getUserByUsername(login)
-    }
 }

@@ -11,16 +11,19 @@ import { MailService } from './mail/mail.service';
 import { MailController } from './mail/mail.controller';
 import { MailModule } from './mail/mail.module';
 import { AccountRequestModule } from './account-request/account-request.module';
+import { ProductModule } from './product/product.module';
+import { ProductService } from './product/product.service';
+import { LikeService } from './product/like.service';
 import { DrinksModule } from './drinks/drinks.module';
-import { LikesService } from './likes/likes.service';
 
 @Module({
-  imports: [AuthModule, UserModule, PrismaModule, AdminModule, MailModule, AccountRequestModule, DrinksModule],
+  imports: [AuthModule, UserModule, PrismaModule, AdminModule, MailModule, AccountRequestModule, ProductModule, DrinksModule],
   controllers: [AppController, MailController],
   providers: [
     AppService,
     MailService,
-    LikesService,
+    ProductService,
+    LikeService
   ],
 })
 export class AppModule {}

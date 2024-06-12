@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
-export class LikesService {
+export class LikeService {
     constructor(private prismaService: PrismaService) {}
 
-    likeDrink = async (userId: string, drinkId: string): Promise<void> => {
+    likeProduct = async (userId: string, productId: string): Promise<void> => {
         await this.prismaService.like.create({
-            data: { userId, drinkId }
+            data: { userId, productId }
         })
     }
 }
