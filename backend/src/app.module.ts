@@ -14,9 +14,10 @@ import { AccountRequestModule } from './account-request/account-request.module';
 import { ProductModule } from './product/product.module';
 import { ProductService } from './product/product.service';
 import { LikeService } from './product/like.service';
+import { DrinksModule } from './drinks/drinks.module';
 
 @Module({
-  imports: [AuthModule, UserModule, PrismaModule, AdminModule, MailModule, AccountRequestModule, ProductModule],
+  imports: [AuthModule, UserModule, PrismaModule, AdminModule, MailModule, AccountRequestModule, ProductModule, DrinksModule],
   controllers: [AppController, MailController],
   providers: [
     AppService,

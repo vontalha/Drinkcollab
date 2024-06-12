@@ -38,7 +38,7 @@ export class AuthController {
     @UsePipes(new ZodValidationPipe(LoginSchema))
     @Post("login")
     async login(@Body() login: LoginDto, @Res({passthrough: true}) res: Response): Promise<void>{
-        const { access_token } = await this.authService.login(login.login, login.password)
+        const { access_token } = await this.authService.login(login.email, login.password)
         res.cookie("access_token", access_token, {
             httpOnly: true,
             secure: false,
