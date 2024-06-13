@@ -4,7 +4,7 @@ import { Product, Category, ProductType } from '@prisma/client';
 import { AddProductDto, UpdateProductDto } from './dto/product.dto';
 
 @Injectable()
-export class ProductService {
+export class ProductsService {
 	constructor(private prismaService: PrismaService) {}
 
 	addProduct = async (data: AddProductDto): Promise<Product> => {
@@ -25,9 +25,9 @@ export class ProductService {
 		});
 	};
 
-	getAllProducts = async (): Promise<Product[]> => {
-		return await this.prismaService.product.findMany();
-	};
+	// getAllProducts = async (): Promise<Product[]> => {
+	// 	return await this.prismaService.product.findMany();
+	// };
 
     getAllProductsByType = async (type: "DRINK" | "SNACK"): Promise<Product[]>=> {
         return await this.prismaService.product.findMany({ where: { type } })
@@ -102,6 +102,28 @@ export class ProductService {
             ...(amount && { take: amount }),
 		});
 	};
+
+	getAllProducts = async (
+		page: number,
+		pageSize: number,
+		sortBy: string,
+		sortOrder: "asc" | "desc"
+	): Promise<{ data: Product[]; total: number }> => {
+		const skip = (page - 1) * pageSize;
+		const take = pageSize
+		const [data, total] = await this.prismaService.$transaction([
+            this.prismaService.product.findMany({
+                skip,
+                take,
+                orderBy: {
+                    [sortBy]: sortOrder,
+                },
+            }),
+            this.prismaService.product.count(),
+        ]);
+
+        return { data, total };
+	}
 
 	getCategories = async (type: ProductType): Promise<Category[]> => {
 		return await this.prismaService.category.findMany({
