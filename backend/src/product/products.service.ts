@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Product, Category, ProductType } from '@prisma/client';
 import { AddProductDto, UpdateProductDto } from './dto/product.dto';
@@ -107,12 +107,16 @@ export class ProductsService {
 		page: number,
 		pageSize: number,
 		sortBy: string,
-		sortOrder: "asc" | "desc"
-	): Promise<{ data: Product[]; total: number }> => {
+		sortOrder: "asc" | "desc",
+		type?: "DRINK" | "SNACK" 
+	): Promise<{ data: Product[]; total: number; totalPages: number }> => {
 		const skip = (page - 1) * pageSize;
 		const take = pageSize
 		const [data, total] = await this.prismaService.$transaction([
             this.prismaService.product.findMany({
+				where: { 
+					...( type? { type }: {})
+				},
                 skip,
                 take,
                 orderBy: {
@@ -122,7 +126,13 @@ export class ProductsService {
             this.prismaService.product.count(),
         ]);
 
-        return { data, total };
+		const totalPages = Math.ceil(total / pageSize);
+
+        if (page > totalPages) {
+            throw new BadRequestException('Page number exceeds total pages.');
+        }
+
+        return { data, total, totalPages };	
 	}
 
 	getCategories = async (type: ProductType): Promise<Category[]> => {
