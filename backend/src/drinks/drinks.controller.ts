@@ -10,7 +10,8 @@ import {
     UsePipes,
     Request as Req,
     NotFoundException,
-    Query
+    Query,
+    Param
 } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { Category, Product, ProductType } from '@prisma/client';
@@ -31,13 +32,12 @@ export class DrinksController {
         return this.productsService.getCategories(ProductType.DRINK)
     }
 
-
     @Get("categories/:category/")
-    async getProducts(@Query() paginationDto: PaginationDto
+    async getDrinks(@Param("category") categoryName: string, @Query() paginationDto: PaginationDto
     ): Promise<{ data: Product[]; total: number; totalPages: number }>{
         
         const { page, pageSize, sortBy, sortOrder } = paginationDto;
-        return this.productsService.getAllProducts(page, pageSize, sortBy, sortOrder);
+        return this.productsService.getAllProducts(page, pageSize, sortBy, sortOrder, ProductType.DRINK, categoryName);
     }
 
     @UseGuards(JwtAuthGuard)

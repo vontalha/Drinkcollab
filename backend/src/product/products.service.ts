@@ -108,14 +108,30 @@ export class ProductsService {
 		pageSize: number,
 		sortBy: string,
 		sortOrder: "asc" | "desc",
-		type?: "DRINK" | "SNACK" 
+		type?: "DRINK" | "SNACK",
+		categoryName?: string 
 	): Promise<{ data: Product[]; total: number; totalPages: number }> => {
 		const skip = (page - 1) * pageSize;
 		const take = pageSize
+
+		let categoryId: string | undefined
+
+		if (categoryName){
+			const category = await this.prismaService.category.findUnique({
+				where: { name: categoryName }
+			});
+
+			if (!category){
+				throw new NotFoundException(`Category with name "${categoryName}" not found`);
+			}
+			categoryId = category.id;
+		};
+
 		const [data, total] = await this.prismaService.$transaction([
             this.prismaService.product.findMany({
 				where: { 
-					...( type? { type }: {})
+					...( type? { type }: {}),
+					...( categoryId? { categoryId }: {}),
 				},
                 skip,
                 take,
@@ -134,7 +150,6 @@ export class ProductsService {
 
         return { data, total, totalPages };	
 	}
-
 
 	getCategories = async (type: ProductType): Promise<Category[]> => {
 		return await this.prismaService.category.findMany({
