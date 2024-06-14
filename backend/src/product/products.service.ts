@@ -135,6 +135,7 @@ export class ProductsService {
         return { data, total, totalPages };	
 	}
 
+
 	getCategories = async (type: ProductType): Promise<Category[]> => {
 		return await this.prismaService.category.findMany({
 			where: { type },
