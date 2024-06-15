@@ -7,4 +7,4 @@ import { LikeService } from './like.service';
   providers: [ProductsService, LikeService],
   controllers: [ProductController]
 })
-export class ProductModule {}
+export class ProductsModule {}
