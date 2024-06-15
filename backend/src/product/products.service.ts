@@ -1,10 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Product, Category, ProductType } from '@prisma/client';
 import { AddProductDto, UpdateProductDto } from './dto/product.dto';
 
 @Injectable()
-export class ProductService {
+export class ProductsService {
 	constructor(private prismaService: PrismaService) {}
 
 	addProduct = async (data: AddProductDto): Promise<Product> => {
@@ -25,9 +25,9 @@ export class ProductService {
 		});
 	};
 
-	getAllProducts = async (): Promise<Product[]> => {
-		return await this.prismaService.product.findMany();
-	};
+	// getAllProducts = async (): Promise<Product[]> => {
+	// 	return await this.prismaService.product.findMany();
+	// };
 
     getAllProductsByType = async (type: "DRINK" | "SNACK"): Promise<Product[]>=> {
         return await this.prismaService.product.findMany({ where: { type } })
@@ -102,6 +102,54 @@ export class ProductService {
             ...(amount && { take: amount }),
 		});
 	};
+
+	getAllProducts = async (
+		page: number,
+		pageSize: number,
+		sortBy: string,
+		sortOrder: "asc" | "desc",
+		type?: "DRINK" | "SNACK",
+		categoryName?: string 
+	): Promise<{ data: Product[]; total: number; totalPages: number }> => {
+		const skip = (page - 1) * pageSize;
+		const take = pageSize
+
+		let categoryId: string | undefined
+
+		if (categoryName){
+			const category = await this.prismaService.category.findUnique({
+				where: { name: categoryName }
+			});
+
+			if (!category){
+				throw new NotFoundException(`Category with name "${categoryName}" not found`);
+			}
+			categoryId = category.id;
+		};
+
+		const [data, total] = await this.prismaService.$transaction([
+            this.prismaService.product.findMany({
+				where: { 
+					...( type? { type }: {}),
+					...( categoryId? { categoryId }: {}),
+				},
+                skip,
+                take,
+                orderBy: {
+                    [sortBy]: sortOrder,
+                },
+            }),
+            this.prismaService.product.count(),
+        ]);
+
+		const totalPages = Math.ceil(total / pageSize);
+
+        if (page > totalPages) {
+            throw new BadRequestException('Page number exceeds total pages.');
+        }
+
+        return { data, total, totalPages };	
+	}
 
 	getCategories = async (type: ProductType): Promise<Category[]> => {
 		return await this.prismaService.category.findMany({

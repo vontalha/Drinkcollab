@@ -14,7 +14,7 @@ import {
 import { Response, Request } from 'express';
 import { AppService } from './app.service';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
-import { ProductService } from './product/product.service';
+import { ProductsService } from './product/products.service';
 import { Product, ProductType } from '@prisma/client';
 import { LikeService } from './product/like.service';
 import { LikeProductDto } from './product/dto/like.dto';
@@ -22,7 +22,7 @@ import { LikeProductDto } from './product/dto/like.dto';
 @Controller()
 export class AppController {
 	constructor(
-		private productService: ProductService,
+		private productService: ProductsService,
 		private likeService: LikeService
 	) {}
 

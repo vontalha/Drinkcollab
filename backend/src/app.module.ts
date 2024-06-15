@@ -11,8 +11,8 @@ import { MailService } from './mail/mail.service';
 import { MailController } from './mail/mail.controller';
 import { MailModule } from './mail/mail.module';
 import { AccountRequestModule } from './account-request/account-request.module';
-import { ProductModule } from './product/product.module';
-import { ProductService } from './product/product.service';
+import { ProductModule } from './product/products.module';
+import { ProductsService } from './product/products.service';
 import { LikeService } from './product/like.service';
 import { DrinksModule } from './drinks/drinks.module';
 
@@ -22,7 +22,7 @@ import { DrinksModule } from './drinks/drinks.module';
   providers: [
     AppService,
     MailService,
-    ProductService,
+    ProductsService,
     LikeService
   ],
 })
