@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Get, HttpCode, HttpStatus, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Get, HttpCode, HttpStatus, Param, Delete, Put } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/common/guards/role.guard';
 import { Role } from 'src/common/enums/role.enum';
@@ -42,7 +42,7 @@ export class AdminController {
         }
     }
 
-    @Post("products/update/:id")
+    @Put("products/update/:id")
     @HttpCode(HttpStatus.OK)
     async updateProduct(
         @Param("id") productId: string, 
