@@ -33,7 +33,8 @@ export class DrinksController {
     }
 
     @Get("categories/:category/")
-    async getDrinks(@Param("category") categoryName: string, @Query() paginationDto: PaginationDto
+    async getDrinks(
+    	@Param("category") categoryName: string, @Query() paginationDto: PaginationDto
     ): Promise<{ data: Product[]; total: number; totalPages: number }>{
         
         const { page, pageSize, sortBy, sortOrder } = paginationDto;

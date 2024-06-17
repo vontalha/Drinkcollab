@@ -4,7 +4,7 @@ import { ProductController } from './products.controller';
 import { LikeService } from './like.service';
 
 @Module({
-  providers: [ProductsService, LikeService],
-  controllers: [ProductController]
+    providers: [ProductsService, LikeService],
+    controllers: [ProductController],
 })
 export class ProductsModule {}
