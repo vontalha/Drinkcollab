@@ -6,10 +6,15 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Product, Category, ProductType } from '@prisma/client';
 import { AddProductDto, UpdateProductDto } from './dto/product.dto';
+import { FilterDto } from 'src/dto/filter.dto';
+import { FilterService } from './filter.service';
 
 @Injectable()
 export class ProductsService {
-    constructor(private prismaService: PrismaService) {}
+    constructor(
+        private prismaService: PrismaService,
+        private filterService: FilterService,
+    ) {}
 
     addProduct = async (data: AddProductDto): Promise<Product> => {
         const { categoryName, ...productData } = data;
@@ -120,45 +125,147 @@ export class ProductsService {
         });
     };
 
-    getAllProducts = async (
+    // getAllProducts = async (
+    //     page: number,
+    //     pageSize: number,
+    //     sortBy: string,
+    //     sortOrder: 'asc' | 'desc',
+    //     type?: 'DRINK' | 'SNACK',
+    //     categoryName?: string,
+    // ): Promise<{ data: Product[]; total: number; totalPages: number }> => {
+    //     const skip = (page - 1) * pageSize;
+    //     const take = pageSize;
+
+    //     let categoryId: string | undefined;
+
+    //     if (categoryName) {
+    //         const category = await this.prismaService.category.findUnique({
+    //             where: { name: categoryName },
+    //         });
+
+    //         if (!category) {
+    //             throw new NotFoundException(
+    //                 `Category with name "${categoryName}" not found`,
+    //             );
+    //         }
+    //         categoryId = category.id;
+    //     }
+
+    //     const [data, total] = await this.prismaService.$transaction([
+    //         this.prismaService.product.findMany({
+    //             where: {
+    //                 ...(type ? { type } : {}),
+    //                 ...(categoryId ? { categoryId } : {}),
+    //             },
+    //             skip,
+    //             take,
+    //             orderBy: {
+    //                 [sortBy]: sortOrder,
+    //             },
+    //         }),
+    //         this.prismaService.product.count(),
+    //     ]);
+
+    //     const totalPages = Math.ceil(total / pageSize);
+
+    //     if (page > totalPages) {
+    //         throw new BadRequestException('Page number exceeds total pages.');
+    //     }
+
+    //     return { data, total, totalPages };
+    // };
+
+    getCategories = async (
+        type?: ProductType,
+    ): Promise<{ name: string; id: string }[]> => {
+        return await this.prismaService.category.findMany({
+            where: {
+                ...(type ? { type } : {}),
+            },
+            select: {
+                name: true,
+                id: true,
+            },
+        });
+    };
+
+    getBrands = async (type?: ProductType): Promise<string[]> => {
+        const brands = await this.prismaService.product.findMany({
+            where: {
+                ...(type ? { type } : {}),
+            },
+            select: {
+                brand: true,
+            },
+            distinct: ['brand'],
+        });
+        return brands
+            .map((product) => product.brand)
+            .filter((brand) => brand !== null);
+    };
+
+    // async getFilteredProducts(
+    //     filterDto: FilterDto,
+    //     page: number,
+    //     pageSize: number,
+    //     sortBy: string,
+    //     sortOrder: 'asc' | 'desc',
+    // ): Promise<{ data: Product[]; total: number; totalPages: number }> {
+    //     const skip = (page - 1) * pageSize;
+    //     const take = pageSize;
+
+    //     const whereConditions =
+    //         await this.filterService.buildWhereConditions(filterDto);
+
+    //     const [data, total] = await this.prismaService.$transaction([
+    //         this.prismaService.product.findMany({
+    //             where: whereConditions,
+    //             skip,
+    //             take,
+    //             orderBy: {
+    //                 [sortBy]: sortOrder,
+    //             },
+    //         }),
+    //         this.prismaService.product.count({
+    //             where: whereConditions,
+    //         }),
+    //     ]);
+
+    //     const totalPages = Math.ceil(total / pageSize);
+
+    //     if (page > totalPages) {
+    //         throw new BadRequestException('Page number exceeds total pages.');
+    //     }
+
+    //     return { data, total, totalPages };
+    // }
+
+    async getAllProducts(
         page: number,
         pageSize: number,
         sortBy: string,
         sortOrder: 'asc' | 'desc',
-        type?: 'DRINK' | 'SNACK',
-        categoryName?: string,
-    ): Promise<{ data: Product[]; total: number; totalPages: number }> => {
+        filterDto?: FilterDto,
+    ): Promise<{ data: Product[]; total: number; totalPages: number }> {
         const skip = (page - 1) * pageSize;
         const take = pageSize;
 
-        let categoryId: string | undefined;
-
-        if (categoryName) {
-            const category = await this.prismaService.category.findUnique({
-                where: { name: categoryName },
-            });
-
-            if (!category) {
-                throw new NotFoundException(
-                    `Category with name "${categoryName}" not found`,
-                );
-            }
-            categoryId = category.id;
-        }
+        const whereConditions = filterDto
+            ? await this.filterService.buildWhereConditions(filterDto)
+            : {};
 
         const [data, total] = await this.prismaService.$transaction([
             this.prismaService.product.findMany({
-                where: {
-                    ...(type ? { type } : {}),
-                    ...(categoryId ? { categoryId } : {}),
-                },
+                where: whereConditions,
                 skip,
                 take,
                 orderBy: {
                     [sortBy]: sortOrder,
                 },
             }),
-            this.prismaService.product.count(),
+            this.prismaService.product.count({
+                where: whereConditions,
+            }),
         ]);
 
         const totalPages = Math.ceil(total / pageSize);
@@ -168,11 +275,5 @@ export class ProductsService {
         }
 
         return { data, total, totalPages };
-    };
-
-    getCategories = async (type: ProductType): Promise<Category[]> => {
-        return await this.prismaService.category.findMany({
-            where: { type },
-        });
-    };
+    }
 }

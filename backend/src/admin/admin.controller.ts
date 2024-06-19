@@ -16,11 +16,12 @@ import { RolesGuard } from 'src/common/guards/role.guard';
 import { Role } from 'src/common/enums/role.enum';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { AccountRequestService } from 'src/account-request/account-request.service';
-import { Product } from '@prisma/client';
+import { Category, Product } from '@prisma/client';
 import { AddProductDto, UpdateProductDto } from 'src/product/dto/product.dto';
 import { ProductsService } from 'src/product/products.service';
 import { PaginationDto } from 'src/dto/pagination.dto';
 import { ProductType } from '@prisma/client';
+import { FilterDto } from 'src/dto/filter.dto';
 
 @Roles(Role.Admin)
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -41,49 +42,6 @@ export class AdminController {
         return this.accountRequestService.getAllRequestTokens();
     }
 
-    @Get('Products')
-    async getAllProducts(
-        // @Query('page') page: number = 1,
-        // @Query('pageSize') pageSize: number = 20,
-        // @Query('sortBy') sortBy: string = 'sales',
-        // @Query('sortOrder') sortOrder: 'asc' | 'desc' = 'desc'
-        @Query() paginationDto: PaginationDto,
-    ): Promise<{ data: Product[]; total: number; totalPages: number }> {
-        const { page, pageSize, sortBy, sortOrder } = paginationDto;
-        return this.productsService.getAllProducts(
-            page,
-            pageSize,
-            sortBy,
-            sortOrder,
-        );
-    }
-    @Get('Products/drinks')
-    async getDrinks(
-        @Query() paginationDto: PaginationDto,
-    ): Promise<{ data: Product[]; total: number; totalPages: number }> {
-        const { page, pageSize, sortBy, sortOrder } = paginationDto;
-        return this.productsService.getAllProducts(
-            page,
-            pageSize,
-            sortBy,
-            sortOrder,
-            ProductType.DRINK
-        );
-    }
-
-    @Get('Products/snacks')
-    async getSnacks(
-        @Query() paginationDto: PaginationDto,
-    ): Promise<{ data: Product[]; total: number; totalPages: number }> {
-        const { page, pageSize, sortBy, sortOrder } = paginationDto;
-        return this.productsService.getAllProducts(
-            page,
-            pageSize,
-            sortBy,
-            sortOrder,
-            ProductType.SNACK
-        );
-    }
     /**
      *
      * @param tokenId handler receives token id which is used to fetch token information
@@ -102,6 +60,64 @@ export class AdminController {
             status: HttpStatus.OK,
             message: 'Account approved!',
         };
+    }
+
+    @Get('products')
+    async getAllProducts(
+        @Query() paginationDto: PaginationDto,
+        @Query() filterDto: FilterDto,
+    ): Promise<{ data: Product[]; total: number; totalPages: number }> {
+        const { page, pageSize, sortBy, sortOrder } = paginationDto;
+        return this.productsService.getAllProducts(
+            page,
+            pageSize,
+            sortBy,
+            sortOrder,
+            filterDto
+        );
+    }
+    
+    @Get('products/categories')
+    async getCategories(): Promise<{ name: string; id: string }[]>  {
+        return await this.productsService.getCategories();
+    }
+
+    @Get('products/brands')
+    async getBrands(): Promise<string[]> {
+        return await this.productsService.getBrands();
+    }
+
+    @Get('products/drinks')
+    async getDrinks(
+        @Query() paginationDto: PaginationDto,
+        @Query() filterDto: FilterDto,
+    ): Promise<{ data: Product[]; total: number; totalPages: number }> {
+        const { page, pageSize, sortBy, sortOrder } = paginationDto;
+        const filter = {...filterDto, type: ProductType.DRINK}
+
+        return this.productsService.getAllProducts(
+            page,
+            pageSize,
+            sortBy,
+            sortOrder,
+            filter
+        );
+    }
+
+    @Get('products/snacks')
+    async getSnacks(
+        @Query() paginationDto: PaginationDto,
+        @Query() filterDto: FilterDto,
+    ): Promise<{ data: Product[]; total: number; totalPages: number }> {
+        const { page, pageSize, sortBy, sortOrder } = paginationDto;
+        const filter = {...filterDto, type: ProductType.SNACK}
+        return this.productsService.getAllProducts(
+            page,
+            pageSize,
+            sortBy,
+            sortOrder,
+            filter
+        );
     }
 
     @Put('products/update/:id')
