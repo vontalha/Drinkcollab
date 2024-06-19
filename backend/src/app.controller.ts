@@ -9,7 +9,7 @@ import {
     UseGuards,
     UsePipes,
     Request as Req,
-    NotFoundException
+    NotFoundException,
 } from '@nestjs/common';
 import { Response, Request } from 'express';
 import { AppService } from './app.service';
@@ -21,24 +21,34 @@ import { LikeProductDto } from './product/dto/like.dto';
 
 @Controller()
 export class AppController {
-	constructor(
-		private productService: ProductsService,
-		private likeService: LikeService
-	) {}
+    constructor(
+        private productService: ProductsService,
+        private likeService: LikeService,
+    ) {}
 
-	@Get()
-	async getLandingPageData(): Promise<{ drinks: Product[], snacks: Product[], popular: Product[] }> {
-		const drinks = await this.productService.getPopularProducts(9, ProductType.DRINK);
-		const snacks = await this.productService.getPopularProducts(9, ProductType.SNACK);
-		const popular = await this.productService.getPopularProducts(9);
+    @Get()
+    async getLandingPageData(): Promise<{
+        drinks: Product[];
+        snacks: Product[];
+        popular: Product[];
+    }> {
+        const drinks = await this.productService.getPopularProducts(
+            9,
+            ProductType.DRINK,
+        );
+        const snacks = await this.productService.getPopularProducts(
+            9,
+            ProductType.SNACK,
+        );
+        const popular = await this.productService.getPopularProducts(9);
 
-		return { drinks, snacks, popular };
-	}
+        return { drinks, snacks, popular };
+    }
 
-	@UseGuards(JwtAuthGuard)
-	@Post("liked")
-	async likeProduct(@Body() likeProductDto: LikeProductDto) {
-		const { userId, productId } = likeProductDto;
-		await this.likeService.likeProduct(userId, productId);	
-	}
+    @UseGuards(JwtAuthGuard)
+    @Post('liked')
+    async likeProduct(@Body() likeProductDto: LikeProductDto) {
+        const { userId, productId } = likeProductDto;
+        await this.likeService.likeProduct(userId, productId);
+    }
 }
