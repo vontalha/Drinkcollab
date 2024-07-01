@@ -1,18 +1,5 @@
-import {
-    Body,
-    Controller,
-    Get,
-    HttpCode,
-    HttpStatus,
-    Post,
-    Res,
-    UseGuards,
-    UsePipes,
-    Request as Req,
-    NotFoundException,
-    Query,
-} from '@nestjs/common';
-import { Product, ProductType } from '@prisma/client';
+import { Body, Controller, Get, Post, UseGuards, Query } from '@nestjs/common';
+import { Product } from '@prisma/client';
 import { LikeProductDto } from './dto/like.dto';
 import { LikeService } from './like.service';
 import { ProductsService } from './products.service';

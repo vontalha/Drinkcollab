@@ -9,10 +9,23 @@ import { MailModule } from 'src/mail/mail.module';
 import { MailService } from 'src/mail/mail.service';
 import { ProductsModule } from 'src/product/products.module';
 import { ProductsService } from 'src/product/products.service';
+import { FilterService } from 'src/product/filter.service';
 
 @Module({
-  providers: [AdminService, AccountRequestService, MailService, ProductsService],
-  controllers: [AdminController],
-  imports: [PrismaModule, AuthModule, AccountRequestModule, MailModule, ProductsModule]
+    providers: [
+        AdminService,
+        AccountRequestService,
+        MailService,
+        ProductsService,
+        FilterService,
+    ],
+    controllers: [AdminController],
+    imports: [
+        PrismaModule,
+        AuthModule,
+        AccountRequestModule,
+        MailModule,
+        ProductsModule,
+    ],
 })
 export class AdminModule {}

@@ -2,20 +2,12 @@ import {
     Body,
     Controller,
     Get,
-    HttpCode,
-    HttpStatus,
     Post,
-    Res,
     UseGuards,
-    UsePipes,
-    Request as Req,
-    NotFoundException,
     Query,
     Param,
 } from '@nestjs/common';
-import { Response, Request } from 'express';
-import { Category, Product, ProductType } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { Product, ProductType } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ProductsService } from 'src/product/products.service';
 import { LikeProductDto } from 'src/product/dto/like.dto';
@@ -42,7 +34,11 @@ export class DrinksController {
         @Query() filterDto: FilterDto,
     ): Promise<{ data: Product[]; total: number; totalPages: number }> {
         const { page, pageSize, sortBy, sortOrder } = paginationDto;
-        const filter = {...filterDto, category: categoryName, type: ProductType.DRINK}
+        const filter = {
+            ...filterDto,
+            category: categoryName,
+            type: ProductType.DRINK,
+        };
         return this.productsService.getAllProducts(
             page,
             pageSize,

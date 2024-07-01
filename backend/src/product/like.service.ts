@@ -7,7 +7,7 @@ export class LikeService {
 
     likeProduct = async (userId: string, productId: string): Promise<void> => {
         await this.prismaService.like.create({
-            data: { userId, productId }
-        })
-    }
+            data: { userId, productId },
+        });
+    };
 }

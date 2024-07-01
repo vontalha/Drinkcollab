@@ -1,18 +1,5 @@
-import {
-    Body,
-    Controller,
-    Get,
-    HttpCode,
-    HttpStatus,
-    Post,
-    Res,
-    UseGuards,
-    UsePipes,
-    Request as Req,
-    NotFoundException,
-} from '@nestjs/common';
-import { Response, Request } from 'express';
-import { AppService } from './app.service';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { ProductsService } from './product/products.service';
 import { Product, ProductType } from '@prisma/client';

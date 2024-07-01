@@ -13,6 +13,7 @@ import { ProductsModule } from './product/products.module';
 import { ProductsService } from './product/products.service';
 import { LikeService } from './product/like.service';
 import { DrinksModule } from './drinks/drinks.module';
+import { FilterService } from './product/filter.service';
 
 @Module({
     imports: [
@@ -26,6 +27,12 @@ import { DrinksModule } from './drinks/drinks.module';
         DrinksModule,
     ],
     controllers: [AppController, MailController],
-    providers: [AppService, MailService, ProductsService, LikeService],
+    providers: [
+        AppService,
+        MailService,
+        ProductsService,
+        LikeService,
+        FilterService,
+    ],
 })
 export class AppModule {}

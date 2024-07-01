@@ -16,27 +16,27 @@ import { AccountRequestModule } from 'src/account-request/account-request.module
 import { MailService } from 'src/mail/mail.service';
 
 @Module({
-  imports: [
-    AccountRequestModule,
-    PrismaModule,
-    UserModule,
-    PassportModule, 
-    PrismaModule, 
-    JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: {expiresIn: "1d"}
-    })
-  ],
-  controllers: [AuthController],
-  providers: [
-    AuthService, 
-    JwtStrategy, 
-    JwtAuthGuard, 
-    NoAuthGuard, 
-    InviteGuard, 
-    PrismaService,
-    AccountRequestService,
-    MailService
-  ]
+    imports: [
+        AccountRequestModule,
+        PrismaModule,
+        UserModule,
+        PassportModule,
+        PrismaModule,
+        JwtModule.register({
+            secret: process.env.JWT_SECRET,
+            signOptions: { expiresIn: '1d' },
+        }),
+    ],
+    controllers: [AuthController],
+    providers: [
+        AuthService,
+        JwtStrategy,
+        JwtAuthGuard,
+        NoAuthGuard,
+        InviteGuard,
+        PrismaService,
+        AccountRequestService,
+        MailService,
+    ],
 })
 export class AuthModule {}
