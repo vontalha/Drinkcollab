@@ -1,0 +1,38 @@
+<mat-card>
+  <mat-card-title>Create Account</mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <p>
+        <mat-form-field>
+          <input type="text" matInput placeholder="Email" formControlName="email">
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field>
+          <input type="text" matInput placeholder="Name" formControlName="name">
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field>
+          <input type="text" matInput placeholder="First Name" formControlName="firstname">
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field>
+          <input type="password" matInput placeholder="Password" formControlName="password">
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field>
+          <input type="password" matInput placeholder="Password" formControlName="password1">
+        </mat-form-field>
+      </p>
+      <p *ngIf="error" class="error">
+        {{ error }}
+      </p>
+      <div class="button">
+        <button type="submit" mat-button>Create Account</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
