@@ -45,8 +45,7 @@ $ npx prisma generate
 
 ### 3.3 Migrating the schema
 
-To map the data model defined in `prisma/schema.prisma` to the postgres db schema,  
-you need to use the `prisma migrate` CLI commands:
+To map the data model defined in `prisma/schema.prisma` to the postgres db schema, you need to use the `prisma migrate` CLI commands:
 
 ```bash
 $ npx prisma migrate dev --name init
