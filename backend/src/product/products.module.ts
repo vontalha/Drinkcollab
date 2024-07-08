@@ -7,5 +7,6 @@ import { FilterService } from './filter.service';
 @Module({
     providers: [ProductsService, LikeService, FilterService],
     controllers: [ProductController],
+    exports: [ProductsService, LikeService, FilterService],
 })
 export class ProductsModule {}
