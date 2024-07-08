@@ -67,6 +67,7 @@ JWT_SECRET="your_jwt_secret_key"
 ```
 
 into the `.env` file and replace `your_jwt_secret_key` with a random string which is used to sign the JWTs.
+
 You can generate a secret key using: 
 ```bash
 $ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
