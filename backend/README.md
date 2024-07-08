@@ -23,9 +23,9 @@ Drinkcollab uses the Prisma ORM for CRUD operations.
 
 To connect the postgres db you set up earlier with the Prisma client, 
 create a `.env` file in the root backend folder. Afterwards add the following Variable:
-
-`DATABASE_URL=postgresql://USER:PASSWORD@HOST:PORT/DATABASE`
-
+```
+DATABASE_URL=postgresql://USER@HOST:PORT/DATABASE
+```
 into the `.env` and replace the DB URL with your own.
 
 The DB link ist structured as following:
@@ -63,8 +63,9 @@ to view and edit the db.
 ## Authentication
 
 Drinkcollab uses the Nest.js JWT Module for authentication, therefore add:
-
-`JWT_SECRET="your_jwt_secret_key"`
+```
+JWT_SECRET="your_jwt_secret_key"
+```
 
 into the `.env` file and replace `your_jwt_secret_key` with a random string which is used to sign the JWTs.
 You can generate a secret key using: 
@@ -94,7 +95,7 @@ $ npm run test
 # e2e tests
 $ npm run test:e2e
 
-# test coverage
+# test coverag
 $ npm run test:cov
 ```
 
