@@ -8,7 +8,7 @@ Set up a postgres database locally
 
 ## 2. Install Node modules
 
-run
+run:
 
 ```bash
 $ npm install
@@ -54,7 +54,7 @@ $ npx prisma migrate dev --name init
 
 ### 3.3 Prisma Studio
 
-You can run 
+You can run:
 ```bash
 $ npx prisma studio
 ```
