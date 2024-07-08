@@ -60,7 +60,7 @@ $ npx prisma studio
 ```
 to view and edit the db.
 
-## Authentication
+## 4. Authentication
 
 Drinkcollab uses the Nest.js JWT Module for authentication, therefore add:
 ```
@@ -73,7 +73,7 @@ You can generate a secret key using:
 $ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
-## Running the backend
+## 5. Running the backend
 
 ```bash
 # development
