@@ -36,7 +36,7 @@ The DB link ist structured as following:
 - `DATABASE` : The name of the database
 - `SCHEMA` : The name of the schema inside the database
 
-## 3.2 Generate Prisma client
+### 3.2 Generate Prisma client
 
 To generate the required Prisma client run:
 ```bash
