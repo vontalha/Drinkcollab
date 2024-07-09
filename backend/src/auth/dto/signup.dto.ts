@@ -1,11 +1,16 @@
 import { z } from "zod";
 
 export const SignupSchema = z.object({
-	username: z.string()
+	firstName: z.string()
 		.trim()
-		.min(2, { message: "Username must be at least 2 characters long" })
-		.regex(/^[a-zA-Z0-9_]+$/, { message: "Username can only contain letters, numbers, and underscores" })
-		.max(255, { message: "Username must not be more than 255 characters long" }),
+		.min(2, { message: "First name must be at least 2 characters long" })
+		.regex(/^[a-zA-Z]+$/, { message: "First Name can only contain letters" })
+		.max(255, { message: "First Name must not be more than 255 characters long" }),
+	lastName: z.string()
+		.trim()
+		.min(2, { message: "Last name must be at least 2 characters long" })
+		.regex(/^[a-zA-Z]+$/, { message: "Last Name can only contain letters" })
+		.max(255, { message: "Last Name must not be more than 255 characters long" }),
 
 	email: z.string()
 		.email({ message: "Please enter a valid email address" }),

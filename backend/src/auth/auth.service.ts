@@ -22,11 +22,11 @@ export class AuthService {
     ){}
 
     login = async (
-        login: string,
+        email: string,
         password: string
     ): Promise<AuthEntity> => {
 
-        const user = await this.userService.getUserByLogin(login)
+        const user = await this.userService.getUserByEmail(email)
         
         if (!user) {
             throw new NotFoundException("User does not exist!")
@@ -40,7 +40,6 @@ export class AuthService {
 
         const payload = { 
             sub: user.id, 
-            username: user.name, 
             email: user.email, 
             role: user.role 
         }
@@ -53,8 +52,9 @@ export class AuthService {
     signup = async (credentials: SignupDto): Promise<AuthEntity> => {
         
         const hashedPassword = await bcrypt.hash(credentials.password, 10);
-        const lowercaseUsername = credentials.username.toLowerCase();
         const lowercaseEmail = credentials.email.toLowerCase();
+        const lowercaseFirstName = credentials.firstName.toLowerCase();
+        const lowercaseLastName = credentials.lastName.toLowerCase();
 
         const existingUser = await this.userService.getUserByEmail(lowercaseEmail);
 
@@ -64,7 +64,8 @@ export class AuthService {
 
         const newUser = await this.prismaService.user.create({
             data: {
-                name: lowercaseUsername,
+                firstName : lowercaseFirstName,
+                lastName: lowercaseLastName,
                 email: lowercaseEmail,
                 password: hashedPassword,
                 role: "USER"
@@ -73,7 +74,6 @@ export class AuthService {
 
         const payload = { 
             sub: newUser.id, 
-            username: newUser.name, 
             email: newUser.email, 
             role: newUser.role 
         };
