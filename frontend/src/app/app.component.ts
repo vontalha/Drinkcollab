@@ -6,11 +6,13 @@ import {RequestAccountComponent} from "./request-account/request-account.compone
 import {CreateAccountComponent} from "./create-account/create-account.component";
 import {StorepageComponent} from "./storepage/storepage.component";
 import {UserListComponent} from "./user-list/user-list.component";
+import {MatTab, MatTabGroup} from "@angular/material/tabs";
+import {LoginTabComponent} from "./login-tab/login-tab.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavigationComponent, LoginformComponent, RequestAccountComponent, CreateAccountComponent, StorepageComponent, UserListComponent],
+  imports: [RouterOutlet, NavigationComponent, LoginformComponent, RequestAccountComponent, CreateAccountComponent, StorepageComponent, UserListComponent, MatTabGroup, MatTab, LoginTabComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

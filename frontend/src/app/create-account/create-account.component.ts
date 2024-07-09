@@ -37,16 +37,11 @@ export class CreateAccountComponent {
     password1: new FormControl(''),
   });
 
-  submit() {
-    if (this.form.valid) {
-      this.submitEM.emit(this.form.value);
-    }
-  }
-  createAccount(uuid: string): void {
+  createAccount(): void {
     if (this.form.valid) {
       this.http.post('https://localhost:3000/requests/approve/', {credentials: {     email: this.form.get('email')?.value,     password: this.form.get('password1')?.value,     firstName: this.form.get('firstname')?.value,     lastName: this.form.get('name')?.value }})
         .subscribe(response => {
-          console.log(`UUID ${uuid} approved`);
+          console.log(`account created`);
         });
     }
   }
