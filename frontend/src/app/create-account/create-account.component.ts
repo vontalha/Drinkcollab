@@ -39,7 +39,7 @@ export class CreateAccountComponent {
 
   createAccount(): void {
     if (this.form.valid) {
-      this.http.post('https://localhost:3000/requests/approve/', {credentials: {     email: this.form.get('email')?.value,     password: this.form.get('password1')?.value,     firstName: this.form.get('firstname')?.value,     lastName: this.form.get('name')?.value }})
+      this.http.post('https://localhost:3000/auth/signup/',  { email: this.form.get('email')?.value,     password: this.form.get('password1')?.value,     firstName: this.form.get('firstname')?.value,     lastName: this.form.get('name')?.value })
         .subscribe(response => {
           console.log(`account created`);
         });
