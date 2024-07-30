@@ -1,21 +1,26 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import * as cookieParser from "cookie-parser";
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create(AppModule);
 
-  const config = new DocumentBuilder()
-    .setTitle("Dirnkcollab")
-    .setDescription("Drinkcollab description")
-    .setVersion("1.0")
-    .build();
+    app.enableCors({
+        origin: 'http://localhost:4200',
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+        credentials: true,
+    });
 
-    const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup("api", app, document)
+    // const config = new DocumentBuilder()
+    //   .setTitle("Dirnkcollab")
+    //   .setDescription("Drinkcollab description")
+    //   .setVersion("1.0")
+    //   .build();
+
+    //   const document = SwaggerModule.createDocument(app, config);
+    //   SwaggerModule.setup("api", app, document)
     app.use(cookieParser());
-    
+
     await app.listen(3000);
 }
 bootstrap();

@@ -5,7 +5,7 @@ import { ProductsService } from './product/products.service';
 import { Product, ProductType } from '@prisma/client';
 import { LikeService } from './product/like.service';
 import { LikeProductDto } from './product/dto/like.dto';
-
+@UseGuards(JwtAuthGuard)
 @Controller()
 export class AppController {
     constructor(
@@ -32,7 +32,6 @@ export class AppController {
         return { drinks, snacks, popular };
     }
 
-    @UseGuards(JwtAuthGuard)
     @Post('liked')
     async likeProduct(@Body() likeProductDto: LikeProductDto) {
         const { userId, productId } = likeProductDto;
