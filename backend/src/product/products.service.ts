@@ -4,7 +4,7 @@ import {
     NotFoundException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Product, Category, ProductType } from '@prisma/client';
+import { Product, ProductType } from '@prisma/client';
 import { AddProductDto, UpdateProductDto } from './dto/product.dto';
 import { FilterDto } from 'src/dto/filter.dto';
 import { FilterService } from './filter.service';

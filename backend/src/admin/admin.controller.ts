@@ -16,7 +16,7 @@ import { RolesGuard } from 'src/common/guards/role.guard';
 import { Role } from 'src/common/enums/role.enum';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { AccountRequestService } from 'src/account-request/account-request.service';
-import { Category, Product } from '@prisma/client';
+import { Product } from '@prisma/client';
 import { AddProductDto, UpdateProductDto } from 'src/product/dto/product.dto';
 import { ProductsService } from 'src/product/products.service';
 import { PaginationDto } from 'src/dto/pagination.dto';
@@ -73,12 +73,12 @@ export class AdminController {
             pageSize,
             sortBy,
             sortOrder,
-            filterDto
+            filterDto,
         );
     }
-    
+
     @Get('products/categories')
-    async getCategories(): Promise<{ name: string; id: string }[]>  {
+    async getCategories(): Promise<{ name: string; id: string }[]> {
         return await this.productsService.getCategories();
     }
 
@@ -93,14 +93,14 @@ export class AdminController {
         @Query() filterDto: FilterDto,
     ): Promise<{ data: Product[]; total: number; totalPages: number }> {
         const { page, pageSize, sortBy, sortOrder } = paginationDto;
-        const filter = {...filterDto, type: ProductType.DRINK}
+        const filter = { ...filterDto, type: ProductType.DRINK };
 
         return this.productsService.getAllProducts(
             page,
             pageSize,
             sortBy,
             sortOrder,
-            filter
+            filter,
         );
     }
 
@@ -110,13 +110,13 @@ export class AdminController {
         @Query() filterDto: FilterDto,
     ): Promise<{ data: Product[]; total: number; totalPages: number }> {
         const { page, pageSize, sortBy, sortOrder } = paginationDto;
-        const filter = {...filterDto, type: ProductType.SNACK}
+        const filter = { ...filterDto, type: ProductType.SNACK };
         return this.productsService.getAllProducts(
             page,
             pageSize,
             sortBy,
             sortOrder,
-            filter
+            filter,
         );
     }
 

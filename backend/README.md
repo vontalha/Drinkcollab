@@ -1,38 +1,79 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Drinkcollab Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+To set up and make use of the backend for Drinkcollab follow these steps
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 1. Postgres
 
-## Description
+Set up a postgres database locally
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 2. Install Node modules
 
-## Installation
+run:
 
 ```bash
 $ npm install
 ```
+to install the node modules required for the Drinkcollab backend
 
-## Running the app
+## 3. Setup Prisma ORM
+
+Drinkcollab uses the Prisma ORM for CRUD operations. 
+
+### 3.1 Connect Prisma client with Postgres DB
+
+To connect the postgres db you set up earlier with the Prisma client, 
+create a `.env` file in the root backend folder. Afterwards add the following Variable:
+```
+DATABASE_URL=postgresql://USER@HOST:PORT/DATABASE
+```
+into the `.env` and replace the DB URL with your own.
+
+The DB link ist structured as following:
+
+- `USER` : The name of your database user
+- `HOST` : The name of your host name (for the local environment, it is localhost)
+- `PORT` : The port where your database server is running (typically 5432 for PostgreSQL)
+- `DATABASE` : The name of the database
+- `SCHEMA` : The name of the schema inside the database
+
+### 3.2 Generate Prisma client
+
+To generate the required Prisma client run:
+```bash
+$ npx prisma generate
+```
+
+### 3.3 Migrating the schema
+
+To map the data model defined in `prisma/schema.prisma` to the postgres db schema, you need to use the `prisma migrate` CLI commands:
+
+```bash
+$ npx prisma migrate dev --name init
+```
+
+### 3.3 Prisma Studio
+
+You can run:
+```bash
+$ npx prisma studio
+```
+to view and edit the db.
+
+## 4. Authentication
+
+Drinkcollab uses the Nest.js JWT Module for authentication, therefore add:
+```
+JWT_SECRET="your_jwt_secret_key"
+```
+
+into the `.env` file and replace `your_jwt_secret_key` with a random string which is used to sign the JWTs.
+
+You can generate a secret key using: 
+```bash
+$ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+## 5. Running the backend
 
 ```bash
 # development
@@ -54,19 +95,9 @@ $ npm run test
 # e2e tests
 $ npm run test:e2e
 
-# test coverage
+# test coverag
 $ npm run test:cov
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
 
 ## License
 
