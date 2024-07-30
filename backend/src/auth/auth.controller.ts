@@ -3,7 +3,6 @@ import { AccountRequestService } from 'src/account-request/account-request.servi
 import {
     Body,
     Controller,
-    Get,
     HttpCode,
     HttpStatus,
     Post,
@@ -19,7 +18,6 @@ import { ZodValidationPipe } from 'src/common/pipes/zod-validation.pipe';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { SignupDto, SignupSchema } from './dto/signup.dto';
-import { JwtAuthGuard } from './jwt-auth.guard';
 import { NoAuthGuard } from './no-auth.guard';
 import { InviteGuard } from './invite.guard';
 
