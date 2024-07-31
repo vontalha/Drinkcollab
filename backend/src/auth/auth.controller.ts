@@ -20,6 +20,7 @@ import { LoginDto } from './dto/login.dto';
 import { SignupDto, SignupSchema } from './dto/signup.dto';
 import { NoAuthGuard } from './no-auth.guard';
 import { InviteGuard } from './invite.guard';
+import { UserRole } from '@prisma/client';
 
 @Controller('auth')
 export class AuthController {
@@ -37,17 +38,23 @@ export class AuthController {
     async login(
         @Body() login: LoginDto,
         @Res({ passthrough: true }) res: Response,
-    ): Promise<void> {
-        const { access_token } = await this.authService.login(
+    ): Promise<{ userId: string; role: UserRole }> {
+        const { access_token, userId, role } = await this.authService.login(
             login.email,
             login.password,
         );
+
         res.cookie('access_token', access_token, {
             httpOnly: true,
             secure: false,
             sameSite: 'lax',
             expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
-        }).send({ status: 'ok' });
+        });
+
+        return {
+            userId,
+            role,
+        };
     }
 
     // @UseGuards(JwtAuthGuard)
