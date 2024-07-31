@@ -6,6 +6,9 @@ import {MatInputModule} from "@angular/material/input";
 import {CommonModule} from "@angular/common";
 import {MatButton} from "@angular/material/button";
 import {HttpClient} from '@angular/common/http';
+import { FormBuilder } from '@angular/forms';
+import axios from 'axios';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-loginform',
@@ -28,24 +31,42 @@ import {HttpClient} from '@angular/common/http';
 })
 export class LoginformComponent {
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private formBuilder: FormBuilder,
+    private router: Router,
+
+    ) { }
 
   form: FormGroup = new FormGroup({
     email: new FormControl('',Validators.required),
     password: new FormControl('',Validators.required),
   });
+  // loginForm = this.formBuilder.group({
+  //   email: '',
+  //   password: ''
+  // });
 
   login() {
       if (this.form.valid) {
         // @ts-ignore
-        let email = this.form.get('email').value;
+        let email = this.form.get('email')?.value.toString();
         // @ts-ignore
         //{"email": "admin@email.com" , "password": "ExamplePassword"}
-        let password  = this.form.get('password');
-        this.http.post('https://localhost:3000/auth/login',  {email: email , password: password})
-          .subscribe(response => {
-            console.log("login");
-          });
+        let password  = this.form.get('password')?.value.toString();
+
+        axios.post('http://localhost:3000/auth/login',{'email': email , 'password': password}).then((response)=>{
+          console.log(response.data);
+          console.log("login");
+          if(response.status==200){
+            this.router.navigate(['/', 'home']);
+          }
+        });
+        // this.http.post('http://localhost:3000/auth/login',  {'email': email , 'password': password})
+        // //this.http.post('https://localhost:3000/auth/login',  this.loginForm.value)
+        //   .subscribe(response => {
+        //     console.log("login");
+        //   });
     }
   }
   // @ts-ignore

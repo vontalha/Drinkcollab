@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {Router, RouterOutlet} from '@angular/router';
 import {NavigationComponent} from "./navigation/navigation.component";
 import {LoginformComponent} from "./loginform/loginform.component";
 import {RequestAccountComponent} from "./request-account/request-account.component";
@@ -18,4 +18,10 @@ import {LoginTabComponent} from "./login-tab/login-tab.component";
 })
 export class AppComponent {
   title = 'Drinkcollab';
+
+  constructor(router:Router) {
+    router.navigate(['/login'], {
+      skipLocationChange: true,
+    });
+  }
 }

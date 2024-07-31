@@ -5,8 +5,8 @@ import {LoginformComponent} from "./loginform/loginform.component";
 import {RequestAccountComponent} from "./request-account/request-account.component";
 
 export const routes: Routes = [
+  {path:'login',component: LoginformComponent},
   {path:'create-account',component: CreateAccountComponent},
   {path:'request-account',component: RequestAccountComponent},
-  {path:'login',component: LoginformComponent},
   {path:'home',component: StorepageComponent},
 ];
