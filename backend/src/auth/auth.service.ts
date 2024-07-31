@@ -10,6 +10,7 @@ import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcryptjs';
 import { SignupDto } from './dto/signup.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UserRole } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +20,10 @@ export class AuthService {
         private prismaService: PrismaService,
     ) {}
 
-    login = async (email: string, password: string): Promise<AuthEntity> => {
+    login = async (
+        email: string,
+        password: string,
+    ): Promise<{ access_token: string; userId: string; role: UserRole }> => {
         const user = await this.userService.getUserByEmail(email);
 
         if (!user) {
@@ -39,7 +43,7 @@ export class AuthService {
         };
         const access_token = await this.jwtService.signAsync(payload);
 
-        return { access_token };
+        return { access_token, userId: user.id, role: user.role };
     };
 
     signup = async (credentials: SignupDto): Promise<AuthEntity> => {
