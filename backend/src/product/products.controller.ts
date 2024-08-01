@@ -4,7 +4,7 @@ import { LikeProductDto } from './dto/like.dto';
 import { LikeService } from './like.service';
 import { ProductsService } from './products.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { PaginationDto } from 'src/dto/pagination.dto';
+import { PaginationProductDto } from 'src/dto/pagination.dto';
 
 @Controller('products')
 export class ProductController {
@@ -19,7 +19,7 @@ export class ProductController {
         // @Query('pageSize') pageSize: number = 20,
         // @Query('sortBy') sortBy: string = 'sales',
         // @Query('sortOrder') sortOrder: 'asc' | 'desc' = 'desc'
-        @Query() paginationDto: PaginationDto,
+        @Query() paginationDto: PaginationProductDto,
     ): Promise<{ data: Product[]; total: number; totalPages: number }> {
         const { page, pageSize, sortBy, sortOrder } = paginationDto;
         return this.productsService.getAllProducts(

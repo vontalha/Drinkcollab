@@ -2,12 +2,10 @@ import { z } from 'zod';
 
 export const LoginSchema = z
     .object({
-        email: z
-            .string({ required_error: 'E-Mail required' })
-            .email({
-                message:
-                    'Invalid email format. Please enter a valid email address.',
-            }),
+        email: z.string({ required_error: 'E-Mail required' }).email({
+            message:
+                'Invalid email format. Please enter a valid email address.',
+        }),
 
         password: z
             .string({ required_error: 'Password is required' })
