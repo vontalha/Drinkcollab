@@ -1,0 +1,40 @@
+# https://hub.docker.com/_/postgres
+# Use postgres/example user/password credentials
+version: '3'
+
+services:
+  database:
+    image: 'postgres:latest'
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=example
+      - POSTGRES_USER=postgres
+      - PGADMIN_DEFAULT_EMAIL=aaaaa
+      - PGADMIN_DEFAULT_PASSWORD=example
+    networks:
+      - postgres-network
+    volumes:
+      - ./db-data/:/var/lib/postgresql/data/
+      #- ./init.sql:/docker-entrypoint-initdb.d/init.sql
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - 5430:80
+    environment:
+      - POSTGRES_PASSWORD=example
+      - POSTGRES_USER=postgres
+      - PGADMIN_DEFAULT_EMAIL=aaaaa@aa.aa
+      - PGADMIN_DEFAULT_PASSWORD=example
+    depends_on:
+      - database
+    networks:
+      - postgres-network
+    volumes:
+      - ./pgadmin-data/:/var/lib/pgadmin/
+
+
+networks: 
+  postgres-network:
+    driver: bridge

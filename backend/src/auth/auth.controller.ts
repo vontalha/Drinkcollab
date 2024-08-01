@@ -43,10 +43,10 @@ export class AuthController {
             login.password,
         );
         res.cookie('access_token', access_token, {
-            httpOnly: true,
+            httpOnly: false,
             secure: false,
             sameSite: 'lax',
-            expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
+            expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000), //*60 for hours
         }).send({ status: 'ok' });
     }
 

@@ -9,6 +9,7 @@ import {HttpClient} from '@angular/common/http';
 import { FormBuilder } from '@angular/forms';
 import axios from 'axios';
 import { Router } from '@angular/router';
+import {MatTableDataSource} from "@angular/material/table";
 
 @Component({
   selector: 'app-loginform',
@@ -35,7 +36,6 @@ export class LoginformComponent {
     private http: HttpClient,
     private formBuilder: FormBuilder,
     private router: Router,
-
     ) { }
 
   form: FormGroup = new FormGroup({
@@ -55,12 +55,15 @@ export class LoginformComponent {
         //{"email": "admin@email.com" , "password": "ExamplePassword"}
         let password  = this.form.get('password')?.value.toString();
 
-        axios.post('http://localhost:3000/auth/login',{'email': email , 'password': password}).then((response)=>{
+        axios.post('http://localhost:3000/auth/login',{'email': email , 'password': password},{ withCredentials: true }).then((response)=>{
           console.log(response.data);
+          //console.log()
           console.log("login");
-          if(response.status==200){
-            this.router.navigate(['/', 'home']);
-          }
+          // if(response.status==200){
+          //   this.router.navigate(['/', 'home']);
+          // }
+          this.table();
+          //console.log(withCredentials)
         });
         // this.http.post('http://localhost:3000/auth/login',  {'email': email , 'password': password})
         // //this.http.post('https://localhost:3000/auth/login',  this.loginForm.value)
@@ -69,6 +72,13 @@ export class LoginformComponent {
         //   });
     }
   }
+  table(){
+    axios.get('http://localhost:3000/admin/requests', { withCredentials: true }).then((response)=>{
+      console.log(response.data.toString());
+      this.router.navigate(['/', 'home']);
+    });
+  }
+
   // @ts-ignore
   @Input() error: string | null;
 
