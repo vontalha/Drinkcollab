@@ -90,7 +90,7 @@ export class AccountRequestService {
             throw new NotFoundException('Token not found!');
         }
 
-        const inviteLink = `Http://localhost:3000/account-request/approved?token=${existingToken.token}`;
+        const inviteLink = `Http://localhost:4200/account-request/approved?token=${existingToken.token}`;
 
         const mailOptions: SendEmailDto = {
             from: process.env.MAIL_FROM,
