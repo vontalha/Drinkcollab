@@ -30,8 +30,13 @@ export class ProductController {
         );
     }
 
+    @Get('search')
+    async search(@Query('q') query: string): Promise<Product[]> {
+        return this.productsService.searchProducts(query);
+    }
+
     @UseGuards(JwtAuthGuard)
-    @Post('liked')
+    @Post('like')
     async likeProduct(@Body() likeProductDto: LikeProductDto) {
         const { userId, productId } = likeProductDto;
         await this.likeService.likeProduct(userId, productId);

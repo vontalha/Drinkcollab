@@ -8,6 +8,7 @@ import { Product, ProductType } from '@prisma/client';
 import { AddProductDto, UpdateProductDto } from './dto/product.dto';
 import { FilterDto } from 'src/dto/filter.dto';
 import { FilterService } from './filter.service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class ProductsService {
@@ -276,4 +277,86 @@ export class ProductsService {
 
         return { data, total, totalPages };
     }
+    
+    searchProductsMini = async (query: string): Promise<Product[]> => {
+        if (typeof query !== 'string') {
+            throw new TypeError('Query must be a string');
+        }
+
+        // Properly quote the query string to avoid SQL injection
+        const sanitizedQuery = query.replace(/'/g, "''");
+
+        const rawQuery = Prisma.sql`
+
+            SELECT "name", similarity("name", ${Prisma.raw(`'${sanitizedQuery}'::text`)}) AS sml
+            FROM "Product"
+            WHERE "name" % ${Prisma.raw(`'${sanitizedQuery}'::text`)}
+            ORDER BY sml DESC
+            LIMIT 20;
+        `;
+
+        console.log(rawQuery);
+        //this has to be part of the first execution to install pg_trgm for postgres
+        //after first run comment out
+        // await this.prismaService
+        //     .$executeRaw`CREATE EXTENSION IF NOT EXISTS pg_trgm;`;
+
+        const products =
+            await this.prismaService.$queryRaw<Product[]>(rawQuery);
+
+        return products;
+    };
+
+    searchProducts = async (query: string): Promise<Product[]> => {
+        const queryTerms = query
+            .split(' ')
+            .map((term) => term.trim())
+            .filter((term) => term.length > 0);
+
+        const whereConditions = queryTerms
+            .map(
+                (term) => Prisma.sql`
+            (
+                "name" % ${term}
+                OR "brand" % ${term}
+                OR "type"::text % ${term}
+                OR "description" % ${term}
+                OR "categoryId" IN (
+                    SELECT "id" FROM "Category" WHERE "name" % ${term}
+                )
+            )
+        `,
+            )
+            .reduce((prev, curr) => Prisma.sql`${prev} OR ${curr}`);
+
+        const similarityCalc = queryTerms
+            .map(
+                (term) => Prisma.sql`
+            GREATEST(
+                similarity("name", ${term}),
+                similarity("brand", ${term}),
+                similarity("type"::text, ${term}),
+                similarity("description", ${term}),
+                (SELECT similarity("name", ${term}) FROM "Category" WHERE "id" = "Product"."categoryId")
+            )
+        `,
+            )
+            .reduce((prev, curr) => Prisma.sql`${prev} + ${curr}`);
+
+        const rawQuery = Prisma.sql`
+            SELECT *,
+                ${similarityCalc} AS similarity_score
+            FROM "Product"
+            WHERE ${whereConditions}
+            ORDER BY similarity_score DESC
+            LIMIT 20;
+        `;
+
+        console.log(rawQuery);
+
+        const products =
+            await this.prismaService.$queryRaw<Product[]>(rawQuery);
+
+        return products;
+    };
 }

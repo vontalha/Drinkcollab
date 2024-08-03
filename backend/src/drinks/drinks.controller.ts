@@ -12,7 +12,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ProductsService } from 'src/product/products.service';
 import { LikeProductDto } from 'src/product/dto/like.dto';
 import { LikeService } from 'src/product/like.service';
-import { PaginationDto } from 'src/dto/pagination.dto';
+import { PaginationProductDto } from 'src/dto/pagination.dto';
 import { FilterDto } from 'src/dto/filter.dto';
 
 @Controller('drinks')
@@ -30,7 +30,7 @@ export class DrinksController {
     @Get('categories/:category')
     async getDrinks(
         @Param('category') categoryName: string,
-        @Query() paginationDto: PaginationDto,
+        @Query() paginationDto: PaginationProductDto,
         @Query() filterDto: FilterDto,
     ): Promise<{ data: Product[]; total: number; totalPages: number }> {
         const { page, pageSize, sortBy, sortOrder } = paginationDto;
