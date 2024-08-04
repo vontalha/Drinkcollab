@@ -1,3 +1,4 @@
+import { UserService } from 'src/user/user.service';
 import {
     Controller,
     Post,
@@ -19,9 +20,13 @@ import { AccountRequestService } from 'src/account-request/account-request.servi
 import { Product } from '@prisma/client';
 import { AddProductDto, UpdateProductDto } from 'src/product/dto/product.dto';
 import { ProductsService } from 'src/product/products.service';
-import { PaginationDto } from 'src/dto/pagination.dto';
+import {
+    PaginationProductDto,
+    PaginationUserDto,
+} from 'src/dto/pagination.dto';
 import { ProductType } from '@prisma/client';
 import { FilterDto } from 'src/dto/filter.dto';
+import { SearchUserDto, UpdateUserDto, UserDto } from 'src/user/dto/user.dto';
 
 @Roles(Role.Admin)
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -30,6 +35,7 @@ export class AdminController {
     constructor(
         private accountRequestService: AccountRequestService,
         private productsService: ProductsService,
+        private userService: UserService,
     ) {}
 
     /**
@@ -64,7 +70,7 @@ export class AdminController {
 
     @Get('products')
     async getAllProducts(
-        @Query() paginationDto: PaginationDto,
+        @Query() paginationDto: PaginationProductDto,
         @Query() filterDto: FilterDto,
     ): Promise<{ data: Product[]; total: number; totalPages: number }> {
         const { page, pageSize, sortBy, sortOrder } = paginationDto;
@@ -75,6 +81,11 @@ export class AdminController {
             sortOrder,
             filterDto,
         );
+    }
+
+    @Get('products/search')
+    async searchProducts(@Query('q') query: string): Promise<Product[]> {
+        return this.productsService.searchProducts(query);
     }
 
     @Get('products/categories')
@@ -89,7 +100,7 @@ export class AdminController {
 
     @Get('products/drinks')
     async getDrinks(
-        @Query() paginationDto: PaginationDto,
+        @Query() paginationDto: PaginationProductDto,
         @Query() filterDto: FilterDto,
     ): Promise<{ data: Product[]; total: number; totalPages: number }> {
         const { page, pageSize, sortBy, sortOrder } = paginationDto;
@@ -106,7 +117,7 @@ export class AdminController {
 
     @Get('products/snacks')
     async getSnacks(
-        @Query() paginationDto: PaginationDto,
+        @Query() paginationDto: PaginationProductDto,
         @Query() filterDto: FilterDto,
     ): Promise<{ data: Product[]; total: number; totalPages: number }> {
         const { page, pageSize, sortBy, sortOrder } = paginationDto;
@@ -157,6 +168,49 @@ export class AdminController {
         return {
             status: HttpStatus.OK,
             message: 'Product successfully deleted!',
+        };
+    }
+
+    @Get('users')
+    async getUsers(
+        @Query() paginationDto: PaginationUserDto,
+    ): Promise<{ data: UserDto[]; total: number; totalPages: number }> {
+        const { page, pageSize, sortBy, sortOrder } = paginationDto;
+
+        return this.userService.getAllUsers(page, pageSize, sortBy, sortOrder);
+    }
+
+    @Get('users/search')
+    async searchUsers(@Query('q') query: string): Promise<SearchUserDto[]> {
+        return this.userService.searchUsers(query);
+    }
+
+    @Get('user/:id')
+    async(@Param('id') userId: string): Promise<UserDto> {
+        const user = this.userService.getUserById(userId);
+        return user;
+    }
+
+    @Put('user/update/:id')
+    @HttpCode(HttpStatus.OK)
+    async updateUser(
+        @Param('id') userId: string,
+        @Body() data: UpdateUserDto,
+    ): Promise<{ message: string }> {
+        this.userService.updateUser(userId, data);
+        return {
+            message: `User with id: ${userId} has been successfully updated`,
+        };
+    }
+
+    @Delete('user/delete/:id')
+    @HttpCode(HttpStatus.OK)
+    async deleteUser(
+        @Param('id') userId: string,
+    ): Promise<{ message: string }> {
+        this.userService.deleteUser(userId);
+        return {
+            message: `User with id: ${userId} has been successfully deleted`,
         };
     }
 }
