@@ -1,6 +1,7 @@
 import { IsString, IsOptional, IsIn } from 'class-validator';
 
 export class UserDto {
+    id?: string;
     image?: string;
     email?: string;
     role?: string;
@@ -8,6 +9,12 @@ export class UserDto {
     lastName?: string;
     createdAt?: Date;
     updatedAt?: Date | null;
+}
+export class SearchUserDto {
+    email?: string;
+    role?: string;
+    firstName?: string;
+    lastName?: string;
 }
 
 export class UpdateUserDto {

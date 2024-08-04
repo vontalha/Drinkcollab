@@ -277,7 +277,7 @@ export class ProductsService {
 
         return { data, total, totalPages };
     }
-    
+
     searchProductsMini = async (query: string): Promise<Product[]> => {
         if (typeof query !== 'string') {
             throw new TypeError('Query must be a string');
@@ -354,6 +354,10 @@ export class ProductsService {
 
         console.log(rawQuery);
 
+        //this has to be part of the first execution to install pg_trgm for postgres
+        //after first run comment out
+        // await this.prismaService
+        //     .$executeRaw`CREATE EXTENSION IF NOT EXISTS pg_trgm;`;
         const products =
             await this.prismaService.$queryRaw<Product[]>(rawQuery);
 

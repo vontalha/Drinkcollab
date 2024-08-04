@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UpdateUserDto, UserDto } from './dto/user.dto';
+import { SearchUserDto, UpdateUserDto, UserDto } from './dto/user.dto';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 @Injectable()
 export class UserService {
     constructor(private prismaService: PrismaService) {}
@@ -21,7 +22,16 @@ export class UserService {
         const user = await this.prismaService.user.findUnique({
             where: { id },
             select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                email: true,
                 password: false,
+                image: true,
+                role: true,
+                createdAt: true,
+                updatedAt: true,
+                likedDrinks: true,
             },
         });
 
@@ -104,4 +114,59 @@ export class UserService {
 
         return { data, total, totalPages };
     }
+
+    searchUsers = async (query: string): Promise<SearchUserDto[]> => {
+        await this.prismaService
+            .$executeRaw`CREATE EXTENSION IF NOT EXISTS pg_trgm;`;
+        const queryTerms = query
+            .split(' ')
+            .map((term) => term.trim())
+            .filter((term) => term.length > 0);
+
+        const whereConditions = queryTerms
+            .map(
+                (term) => Prisma.sql`
+            (
+                "email" % ${term}
+                OR "role"::text % ${term}
+                OR "firstName" % ${term}
+                OR "lastName" % ${term}
+            )
+        `,
+            )
+            .reduce((prev, curr) => Prisma.sql`${prev} OR ${curr}`);
+
+        const similarityCalc = queryTerms
+            .map(
+                (term) => Prisma.sql`
+            GREATEST(
+            similarity("email", ${term}),
+            similarity("role"::text, ${term}),
+            similarity("firstName", ${term}),
+            similarity("lastName", ${term})
+        )
+        `,
+            )
+            .reduce((prev, curr) => Prisma.sql`${prev} + ${curr}`);
+
+        const rawQuery = Prisma.sql`
+            SELECT "email", "role", "firstName", "lastName",
+                ${similarityCalc} AS similarity_score
+            FROM "users"
+            WHERE ${whereConditions}
+            ORDER BY similarity_score DESC
+            LIMIT 20;
+        `;
+
+        console.log(rawQuery);
+
+        //this has to be part of the first execution to install pg_trgm for postgres
+        //after first run comment out
+        // await this.prismaService
+        //     .$executeRaw`CREATE EXTENSION IF NOT EXISTS pg_trgm;`;
+        const users =
+            await this.prismaService.$queryRaw<SearchUserDto[]>(rawQuery);
+
+        return users;
+    };
 }

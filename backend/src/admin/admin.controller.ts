@@ -26,7 +26,7 @@ import {
 } from 'src/dto/pagination.dto';
 import { ProductType } from '@prisma/client';
 import { FilterDto } from 'src/dto/filter.dto';
-import { UpdateUserDto, UserDto } from 'src/user/dto/user.dto';
+import { SearchUserDto, UpdateUserDto, UserDto } from 'src/user/dto/user.dto';
 
 @Roles(Role.Admin)
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -81,6 +81,11 @@ export class AdminController {
             sortOrder,
             filterDto,
         );
+    }
+
+    @Get('products/search')
+    async searchProducts(@Query('q') query: string): Promise<Product[]> {
+        return this.productsService.searchProducts(query);
     }
 
     @Get('products/categories')
@@ -173,6 +178,11 @@ export class AdminController {
         const { page, pageSize, sortBy, sortOrder } = paginationDto;
 
         return this.userService.getAllUsers(page, pageSize, sortBy, sortOrder);
+    }
+
+    @Get('users/search')
+    async searchUsers(@Query('q') query: string): Promise<SearchUserDto[]> {
+        return this.userService.searchUsers(query);
     }
 
     @Get('user/:id')
