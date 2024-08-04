@@ -278,35 +278,6 @@ export class ProductsService {
         return { data, total, totalPages };
     }
 
-    searchProductsMini = async (query: string): Promise<Product[]> => {
-        if (typeof query !== 'string') {
-            throw new TypeError('Query must be a string');
-        }
-
-        // Properly quote the query string to avoid SQL injection
-        const sanitizedQuery = query.replace(/'/g, "''");
-
-        const rawQuery = Prisma.sql`
-
-            SELECT "name", similarity("name", ${Prisma.raw(`'${sanitizedQuery}'::text`)}) AS sml
-            FROM "Product"
-            WHERE "name" % ${Prisma.raw(`'${sanitizedQuery}'::text`)}
-            ORDER BY sml DESC
-            LIMIT 20;
-        `;
-
-        console.log(rawQuery);
-        //this has to be part of the first execution to install pg_trgm for postgres
-        //after first run comment out
-        // await this.prismaService
-        //     .$executeRaw`CREATE EXTENSION IF NOT EXISTS pg_trgm;`;
-
-        const products =
-            await this.prismaService.$queryRaw<Product[]>(rawQuery);
-
-        return products;
-    };
-
     searchProducts = async (query: string): Promise<Product[]> => {
         const queryTerms = query
             .split(' ')
