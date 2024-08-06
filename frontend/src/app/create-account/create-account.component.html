@@ -2,24 +2,38 @@
   <mat-card-title>Create Account</mat-card-title>
   <mat-card-content>
     <form [formGroup]="form">
-      <mat-form-field>
-        <input type="text" matInput placeholder="Last Name" formControlName="name">
+      <mat-form-field floatLabel="always">
+        <mat-label>Last Name</mat-label>
+        <input type="text" matInput formControlName="name">
+        <mat-error *ngIf="form.controls['name'].errors?.['minlength']">Last name must be at least 2 characters long</mat-error>
+        <mat-error *ngIf="form.controls['name'].errors?.['maxlength']">Last name must not be more than 255 characters long</mat-error>
+        <mat-error *ngIf="form.controls['name'].errors?.['pattern']">Last Name can only contain letters</mat-error>
       </mat-form-field>
       <p></p>
-      <mat-form-field>
-        <input type="text" matInput placeholder="First Name" formControlName="firstname">
+      <mat-form-field floatLabel="always">
+        <mat-label>First Name</mat-label>
+        <input type="text" matInput formControlName="firstname">
+        <mat-error *ngIf="form.controls['firstname'].errors?.['minlength']">First name must be at least 2 characters long</mat-error>
+        <mat-error *ngIf="form.controls['firstname'].errors?.['maxlength']">First name must not be more than 255 characters long</mat-error>
+        <mat-error *ngIf="form.controls['name'].errors?.['pattern']">First name can only contain letters</mat-error>
       </mat-form-field>
       <p></p>
-      <mat-form-field>
-        <input type="text" matInput placeholder="Email" formControlName="email">
+      <mat-form-field floatLabel="always">
+        <mat-label>Email Address</mat-label>
+        <input type="text" matInput formControlName="email">
+        <mat-error *ngIf="form.get('email')?.invalid">Please enter a valid Email Address</mat-error>
       </mat-form-field>
       <p></p>
-      <mat-form-field>
-        <input type="password" matInput placeholder="Password" formControlName="password">
+      <mat-form-field floatLabel="always">
+        <mat-label>Password</mat-label>
+        <input type="password" matInput formControlName="password">
+
       </mat-form-field>
       <p></p>
-      <mat-form-field>
-        <input type="password" matInput placeholder="Password" formControlName="password1">
+      <mat-form-field floatLabel="always">
+        <mat-label>Confirm Password</mat-label>
+        <input type="password" matInput formControlName="password1">
+        <mat-error *ngIf="form.get('password')!=form.get('password')">Confirm Password doesnt match Password</mat-error>
       </mat-form-field>
 
       <p *ngIf="error" class="error">

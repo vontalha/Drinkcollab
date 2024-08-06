@@ -5,6 +5,7 @@
       <p>
         <mat-form-field>
           <input type="text" matInput placeholder="Email Address" formControlName="email">
+          <mat-error *ngIf="form.value">Please enter a valid Email Address</mat-error>
         </mat-form-field>
       </p>
       <div class="button">

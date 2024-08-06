@@ -1,11 +1,12 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatButton, MatButtonModule} from "@angular/material/button";
 import {MatCard, MatCardContent, MatCardTitle} from "@angular/material/card";
-import {MatFormField} from "@angular/material/form-field";
+import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {NgIf} from "@angular/common";
-import {HttpClient} from "@angular/common/http";
+import {ActivatedRoute} from "@angular/router";
+import axios from "axios";
 
 @Component({
   selector: 'app-create-account',
@@ -20,29 +21,34 @@ import {HttpClient} from "@angular/common/http";
         MatInput,
         NgIf,
         MatButtonModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatError,
+        MatLabel
     ],
   templateUrl: './create-account.component.html',
   styleUrl: './create-account.component.css'
 })
-export class CreateAccountComponent {
+export class CreateAccountComponent implements OnInit{
+  constructor(private route: ActivatedRoute) {}
 
-  constructor(private http: HttpClient) { }
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      const key = params['Key'];
+    });
+  }
+
 
   form: FormGroup = new FormGroup({
-    email: new FormControl(''),
-    name: new FormControl(''),
-    firstname: new FormControl(''),
-    password: new FormControl(''),
-    password1: new FormControl(''),
+    email: new FormControl('',[Validators.required, Validators.email]),
+    name: new FormControl('', [Validators.required, Validators.minLength(2),Validators.maxLength(255), Validators.pattern(/^[a-zA-Z]+$/)]),
+    firstname: new FormControl('',[Validators.required, Validators.minLength(2),Validators.maxLength(255), Validators.pattern(/^[a-zA-Z]+$/)]),
+    password: new FormControl('',[Validators.required, Validators.minLength(8), Validators.maxLength(255),Validators.pattern(/[A-Z]/), Validators.pattern(/[\W_]/), Validators.pattern(/[0-9]/)]),
+    password1: new FormControl(''), //todo
   });
 
   createAccount(): void {
     if (this.form.valid) {
-      this.http.post('https://localhost:3000/auth/signup/',  { email: this.form.get('email')?.value,     password: this.form.get('password1')?.value,     firstName: this.form.get('firstname')?.value,     lastName: this.form.get('name')?.value })
-        .subscribe(response => {
-          console.log(`account created`);
-        });
+      axios.post('https://localhost:3000/auth/signup/',{ email: this.form.get('email')?.value,     password: this.form.get('password1')?.value,     firstName: this.form.get('firstname')?.value,     lastName: this.form.get('name')?.value },{withCredentials:true});
     }
   }
   // @ts-ignore

@@ -20,8 +20,8 @@ export class AppComponent {
   title = 'Drinkcollab';
 
   constructor(router:Router) {
-    router.navigate(['/login'], {
-      skipLocationChange: true,
-    });
+    // router.navigate(['/login'], {
+    //   skipLocationChange: true,
+    // });
   }
 }
