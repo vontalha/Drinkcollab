@@ -31,10 +31,10 @@ import axios from "axios";
 })
 export class CreateAccountComponent implements OnInit{
   constructor(private route: ActivatedRoute) {}
-
+  token ='';
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      const token = params['token'];
+      this.token = params['token'];
     });
   }
 
@@ -44,12 +44,25 @@ export class CreateAccountComponent implements OnInit{
     name: new FormControl('', [Validators.required, Validators.minLength(2),Validators.maxLength(255), Validators.pattern(/^[a-zA-Z]+$/)]),
     firstname: new FormControl('',[Validators.required, Validators.minLength(2),Validators.maxLength(255), Validators.pattern(/^[a-zA-Z]+$/)]),
     password: new FormControl('',[Validators.required, Validators.minLength(8), Validators.maxLength(255),Validators.pattern(/[A-Z]/), Validators.pattern(/[\W_]/), Validators.pattern(/[0-9]/)]),
-    password1: new FormControl('', Validators.required), //todo
+    password1: new FormControl('', Validators.required),
   });
 
   createAccount(): void {
     if (this.form.valid) {
-      axios.post('https://localhost:3000/auth/signup/',{ email: this.form.get('email')?.value, password: this.form.get('password1')?.value, firstName: this.form.get('firstname')?.value, lastName: this.form.get('name')?.value },{withCredentials:true});
+      axios.post('https://localhost:3000/auth/signup/', {
+        headers: {
+          Cookie: 'token='+this.token,
+        },
+        data: {
+          email: this.form.get('email')?.value,
+          password: this.form.get('password1')?.value,
+          firstName: this.form.get('firstname')?.value,
+          lastName: this.form.get('name')?.value,
+        }
+      },{withCredentials:true}).then((response)=>{
+        console.log(response.status);
+        console.log(response.data);
+      });
     }
   }
   // @ts-ignore
