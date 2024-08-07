@@ -5,13 +5,16 @@
 }
 
 .mat-form-field {
-  width: 100%;
+  width: 110%;
   min-width: 300px;
   height: 75%;
 }
+mat-hint {
+  max-height: 27px;
+}
 
 mat-card-title,
-mat-card-content {
+mat-card-content{
   display: flex;
   justify-content: center;
 }

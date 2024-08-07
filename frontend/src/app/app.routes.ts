@@ -7,7 +7,7 @@ import {UserListComponent} from "./user-list/user-list.component";
 
 export const routes: Routes = [
   {path:'login',component: LoginformComponent, canActivate:[]},
-  {path:'account-request/approve',component: CreateAccountComponent},
+  {path:'account-request/approved',component: CreateAccountComponent},
   {path:'request-account',component: RequestAccountComponent},
   {path:'home',component: StorepageComponent},
   {path:'admin', component: UserListComponent},

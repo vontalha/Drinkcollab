@@ -12,4 +12,20 @@
 <!app-create-account><!/app-create-account>
 <!app-loginform><!/app-loginform>
 <!app-user-list><!/app-user-list>
-<router-outlet />
+<header>
+  <mat-toolbar color="primary">
+    <span class="project"> Drinkcollab </span>
+    <span class="links" [style.cursor]="'pointer'" routerLink="login"> Login </span>
+    <span class="links" [style.cursor]="'pointer'" routerLink="request-account"> Request Account </span>
+  </mat-toolbar>
+</header>
+
+<main>
+  <router-outlet />
+</main>
+
+<footer>
+  <div >
+    <h2>Footer Drinkcollab (todo)</h2>
+  </div>
+</footer>
