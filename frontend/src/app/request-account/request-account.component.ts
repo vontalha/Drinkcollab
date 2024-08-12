@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {MatCard, MatCardContent, MatCardTitle} from "@angular/material/card";
+import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
 import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatButtonModule} from '@angular/material/button';
@@ -12,18 +12,19 @@ import {NgIf} from "@angular/common";
 @Component({
   selector: 'app-request-account',
   standalone: true,
-    imports: [
-        FormsModule,
-        MatCard,
-        MatCardContent,
-        MatCardTitle,
-        MatFormField,
-        MatInput,
-        MatButtonModule,
-        ReactiveFormsModule,
-        MatError,
-        NgIf
-    ],
+  imports: [
+    FormsModule,
+    MatCard,
+    MatCardContent,
+    MatCardTitle,
+    MatFormField,
+    MatInput,
+    MatButtonModule,
+    ReactiveFormsModule,
+    MatError,
+    NgIf,
+    MatCardHeader
+  ],
   templateUrl: './request-account.component.html',
   styleUrl: './request-account.component.css',
   host: {ngSkipHydration: 'true'}

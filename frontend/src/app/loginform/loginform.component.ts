@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {MatCard, MatCardContent, MatCardTitle} from "@angular/material/card";
+import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
 import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
@@ -24,7 +24,8 @@ import {MatTableDataSource} from "@angular/material/table";
     MatError,
     MatInputModule,
     CommonModule,
-    MatButton
+    MatButton,
+    MatCardHeader
   ],
   templateUrl: './loginform.component.html',
   styleUrl: './loginform.component.css',

@@ -1,31 +1,34 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatButton, MatButtonModule} from "@angular/material/button";
-import {MatCard, MatCardContent, MatCardTitle} from "@angular/material/card";
+import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
 import {MatError, MatFormField, MatHint, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {NgIf} from "@angular/common";
 import {ActivatedRoute} from "@angular/router";
 import axios from "axios";
+import {MatIcon} from "@angular/material/icon";
 
 @Component({
   selector: 'app-create-account',
   standalone: true,
-    imports: [
-        FormsModule,
-        MatButton,
-        MatCard,
-        MatCardContent,
-        MatCardTitle,
-        MatFormField,
-        MatInput,
-        NgIf,
-        MatButtonModule,
-        ReactiveFormsModule,
-        MatError,
-        MatLabel,
-        MatHint
-    ],
+  imports: [
+    FormsModule,
+    MatButton,
+    MatCard,
+    MatCardContent,
+    MatCardTitle,
+    MatFormField,
+    MatInput,
+    NgIf,
+    MatButtonModule,
+    ReactiveFormsModule,
+    MatError,
+    MatLabel,
+    MatHint,
+    MatIcon,
+    MatCardHeader
+  ],
   templateUrl: './create-account.component.html',
   styleUrl: './create-account.component.css'
 })

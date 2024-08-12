@@ -1,31 +1,22 @@
+<div id="container">
 
+  <header>
+    <mat-toolbar color="primary">
+      <span class="project"> Drinkcollab </span>
+      <span class="flex-grow"></span>
+      <span class="links" [style.cursor]="'pointer'" routerLink="login"> Login </span>
+      <span class="links" [style.cursor]="'pointer'" routerLink="request-account"> Request Account </span>
+    </mat-toolbar>
+  </header>
 
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!app-navigation><!/app-navigation>
-<!app-login-tab><!/app-login-tab>
-<!app-create-account><!/app-create-account>
-<!app-loginform><!/app-loginform>
-<!app-user-list><!/app-user-list>
-<header>
-  <mat-toolbar color="primary">
-    <span class="project"> Drinkcollab </span>
-    <span class="links" [style.cursor]="'pointer'" routerLink="login"> Login </span>
-    <span class="links" [style.cursor]="'pointer'" routerLink="request-account"> Request Account </span>
-  </mat-toolbar>
-</header>
+  <main class="flex-grow">
+    <router-outlet />
+  </main>
 
-<main>
-  <router-outlet />
-</main>
+  <footer>
+    <div >
+      <h2>Footer Drinkcollab (todo)</h2>
+    </div>
+  </footer>
 
-<footer>
-  <div >
-    <h2>Footer Drinkcollab (todo)</h2>
-  </div>
-</footer>
+</div>

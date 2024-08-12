@@ -4,12 +4,15 @@
   margin: 100px 0px;
 }
 
-.mat-form-field {
+mat-form-field {
   width: 100%;
-  min-width: 300px;
+  min-width: 250px;
+}
+mat-card-header{
+  justify-content: center;
+  margin-bottom: 5px;
 }
 
-mat-card-title,
 mat-card-content {
   display: flex;
   justify-content: center;
