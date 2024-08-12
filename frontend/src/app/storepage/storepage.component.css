@@ -9,6 +9,18 @@
   right: 15px;
   bottom: 15px;
 }
+.search,.sortby{
+  display: flex;
+  justify-content: flex-end;
+  max-width: 200px;
+  margin-left: 10px;
+}
+.controlls{
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 40px;
+  margin-top: 20px;
+}
 
 .more-button {
   position: absolute;
@@ -18,4 +30,5 @@
 
 .dashboard-card-content {
   text-align: center;
+  flex-wrap: nowrap;
 }

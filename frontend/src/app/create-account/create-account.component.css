@@ -25,7 +25,7 @@ mat-hint {
 }
 mat-card-header{
   justify-content: center;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 mat-card-title,

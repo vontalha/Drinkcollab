@@ -63,7 +63,8 @@ export class LoginformComponent {
           // if(response.status==200){
           //   this.router.navigate(['/', 'home']);
           // }
-          this.table();
+          //this.table();
+          this.getProducts();
           //console.log(withCredentials)
         });
         // this.http.post('http://localhost:3000/auth/login',  {'email': email , 'password': password})
@@ -72,6 +73,12 @@ export class LoginformComponent {
         //     console.log("login");
         //   });
     }
+  }
+  getProducts(){
+    axios.get('http://localhost:3000/products/all?sortBy=price&sortOrder=asc', { withCredentials: true }).then((response)=>{
+      console.log(response.data.toString());
+      this.router.navigate(['/', 'home']);
+    });
   }
   table(){
     axios.get('http://localhost:3000/admin/requests', { withCredentials: true }).then((response)=>{

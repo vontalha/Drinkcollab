@@ -1,26 +1,20 @@
-<div class="grid-container">
-  <h1 class="mat-h1">Dashboard</h1>
-  <mat-grid-list cols="2" rowHeight="350px">
-    @for (card of cards | async; track card) {
-      <mat-grid-tile [colspan]="card.cols" [rowspan]="card.rows">
-        <mat-card class="dashboard-card">
-          <mat-card-header>
-            <mat-card-title>
-              {{card.title}}
-              <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
-                <mat-icon>more_vert</mat-icon>
-              </button>
-              <mat-menu #menu="matMenu" xPosition="before">
-                <button mat-menu-item>Expand</button>
-                <button mat-menu-item>Remove</button>
-              </mat-menu>
-            </mat-card-title>
-          </mat-card-header>
-          <mat-card-content class="dashboard-card-content">
-            <div>Card Content Here</div>
-          </mat-card-content>
-        </mat-card>
-      </mat-grid-tile>
+<div class="controlls">
+<mat-form-field class="search">
+  <mat-label>Search for item</mat-label>
+  <input matInput type="text" [(ngModel)]="searchTerm">
+</mat-form-field>
+<mat-form-field class="sortby">
+  <mat-label>Sort by</mat-label>
+  <mat-select [(ngModel)]="filter">
+    @for (filter of filters; track filter) {
+      <mat-option [value]="filter.value">{{filter.viewValue}}</mat-option>
     }
-  </mat-grid-list>
+  </mat-select>
+</mat-form-field>
 </div>
+
+<div *ngFor="let product of products">
+  <app-shop-item class="dashboard-card-content"  [product]="product"></app-shop-item>
+</div>
+
+
