@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
 import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
@@ -8,6 +8,7 @@ import {HttpClient} from "@angular/common/http";
 import axios from "axios";
 import {response} from "express";
 import {NgIf} from "@angular/common";
+import {AuthService} from "../services/auth.service";
 
 @Component({
   selector: 'app-request-account',
@@ -32,21 +33,23 @@ import {NgIf} from "@angular/common";
 export class RequestAccountComponent {
   // @ts-ignore
 
-  constructor(private http: HttpClient) { }
+  constructor(private fB: FormBuilder, private auth: AuthService) { }
 
-    form: FormGroup = new FormGroup({
-        email: new FormControl('',[Validators.required, Validators.email]),
-      });
+  form = this.fB.group({
+    email: ['', [Validators.required, Validators.email]]
+  });
+
+  // form: FormGroup = new FormGroup({
+  //   email: new FormControl('',[Validators.required, Validators.email]),
+  // });
 
   requestAccount() {
     if (this.form.valid) {
+      this.auth.requestAccount(this.form.get('email')!.value!.toString());
       // @ts-ignore
-      let email = this.form.get('email').value;
-      console.log("email:", email);
-      // @ts-ignore
-      axios.post('https://localhost:3000/account-request',{email: email},{ withCredentials: true }).then((response)=>{
-        console.log(response.status);
-      });
+      // axios.post('https://localhost:3000/account-request',{email: email},{ withCredentials: true }).then((response)=>{
+      //   console.log(response.status);
+      // });
     }
   }
   // @ts-ignore

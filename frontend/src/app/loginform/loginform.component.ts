@@ -5,11 +5,10 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {MatInputModule} from "@angular/material/input";
 import {CommonModule} from "@angular/common";
 import {MatButton} from "@angular/material/button";
-import {HttpClient} from '@angular/common/http';
 import { FormBuilder } from '@angular/forms';
 import axios from 'axios';
 import { Router } from '@angular/router';
-import {MatTableDataSource} from "@angular/material/table";
+import {AuthService} from "../services/auth.service";
 
 @Component({
   selector: 'app-loginform',
@@ -33,45 +32,38 @@ import {MatTableDataSource} from "@angular/material/table";
 })
 export class LoginformComponent {
 
-  constructor(
-    private http: HttpClient,
-    private formBuilder: FormBuilder,
-    private router: Router,
-    ) { }
 
-  form: FormGroup = new FormGroup({
-    email: new FormControl('',[Validators.required, Validators.email]),
-    password: new FormControl('',Validators.required),
+  constructor(
+    private fB: FormBuilder,
+    private router: Router,
+    private auth: AuthService
+    ) {
+  }
+  form = this.fB.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', Validators.required]
   });
-  // loginForm = this.formBuilder.group({
-  //   email: '',
-  //   password: ''
+  // form: FormGroup = new FormGroup({
+  //   email: new FormControl('',[Validators.required, Validators.email]),
+  //   password: new FormControl('',Validators.required),
   // });
 
   login() {
       if (this.form.valid) {
         // @ts-ignore
-        let email = this.form.get('email')?.value.toString();
+        let email = this.form.get('email')!.value.toString();
         // @ts-ignore
         //{"email": "admin@email.com" , "password": "ExamplePassword"}
-        let password  = this.form.get('password')?.value.toString();
-
+        let password  = this.form.get('password')!.value.toString();
+        if(this.auth.login(email , password)){
+          this.router.navigate(['/', 'home']);
+        }
         axios.post('http://localhost:3000/auth/login',{'email': email , 'password': password},{ withCredentials: true }).then((response)=>{
           console.log(response.data);
-          //console.log()
           console.log("login");
-          // if(response.status==200){
-          //   this.router.navigate(['/', 'home']);
-          // }
           //this.table();
           this.getProducts();
-          //console.log(withCredentials)
         });
-        // this.http.post('http://localhost:3000/auth/login',  {'email': email , 'password': password})
-        // //this.http.post('https://localhost:3000/auth/login',  this.loginForm.value)
-        //   .subscribe(response => {
-        //     console.log("login");
-        //   });
     }
   }
   getProducts(){

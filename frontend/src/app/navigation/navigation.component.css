@@ -1,0 +1,16 @@
+.mat-toolbar.mat-primary {
+  background: #483D8B;
+  color: #fff;
+  display: flex
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+.project{
+  margin-right: 50px;
+}
+
+.links{
+  margin-left: 20px;
+}

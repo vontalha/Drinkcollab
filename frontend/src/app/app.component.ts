@@ -8,11 +8,12 @@ import {StorepageComponent} from "./storepage/storepage.component";
 import {UserListComponent} from "./user-list/user-list.component";
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
 import {MatToolbar} from "@angular/material/toolbar";
+import {MatButton} from "@angular/material/button";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NavigationComponent, LoginformComponent, RequestAccountComponent, CreateAccountComponent, StorepageComponent, UserListComponent, MatTabGroup, MatTab, MatToolbar, RouterLink],
+    imports: [RouterOutlet, NavigationComponent, LoginformComponent, RequestAccountComponent, CreateAccountComponent, StorepageComponent, UserListComponent, MatTabGroup, MatTab, MatToolbar, RouterLink, MatButton],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

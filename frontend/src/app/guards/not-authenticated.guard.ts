@@ -7,19 +7,23 @@ import {
   UrlTree,
 } from "@angular/router";
 import { Observable } from "rxjs";
-//import { AuthService } from "../services/auth.service";
+import { AuthService } from "../services/auth.service";
 
 @Injectable({
   providedIn: "root",
 })
 
 export class NotAuthenticatedGuard implements CanActivate {
-  constructor(public auth: AuthService, public router: Router) {}
+  constructor(public authService: AuthService, public router: Router) {}
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if (this.auth.isAuthenticated()) {
+    let activate;
+    this.authService.isAuthenticated().then((result)=>{
+      activate = result;
+    });
+    if (activate) {
       this.router.navigate(["/"]);
       return false;
     }
