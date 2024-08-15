@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
-import {from, Observable} from 'rxjs';
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
-
-//import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
+import axios from 'axios';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +22,6 @@ export class AuthService {
       console.log(!!(response.data.userId && response.data.role));
       return !!(response.data.userId && response.data.role);
     })
-    //return this.http.post(this.apiUrl + '/api/User/login', { username, password }, {withCredentials:true});
   }
 
   logout(){
@@ -35,25 +31,15 @@ export class AuthService {
   }
 
 
-
-
   public async isAuthenticated() : Promise<boolean> {
-
-    return await axios.get(this.apiUrl + '/user/me', {withCredentials: true}).then((response) => {
-      if(response.status==401){
-        console.log("status"+response.status);
-        return false
-      }
+    return await axios.get(this.apiUrl + '/user/me', {withCredentials: true})
+      .then((response) => {
       console.log(response.data.id && response.data.role);
       return true;
 
-      //return !!(response.data.id && response.data.role);
-    });
-
-    //const token = localStorage.getItem('authToken');
-    //const helper = new JwtHelperService();
-    //const isExpired = helper.isTokenExpired(token);
-    //return !isExpired;
-    //return false;
+    })
+      .catch(e => {
+        return false
+      })
   }
 }

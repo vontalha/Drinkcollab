@@ -1,12 +1,9 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
-import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatError, MatFormField} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatButtonModule} from '@angular/material/button';
-import {HttpClient} from "@angular/common/http";
-import axios from "axios";
-import {response} from "express";
 import {NgIf} from "@angular/common";
 import {AuthService} from "../services/auth.service";
 
@@ -31,17 +28,12 @@ import {AuthService} from "../services/auth.service";
   host: {ngSkipHydration: 'true'}
 })
 export class RequestAccountComponent {
-  // @ts-ignore
 
   constructor(private fB: FormBuilder, private auth: AuthService) { }
 
   form = this.fB.group({
     email: ['', [Validators.required, Validators.email]]
   });
-
-  // form: FormGroup = new FormGroup({
-  //   email: new FormControl('',[Validators.required, Validators.email]),
-  // });
 
   requestAccount() {
     if (this.form.valid) {
