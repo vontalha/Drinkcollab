@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {from, Observable} from 'rxjs';
-import axios from 'axios';
-import {response} from "express";
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
 //import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 
@@ -21,10 +20,11 @@ export class AuthService {
     });
   }
 
-  login(username: string, password: string): Observable<boolean> {
-    return from(axios.post(this.apiUrl + '/api/User/login', { username, password }, {withCredentials:true}).then((response)=>{
+  login(email: string, password: string): Promise<boolean> {
+    return axios.post(this.apiUrl + '/auth/login', { email, password }, {withCredentials:true}).then((response)=>{
+      console.log(!!(response.data.userId && response.data.role));
       return !!(response.data.userId && response.data.role);
-    }));
+    })
     //return this.http.post(this.apiUrl + '/api/User/login', { username, password }, {withCredentials:true});
   }
 
@@ -32,12 +32,22 @@ export class AuthService {
     axios.post(this.apiUrl + '/auth/logout',{},{withCredentials: true}).then((response)=>{
       console.log(response.status);
     });
-
   }
 
+
+
+
   public async isAuthenticated() : Promise<boolean> {
-    return await axios.get(this.apiUrl + '/auth/check', {withCredentials: true}).then((response) => {
-      return !!(response.data.userId && response.data.role);
+
+    return await axios.get(this.apiUrl + '/user/me', {withCredentials: true}).then((response) => {
+      if(response.status==401){
+        console.log("status"+response.status);
+        return false
+      }
+      console.log(response.data.id && response.data.role);
+      return true;
+
+      //return !!(response.data.id && response.data.role);
     });
 
     //const token = localStorage.getItem('authToken');
