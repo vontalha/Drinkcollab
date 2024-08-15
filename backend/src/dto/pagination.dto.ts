@@ -15,7 +15,7 @@ export class PaginationProductDto {
     pageSize: number = 20;
 
     @IsOptional()
-    @IsIn(['sales', 'price', 'createdAt'])
+    @IsIn(['sales', 'price', 'createdAt', 'stock'])
     sortBy: string = 'sales';
 
     @IsOptional()
