@@ -28,6 +28,9 @@ describe('ProductsService', () => {
                             findMany: jest.fn(),
                             count: jest.fn(),
                         },
+                        category: {
+                            findUnique: jest.fn(),
+                        },
                         $transaction: jest.fn(),
                         $queryRaw: jest.fn(),
                     },
@@ -62,15 +65,29 @@ describe('ProductsService', () => {
 
             const expectedProduct: Product = {
                 id: '1',
-                ...createProductDto,
-                sales: 0,
+                name: 'Test Product',
+                brand: 'Test Brand',
+                type: 'DRINK',
+                description: 'Test Description',
+                price: 10,
+                image: 'image',
+                size: 1,
                 stock: 0,
+                sales: 0,
                 createdAt: new Date(),
                 updatedAt: new Date(),
-                brand: createProductDto.brand,
                 categoryId: '1',
-                type: 'DRINK',
             };
+
+            jest.spyOn(prismaService.category, 'findUnique').mockResolvedValue({
+                id: '1',
+                name: 'wine',
+                description: 'wine',
+                imageUrl: 'imageUrl',
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                type: 'DRINK',
+            });
 
             jest.spyOn(prismaService.product, 'create').mockResolvedValue(
                 expectedProduct,
@@ -80,7 +97,17 @@ describe('ProductsService', () => {
 
             expect(result).toEqual(expectedProduct);
             expect(prismaService.product.create).toHaveBeenCalledWith({
-                data: createProductDto,
+                data: {
+                    name: 'Test Product',
+                    brand: 'Test Brand',
+                    type: 'DRINK',
+                    description: 'Test Description',
+                    price: 10,
+                    image: 'image',
+                    size: 1,
+                    stock: 1,
+                    categoryId: '1',
+                },
             });
         });
     });
