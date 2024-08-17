@@ -48,7 +48,13 @@ export class ProductsService {
     };
 
     getProduct = async (id: string): Promise<Product> => {
-        return await this.prismaService.product.findUnique({ where: { id } });
+        const product = await this.prismaService.product.findUnique({
+            where: { id },
+        });
+        if (!product) {
+            throw new NotFoundException(`Product with ID ${id} not found`);
+        }
+        return product;
     };
 
     updateProduct = async (
@@ -83,8 +89,8 @@ export class ProductsService {
         });
     };
 
-    deleteProduct = async (id: string): Promise<void> => {
-        await this.prismaService.product.delete({ where: { id } });
+    deleteProduct = async (id: string): Promise<Product> => {
+        return await this.prismaService.product.delete({ where: { id } });
     };
 
     getProductSales = async (id: string): Promise<number> => {
@@ -204,42 +210,6 @@ export class ProductsService {
             .map((product) => product.brand)
             .filter((brand) => brand !== null);
     };
-
-    // async getFilteredProducts(
-    //     filterDto: FilterDto,
-    //     page: number,
-    //     pageSize: number,
-    //     sortBy: string,
-    //     sortOrder: 'asc' | 'desc',
-    // ): Promise<{ data: Product[]; total: number; totalPages: number }> {
-    //     const skip = (page - 1) * pageSize;
-    //     const take = pageSize;
-
-    //     const whereConditions =
-    //         await this.filterService.buildWhereConditions(filterDto);
-
-    //     const [data, total] = await this.prismaService.$transaction([
-    //         this.prismaService.product.findMany({
-    //             where: whereConditions,
-    //             skip,
-    //             take,
-    //             orderBy: {
-    //                 [sortBy]: sortOrder,
-    //             },
-    //         }),
-    //         this.prismaService.product.count({
-    //             where: whereConditions,
-    //         }),
-    //     ]);
-
-    //     const totalPages = Math.ceil(total / pageSize);
-
-    //     if (page > totalPages) {
-    //         throw new BadRequestException('Page number exceeds total pages.');
-    //     }
-
-    //     return { data, total, totalPages };
-    // }
 
     async getAllProducts(
         page: number,
