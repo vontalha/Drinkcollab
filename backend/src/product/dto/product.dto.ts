@@ -13,11 +13,15 @@ export class AddProductDto {
 
     @IsNotEmpty()
     @IsString()
+    brand: string;
+
+    @IsNotEmpty()
+    @IsString()
     image: string;
 
     @IsOptional()
     @IsString()
-    description?: string;
+    description: string;
 
     @IsNotEmpty()
     @IsNumber()

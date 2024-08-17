@@ -41,39 +41,42 @@ export class UserService {
         return user;
     };
 
-    updateUser = async (id: string, payload: UpdateUserDto) => {
+    updateUser = async (
+        id: string,
+        payload: UpdateUserDto,
+    ): Promise<UserDto> => {
         if (!id) {
             throw new BadRequestException('User-Id must be provided');
         }
 
-        const existingUser = this.prismaService.user.findUnique({
+        const existingUser = await this.prismaService.user.findUnique({
             where: { id },
         });
 
-        if (existingUser) {
+        if (!existingUser) {
             throw new NotFoundException('User not found!');
         }
 
-        this.prismaService.user.update({
+        return await this.prismaService.user.update({
             where: { id },
             data: { ...payload },
         });
     };
 
-    deleteUser = async (id: string) => {
+    deleteUser = async (id: string): Promise<UserDto> => {
         if (!id) {
             throw new BadRequestException('User-Id must be provided');
         }
 
-        const existingUser = this.prismaService.user.findUnique({
+        const existingUser = await this.prismaService.user.findUnique({
             where: { id },
         });
 
-        if (existingUser) {
+        if (!existingUser) {
             throw new NotFoundException('User not found!');
         }
 
-        this.prismaService.user.delete({
+        return await this.prismaService.user.delete({
             where: { id },
         });
     };
