@@ -11,6 +11,8 @@ import {
     Delete,
     Put,
     Query,
+    UsePipes,
+    ValidationPipe,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/common/guards/role.guard';
@@ -69,6 +71,7 @@ export class AdminController {
     }
 
     @Get('products')
+    @UsePipes(new ValidationPipe({ transform: true }))
     async getAllProducts(
         @Query() paginationDto: PaginationProductDto,
         @Query() filterDto: FilterDto,
@@ -99,6 +102,7 @@ export class AdminController {
     }
 
     @Get('products/drinks')
+    @UsePipes(new ValidationPipe({ transform: true }))
     async getDrinks(
         @Query() paginationDto: PaginationProductDto,
         @Query() filterDto: FilterDto,
@@ -116,6 +120,7 @@ export class AdminController {
     }
 
     @Get('products/snacks')
+    @UsePipes(new ValidationPipe({ transform: true }))
     async getSnacks(
         @Query() paginationDto: PaginationProductDto,
         @Query() filterDto: FilterDto,
@@ -172,6 +177,7 @@ export class AdminController {
     }
 
     @Get('users')
+    @UsePipes(new ValidationPipe({ transform: true }))
     async getUsers(
         @Query() paginationDto: PaginationUserDto,
     ): Promise<{ data: UserDto[]; total: number; totalPages: number }> {
