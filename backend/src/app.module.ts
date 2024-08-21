@@ -13,6 +13,9 @@ import { ProductsModule } from './product/products.module';
 import { ProductsService } from './product/products.service';
 import { LikeService } from './product/like.service';
 import { DrinksModule } from './drinks/drinks.module';
+import { PaymentModule } from './payment/payment.module';
+import { OrderModule } from './order/order.module';
+import { CartModule } from './cart/cart.module';
 
 @Module({
     imports: [
@@ -24,6 +27,9 @@ import { DrinksModule } from './drinks/drinks.module';
         AccountRequestModule,
         ProductsModule,
         DrinksModule,
+        PaymentModule,
+        OrderModule,
+        CartModule,
     ],
     controllers: [AppController, MailController],
     providers: [AppService, MailService, ProductsService, LikeService],

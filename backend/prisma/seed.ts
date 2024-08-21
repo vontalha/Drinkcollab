@@ -23,6 +23,13 @@ async function main() {
             data: user,
         });
         console.log({ createdUser });
+
+        const createdShoppingCart = await prisma.shoppingCart.create({
+            data: {
+                userId: createdUser.id,
+            },
+        });
+        console.log({ createdShoppingCart });
     }
 
     for (const product of products) {
@@ -31,6 +38,12 @@ async function main() {
         });
         console.log({ createdProduct });
     }
+    // async function deleteAllUsers() {
+    //     const deletedUsers = await prisma.product.deleteMany();
+    //     console.log(`Deleted ${deletedUsers.count} users`);
+    // }
+
+    // await deleteAllUsers();
 }
 
 main()

@@ -14,36 +14,43 @@ datasource db {
 }
 
 model User {
-    id          String   @id @default(cuid())
-    firstName   String?
-    lastName    String?
-    email       String?  @unique
-    password    String
-    image       String?
-    likedDrinks Like[]
-    role        UserRole @default(USER)
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime? @updatedAt
+    id            String       @id @default(cuid())
+    firstName     String?
+    lastName      String?
+    email         String?      @unique
+    password      String
+    image         String?
+    likedDrinks   Like[]
+    role          UserRole     @default(USER)
+    createdAt     DateTime     @default(now())
+    updatedAt     DateTime?    @updatedAt
+    creditBalance Decimal      @default(0) @db.Decimal(19, 4)
+    invoices      Invoice[]
+    payments      Payment[]
+    orders        Order[]
+    shoppingCart  ShoppingCart?
 
     @@map("users")
 }
 
 model Product {
-    id          String      @id @default(cuid())
-    name        String?
-    image       String?
-    brand       String?
-    description String?
-    price       Float
-    size        Float?
-    stock       Int         @default(0)
-    sales       Int         @default(0)
-    likedBy     Like[]
-    createdAt   DateTime    @default(now())
-    updatedAt   DateTime    @updatedAt
-    categoryId  String?
-    category    Category?   @relation(fields: [categoryId], references: [id])
-    type        ProductType
+    id           String             @id @default(cuid())
+    name         String?
+    image        String?
+    brand        String?
+    description  String?
+    price        Decimal            @db.Decimal(19, 4)
+    size         Float?
+    stock        Int                @default(0)
+    sales        Int                @default(0)
+    likedBy      Like[]
+    createdAt    DateTime           @default(now())
+    updatedAt    DateTime           @updatedAt
+    categoryId   String?
+    category     Category?          @relation(fields: [categoryId], references: [id])
+    type         ProductType
+    orders       OrderItem[]
+    shoppingCart ShoppingCartItem[]
 }
 
 model Category {
@@ -59,9 +66,9 @@ model Category {
 
 model Like {
     id        String   @id @default(cuid())
-    user      User     @relation(fields: [userId], references: [id])
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId    String
-    product   Product  @relation(fields: [productId], references: [id])
+    product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
     productId String
     createdAt DateTime @default(now())
 
@@ -77,6 +84,96 @@ model RequestToken {
     @@unique([email, token])
 }
 
+model ShoppingCart {
+    id        String             @id @default(cuid())
+    userId    String             @unique
+    user      User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+    createdAt DateTime           @default(now())
+    updatedAt DateTime           @default(now()) @updatedAt
+    items     ShoppingCartItem[]
+    total     Decimal            @default(0) @db.Decimal(19, 4)
+}
+
+model ShoppingCartItem {
+    id             String       @id @default(cuid())
+    shoppingCart   ShoppingCart @relation(fields: [shoppingCartId], references: [id], onDelete: Cascade)
+    shoppingCartId String
+    product        Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+    productId      String
+    quantity       Int          @default(1)
+    createdAt      DateTime     @default(now())
+    updatedAt      DateTime     @default(now()) @updatedAt
+
+    @@unique([shoppingCartId, productId])
+}
+
+model Order {
+    id         String      @id @default(cuid())
+    user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId     String
+    quantity   Int
+    createdAt  DateTime    @default(now())
+    updatedAt  DateTime?   @updatedAt
+    payment    Payment?
+    paymentId  String?
+    orderItems OrderItem[]
+    total      Decimal?    @db.Decimal(19, 4)
+    invoice    Invoice?    @relation(fields: [invoiceId], references: [id])
+    invoiceId  String?
+    status     OrderStatus @default(PENDING)
+
+    @@map("orders")
+}
+
+model OrderItem {
+    id        String   @id @default(cuid())
+    order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+    orderId   String
+    product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+    productId String
+    quantity  Int
+    price     Decimal
+    createdAt DateTime @default(now())
+
+    @@map("order_items")
+}
+
+model Payment {
+    id            String        @id @default(cuid())
+    amount        Decimal?      @db.Decimal(19, 4)
+    status        PaymentStatus @default(PENDING)
+    method        PaymentMethod
+    user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId        String
+    createdAt     DateTime      @default(now())
+    updatedAt     DateTime?     @updatedAt
+    invoiceId     String?       @unique
+    invoice       Invoice?      @relation(fields: [invoiceId], references: [id])
+    paypalOrderId String?       @unique
+    order         Order?        @relation(fields: [orderId], references: [id])
+    orderId       String?       @unique
+
+    @@map("payments")
+}
+
+model Invoice {
+    id          String    @id @default(cuid())
+    user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId      String
+    totalAmount Decimal   @db.Decimal(19, 4)
+    pdfLink     String
+    paid        Boolean   @default(false)
+    dueDate     DateTime
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime? @updatedAt
+
+    payment   Payment?
+    paymentId String?
+    orders    Order[]
+
+    @@map("invoices")
+}
+
 enum UserRole {
     ADMIN
     USER
@@ -85,4 +182,21 @@ enum UserRole {
 enum ProductType {
     DRINK
     SNACK
+}
+
+enum PaymentStatus {
+    PENDING
+    COMPLETED
+    FAILED
+}
+
+enum PaymentMethod {
+    PAYPAL
+    CREDIT
+}
+
+enum OrderStatus {
+    PENDING
+    COMPLETED
+    FAILED
 }

@@ -32,6 +32,7 @@ export class UserService {
                 createdAt: true,
                 updatedAt: true,
                 likedDrinks: true,
+                shoppingCart: true,
             },
         });
 
@@ -112,6 +113,7 @@ export class UserService {
                     createdAt: true,
                     updatedAt: true,
                     likedDrinks: true,
+                    shoppingCart: true,
                 },
             }),
             this.prismaService.user.count(),
