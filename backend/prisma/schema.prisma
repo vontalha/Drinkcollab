@@ -117,7 +117,7 @@ model Order {
     payment    Payment?
     paymentId  String?
     orderItems OrderItem[]
-    total      Decimal?    @db.Decimal(19, 4)
+    total      Decimal?    @default(0) @db.Decimal(19, 4)
     invoice    Invoice?    @relation(fields: [invoiceId], references: [id])
     invoiceId  String?
     status     OrderStatus @default(PENDING)
@@ -131,8 +131,8 @@ model OrderItem {
     orderId   String
     product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
     productId String
-    quantity  Int
-    price     Decimal
+    quantity  Int      @default(1)
+    price     Decimal  @db.Decimal(19, 4)
     createdAt DateTime @default(now())
 
     @@map("order_items")
@@ -198,5 +198,5 @@ enum PaymentMethod {
 enum OrderStatus {
     PENDING
     COMPLETED
-    FAILED
+    CANCELLED
 }

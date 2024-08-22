@@ -8,5 +8,6 @@ import { HttpModule } from '@nestjs/axios';
     imports: [PrismaModule, HttpModule],
     providers: [PaypalService],
     controllers: [PaypalController],
+    exports: [PaypalService],
 })
 export class PaypalModule {}

@@ -49,7 +49,7 @@ export class PaypalService {
 
     createOrder = async (
         cart: CartWithItemsDto,
-    ): Promise<{ status: string; orderId: string }> => {
+    ): Promise<{ status: string; paypalOrderId: string }> => {
         const accessToken = await this.generateAccessToken();
         const url = `${this.baseUrl}/v2/checkout/orders`;
 
@@ -74,7 +74,7 @@ export class PaypalService {
             }),
         );
 
-        return { status: data.status, orderId: data.id };
+        return { status: data.status, paypalOrderId: data.id };
     };
 
     captureOrder = async (paypalOrderId: string): Promise<void> => {
@@ -119,7 +119,7 @@ export class PaypalService {
 
             await this.prisma.order.update({
                 where: { id: payment.orderId },
-                data: { status: 'FAILED' },
+                data: { status: 'CANCELLED' },
             });
             throw new Error('Payment not completed.');
         }
