@@ -14,17 +14,17 @@ datasource db {
 }
 
 model User {
-    id            String       @id @default(cuid())
+    id            String        @id @default(cuid())
     firstName     String?
     lastName      String?
-    email         String?      @unique
+    email         String?       @unique
     password      String
     image         String?
     likedDrinks   Like[]
-    role          UserRole     @default(USER)
-    createdAt     DateTime     @default(now())
-    updatedAt     DateTime?    @updatedAt
-    creditBalance Decimal      @default(0) @db.Decimal(19, 4)
+    role          UserRole      @default(USER)
+    createdAt     DateTime      @default(now())
+    updatedAt     DateTime?     @updatedAt
+    creditBalance Decimal       @default(0) @db.Decimal(19, 4)
     invoices      Invoice[]
     payments      Payment[]
     orders        Order[]
@@ -192,7 +192,7 @@ enum PaymentStatus {
 
 enum PaymentMethod {
     PAYPAL
-    CREDIT
+    INVOICE
 }
 
 enum OrderStatus {

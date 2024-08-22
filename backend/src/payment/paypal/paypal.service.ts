@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
+import { CartWithItemsDto } from 'src/cart/dto/cart.dto';
 
 @Injectable()
 export class PaypalService {
@@ -46,20 +47,81 @@ export class PaypalService {
         }
     };
 
-    // createOrder = async (cart: Cart): Promise<string> => {
-    //     const accessToken = await this.generateAccessToken();
-    //     const url = `${this.baseUrl}/v2/checkout/orders`;
-    //     const payload = {
-    //         intent: 'CAPTURE',
-    //         purchase_units: [
-    //             {
-    //                 amount: {
-    //                     value: '100.00',
-    //                     currency_code: 'EUR',
-    //                 },
-    //             },
-    //         ],
-    //     };
-    //     return;
-    // };
+    createOrder = async (
+        cart: CartWithItemsDto,
+    ): Promise<{ status: string; orderId: string }> => {
+        const accessToken = await this.generateAccessToken();
+        const url = `${this.baseUrl}/v2/checkout/orders`;
+
+        const payload = {
+            intent: 'CAPTURE',
+            purchase_units: [
+                {
+                    amount: {
+                        currency_code: 'EUR',
+                        value: cart.total,
+                    },
+                },
+            ],
+        };
+
+        const { data } = await firstValueFrom(
+            this.httpService.post(url, payload, {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                },
+            }),
+        );
+
+        return { status: data.status, orderId: data.id };
+    };
+
+    captureOrder = async (paypalOrderId: string): Promise<void> => {
+        const accessToken = await this.generateAccessToken();
+        const url = `${this.baseUrl}/v2/checkout/orders/${paypalOrderId}/capture`;
+
+        const { data } = await firstValueFrom(
+            this.httpService.post(
+                url,
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                },
+            ),
+        );
+        if (data.status === 'COMPLETED') {
+            await this.prisma.payment.update({
+                where: { paypalOrderId },
+                data: { status: 'COMPLETED' },
+            });
+
+            const payment = await this.prisma.payment.findUnique({
+                where: { paypalOrderId },
+            });
+
+            await this.prisma.order.update({
+                where: { id: payment.orderId },
+                data: { status: 'COMPLETED' },
+            });
+        } else {
+            await this.prisma.payment.update({
+                where: { paypalOrderId },
+                data: { status: 'FAILED' },
+            });
+
+            const payment = await this.prisma.payment.findUnique({
+                where: { paypalOrderId },
+            });
+
+            await this.prisma.order.update({
+                where: { id: payment.orderId },
+                data: { status: 'FAILED' },
+            });
+            throw new Error('Payment not completed.');
+        }
+    };
 }
