@@ -10,6 +10,7 @@ import { BadRequestException } from '@nestjs/common';
 import { PaymentStatus } from '@prisma/client';
 import { Prisma } from '@prisma/client';
 import { Order } from '@prisma/client';
+import { CreateOrderDto } from './dto/create-order.dto';
 @Injectable()
 export class OrderService {
     constructor(
@@ -19,11 +20,10 @@ export class OrderService {
     ) {}
 
     processCartOrder = async (
-        cartId: string,
-        userId: string,
-        paymentMethod: PaymentMethod,
+        createOrderDto: CreateOrderDto,
     ): Promise<{ orderId: string; paypalOrderId?: string }> => {
         return await this.prismaService.$transaction(async (prisma) => {
+            const { cartId, userId, paymentMethod } = createOrderDto;
             const cart = await this.cartService.getCartbyCartId(cartId);
 
             if (!cart || cart.items.length === 0) {

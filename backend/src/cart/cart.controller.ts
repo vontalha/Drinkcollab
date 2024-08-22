@@ -21,7 +21,10 @@ export class CartController {
     constructor(private cartService: CartService) {}
 
     @Get(':userId')
-    async getCart(@Param('userId') userId: string, @Res() res: Response) {
+    async getCart(
+        @Param('userId') userId: string,
+        @Res() res: Response,
+    ): Promise<Response> {
         const cart = await this.cartService.getCartByUserId(userId);
 
         res.cookie('cartId', cart.id, {
@@ -36,7 +39,7 @@ export class CartController {
         @Param('userId') userId: string,
         @Body() body: AddCartItemDto,
         @Res() res: Response,
-    ) {
+    ): Promise<Response> {
         const cart = await this.cartService.addCartItem(body, userId);
         return res.json(cart);
     }
@@ -56,7 +59,7 @@ export class CartController {
         @Param('userId') userId: string,
         @Body() body: UpdateCartItemDto,
         @Res() res: Response,
-    ) {
+    ): Promise<Response> {
         const cart = await this.cartService.updateItemQuantity(body, userId);
         return res.json(cart);
     }
