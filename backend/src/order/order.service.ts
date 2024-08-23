@@ -24,7 +24,7 @@ export class OrderService {
     ): Promise<{ orderId: string; paypalOrderId?: string }> => {
         return await this.prismaService.$transaction(async (prisma) => {
             const { cartId, userId, paymentMethod } = createOrderDto;
-            console.log(cartId, userId, paymentMethod);
+            console.log('processCartorder:', cartId, userId, paymentMethod);
             const cart = await this.cartService.getCartbyCartId(cartId);
 
             if (!cart || cart.items.length === 0) {
@@ -124,6 +124,16 @@ export class OrderService {
         await prisma.order.update({
             where: { id: order.id },
             data: { paymentId: payment.id },
+        });
+
+        await prisma.shoppingCart.update({
+            where: { id: cart.id },
+            data: {
+                items: {
+                    deleteMany: {},
+                },
+                total: 0,
+            },
         });
 
         return paypalOrder.paypalOrderId;
