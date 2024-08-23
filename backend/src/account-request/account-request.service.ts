@@ -76,6 +76,7 @@ export class AccountRequestService {
         const tokenIds = await this.prismaService.requestToken.findMany({
             select: {
                 id: true,
+                email: true,
             },
         });
         return tokenIds.map((token) => token.id);
