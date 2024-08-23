@@ -1,37 +1,3 @@
-.mat-toolbar.mat-primary {
-  background: #483D8B;
-  color: #fff;
-  display: flex
-}
-
-#container {
-  display: flex;
-  flex-direction: column;
-  flex-flow: column;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
-
-  width: 100%;
-}
-
-.flex-grow {
-  flex-grow: 1;
-}
-.project{
-  margin-right: 50px;
-}
-
-.links{
-  margin-left: 20px;
-}
-
-
-
-main {
-  flex: 1;
-  min-height: calc(100vh - 50px - 64px);
-}
-
 footer {
   background-color: #483D8B;
   text-align:center;
@@ -39,3 +5,4 @@ footer {
   width:100%;
   height:50px;
 }
+

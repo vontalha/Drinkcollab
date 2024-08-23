@@ -2,14 +2,16 @@
   display: flex;
   justify-content: center;
   margin: 100px 0px;
-
 }
 
 mat-form-field {
   width: 100%;
   min-width: 250px;
 }
-
+mat-card{
+  border: 1px solid #303030;
+  border-radius: 10px;
+}
 mat-card-header{
   justify-content: center;
   margin-bottom: 10px;

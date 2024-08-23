@@ -39,7 +39,7 @@ export class RequestAccountComponent {
     if (this.form.valid) {
       this.auth.requestAccount(this.form.get('email')!.value!.toString());
       // @ts-ignore
-      // axios.post('https://localhost:3000/account-request',{email: email},{ withCredentials: true }).then((response)=>{
+      // axios.post('http://localhost:3000/account-request',{email: email},{ withCredentials: true }).then((response)=>{
       //   console.log(response.status);
       // });
     }

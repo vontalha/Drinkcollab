@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit, ViewChild} from '@angular/core';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { map } from 'rxjs/operators';
 import {AsyncPipe, NgFor} from '@angular/common';
@@ -12,6 +12,7 @@ import {MatOption, MatSelect} from "@angular/material/select";
 import {FormsModule} from "@angular/forms";
 import {ShopItemComponent} from "../shop-item/shop-item.component";
 import {MatInputModule} from "@angular/material/input";
+import {MatPaginator} from "@angular/material/paginator";
 
 interface Filter {
   value: string;
@@ -23,28 +24,30 @@ interface Filter {
   templateUrl: './storepage.component.html',
   styleUrl: './storepage.component.css',
   standalone: true,
-  imports: [
-    AsyncPipe,
-    MatGridListModule,
-    MatMenuModule,
-    MatIconModule,
-    MatButtonModule,
-    MatCardModule,
-    MatFormField,
-    MatSelect,
-    MatOption,
-    FormsModule,
-    MatLabel,
-    ShopItemComponent,
-    MatFormFieldModule,
-    MatInputModule,
-    NgFor
-  ]
+    imports: [
+        AsyncPipe,
+        MatGridListModule,
+        MatMenuModule,
+        MatIconModule,
+        MatButtonModule,
+        MatCardModule,
+        MatFormField,
+        MatSelect,
+        MatOption,
+        FormsModule,
+        MatLabel,
+        ShopItemComponent,
+        MatFormFieldModule,
+        MatInputModule,
+        NgFor,
+        MatPaginator
+    ]
 })
 export class StorepageComponent implements OnInit{
 
-  ngOnInit() {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  ngOnInit() {
   }
 
   filters: Filter[] = [
@@ -62,4 +65,13 @@ export class StorepageComponent implements OnInit{
   filter: string | undefined;
 
   constructor() { }
+
+  // applyFilter(event: Event) {
+  //   const filterValue = (event.target as HTMLInputElement).value;
+  //   this.dataSource.filter = filterValue.trim().toLowerCase();
+  //
+  //   if (this.dataSource.paginator) {
+  //     this.dataSource.paginator.firstPage();
+  //   }
+  // }
 }

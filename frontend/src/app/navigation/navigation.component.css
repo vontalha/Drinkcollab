@@ -1,16 +1,38 @@
-.mat-toolbar.mat-primary {
-  background: #483D8B;
-  color: #fff;
-  display: flex
+#container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
-
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+.example-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+mat-toolbar{
+  background: #483D8B;
+}
+.example-sidenav {
+  width: auto;
+}
+.mat-sidenav-content {
+  padding: 16px;
+}
 .flex-grow {
   flex-grow: 1;
 }
-.project{
-  margin-right: 50px;
+.spacer {
+  flex: 1 1 auto;
 }
-
-.links{
-  margin-left: 20px;
+.hide-menu{
+  width: 48px;
+  height: 48px;
+}
+main {
+  flex: 1;
+  min-height: calc(100vh - 100px - 64px);
 }

@@ -1,0 +1,44 @@
+<div *ngIf="(isAuthorized$ | async)">
+
+  <div *ngIf="dataSource.data.length === 0" class="no-data">
+    Keine neuen User zum Freigeben verfügbar
+  </div>
+
+  <div *ngIf="dataSource.data.length > 0">
+    <mat-form-field appearance="outline" class="search-input">
+      <mat-label>Suche</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Suchbegriff eingeben">
+    </mat-form-field>
+
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+
+      <!-- Value Column -->
+      <ng-container matColumnDef="value">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Wert </th>
+        <td mat-cell *matCellDef="let element"> {{element.value}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+
+</div>
+
+<div *ngIf="!(isAuthorized$ | async)" class="unauthorized">
+  <p>Sie sind nicht berechtigt, diese Daten anzuzeigen.</p>
+</div>

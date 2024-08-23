@@ -32,3 +32,6 @@
   text-align: center;
   flex-wrap: nowrap;
 }
+mat-paginator {
+  margin-top: 20px;
+}

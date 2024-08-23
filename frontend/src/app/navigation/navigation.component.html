@@ -1,6 +1,83 @@
-<mat-toolbar color="primary">
-  <span class="project" [style.cursor]="'pointer'" routerLink="home"> Drinkcollab </span>
-  <span class="flex-grow"></span>
-  <button mat-button routerLink="request-account">Request Account</button>
-  <button mat-button routerLink="login">Login</button>
-</mat-toolbar>
+<header>
+  <mat-toolbar>
+    <!-- Linkes Icon zum Öffnen der linken Sidenav -->
+    <button *ngIf="(isAuthenticated$ | async)" mat-icon-button (click)="leftDrawer.toggle()">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <div *ngIf="!(isAuthenticated$ | async)" class="hide-menu">
+    </div>
+
+    <span class="toolbar-title">Drinkcollab</span>
+
+    <!-- Spacer damit Buttons nach rechts rutschen-->
+    <span class="spacer"></span>
+    <!-- Rechtes Icon für den Warenkorb -->
+
+    <button *ngIf="!(isAuthenticated$ | async)"mat-button routerLink="request-account">Request Account</button>
+    <button *ngIf="!(isAuthenticated$ | async)" mat-button routerLink="login">Login</button>
+    <button *ngIf="(isAuthenticated$ | async)" mat-icon-button  (click)="rightDrawer.toggle()" aria-label="Warenkorb anzeigen">
+      <mat-icon>shopping_cart</mat-icon>
+    </button>
+    <button *ngIf="(isAuthenticated$ | async)" mat-button (click)="logout(); leftDrawer.toggle(); rightDrawer.toggle()">Logout</button>
+  </mat-toolbar>
+</header>
+
+<!-- Main Content with Sidenavs -->
+<mat-sidenav-container class="example-container">
+  <!-- Linke Sidenav -->
+  <mat-sidenav #leftDrawer mode="side" class="example-sidenav">
+    <mat-nav-list>
+      <mat-list-item>
+        <span class="project"> Shop </span>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon></mat-icon>
+        <span class="project" [style.cursor]="'pointer'" routerLink="home"> Alle Produkte </span>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon></mat-icon>
+        <span class="project" [style.cursor]="'pointer'" routerLink="home"> Getränke </span>
+      </mat-list-item>
+      <mat-list-item>
+        <mat-icon></mat-icon>
+        <span class="project" [style.cursor]="'pointer'" routerLink="home"> Snaks </span>
+      </mat-list-item>
+      <div *ngIf="(isAuthorized$ | async)">
+        <mat-list-item>
+          <span> Admin </span>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon></mat-icon>
+          <span class="project" [style.cursor]="'pointer'" routerLink="home"> Produktverwaltung </span>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon></mat-icon>
+          <span class="project" [style.cursor]="'pointer'" routerLink="admin"> Nutzerverwaltung </span>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon></mat-icon>
+          <span class="project" [style.cursor]="'pointer'" routerLink="new-user"> Account Requests </span>
+        </mat-list-item>
+        <mat-list-item>
+          <mat-icon></mat-icon>
+          <span class="project" [style.cursor]="'pointer'" routerLink="home"> Abrechnungen </span>
+        </mat-list-item>
+      </div>
+
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <!-- Rechte Sidenav für den Warenkorb -->
+  <mat-sidenav #rightDrawer mode="side" position="end" class="example-sidenav">
+    <!-- Inhalt des Warenkorbs -->
+    <h3>Warenkorb</h3>
+    <p>Ihr Warenkorb ist leer.</p>
+  </mat-sidenav>
+
+  <!-- Hauptinhalt -->
+  <mat-sidenav-content>
+    <main class="flex-grow">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

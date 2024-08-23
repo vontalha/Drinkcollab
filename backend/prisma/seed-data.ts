@@ -77,6 +77,56 @@ export const seedData = async () => {
             stock: 500,
             type: ProductType.DRINK,
         },
+        {
+            name: 'Product 6',
+            description: 'Description for product 5',
+            price: 60.0,
+            stock: 600,
+            type: ProductType.DRINK,
+        },
+        {
+            name: 'Product 7',
+            description: 'Description for product 5',
+            price: 70.0,
+            stock: 700,
+            type: ProductType.DRINK,
+        },
+        {
+            name: 'Product 8',
+            description: 'Description for product 5',
+            price: 80.0,
+            stock: 800,
+            type: ProductType.SNACK,
+        },
+        {
+            name: 'Product 9',
+            description: 'Description for product 5',
+            price: 50.0,
+            stock: 500,
+            type: ProductType.SNACK,
+        },
+        {
+            name: 'Product 10',
+            description: 'Description for product 5',
+            price: 100.0,
+            stock: 1000,
+            type: ProductType.DRINK,
+        },
+        {
+            name: 'Product 11',
+            description: 'Description for product 5',
+            price: 50.0,
+            stock: 500,
+            type: ProductType.DRINK,
+        },
+        {
+            name: 'Product 12',
+            description: 'Description for product 5',
+            price: 50.0,
+            stock: 500,
+            type: ProductType.DRINK,
+        },
+
     ];
 
     return { users, products };
