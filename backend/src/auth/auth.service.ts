@@ -69,10 +69,17 @@ export class AuthService {
             },
         });
 
+        const shoppingCart = await this.prismaService.shoppingCart.create({
+            data: {
+                userId: newUser.id,
+            },
+        });
+
         const payload = {
             sub: newUser.id,
             email: newUser.email,
             role: newUser.role,
+            shoppingCartId: shoppingCart.id,
         };
 
         const access_token = await this.jwtService.signAsync(payload);
