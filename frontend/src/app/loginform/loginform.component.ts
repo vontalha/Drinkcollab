@@ -39,7 +39,7 @@ export class LoginformComponent {
     ) {
   }
   form = this.fB.group({
-    email: ['admin@email.com', [Validators.required, Validators.email]],
+    email: ['admin@example.com', [Validators.required, Validators.email]],
     password: ['ExamplePassword', Validators.required]
   });
 
@@ -48,7 +48,7 @@ export class LoginformComponent {
         // @ts-ignore
         let email = this.form.get('email')!.value.toString();
         // @ts-ignore
-        //{"email": "admin@email.com" , "password": "ExamplePassword"}
+        //{"email": "admin@example.com" , "password": "ExamplePassword"}
         let password  = this.form.get('password')!.value.toString();
 
         let success = await this.auth.login(email, password)

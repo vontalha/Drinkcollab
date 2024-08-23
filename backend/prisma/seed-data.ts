@@ -5,6 +5,13 @@ export const seedData = async () => {
     const hashedPassword = await bcrypt.hash('ExamplePassword', 10);
     const users = [
         {
+            firstName: 'Admin',
+            lastName: 'User',
+            email: 'admin@example.com',
+            password: hashedPassword,
+            role: UserRole.ADMIN,
+        },
+        {
             firstName: 'John',
             lastName: 'Doe',
             email: 'john.doe@example.com',
