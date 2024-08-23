@@ -16,6 +16,7 @@ import { DrinksModule } from './drinks/drinks.module';
 import { PaymentModule } from './payment/payment.module';
 import { OrderModule } from './order/order.module';
 import { CartModule } from './cart/cart.module';
+import { PaypalModule } from './payment/paypal/paypal.module';
 
 @Module({
     imports: [
@@ -30,6 +31,7 @@ import { CartModule } from './cart/cart.module';
         PaymentModule,
         OrderModule,
         CartModule,
+        PaypalModule,
     ],
     controllers: [AppController, MailController],
     providers: [AppService, MailService, ProductsService, LikeService],

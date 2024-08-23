@@ -1,3 +1,5 @@
+import { config } from 'dotenv';
+config();
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { HttpService } from '@nestjs/axios';
@@ -8,7 +10,7 @@ import { CartWithItemsDto } from 'src/cart/dto/cart.dto';
 export class PaypalService {
     private readonly clientId: string = process.env.PAYPAL_CLIENT_ID;
     private readonly clientSecret: string = process.env.PAYPAL_CLIENT_SECRET;
-    private readonly baseUrl: string = process.env.PAYPAL_API_BASE_URL;
+    private readonly baseUrl: string = process.env.PAYPAL_BASE_URL;
 
     constructor(
         private readonly prisma: PrismaService,
@@ -24,6 +26,7 @@ export class PaypalService {
             const auth = Buffer.from(
                 `${this.clientId}:${this.clientSecret}`,
             ).toString('base64');
+            console.log('KeyauthKEY:', auth);
 
             const { data } = await firstValueFrom(
                 // body must be url encoded
@@ -52,6 +55,9 @@ export class PaypalService {
     ): Promise<{ status: string; paypalOrderId: string }> => {
         const accessToken = await this.generateAccessToken();
         const url = `${this.baseUrl}/v2/checkout/orders`;
+        console.log('createOrder:', cart);
+        console.log('accessToken:', accessToken);
+        console.log('url:', url);
 
         const payload = {
             intent: 'CAPTURE',

@@ -24,6 +24,7 @@ export class OrderService {
     ): Promise<{ orderId: string; paypalOrderId?: string }> => {
         return await this.prismaService.$transaction(async (prisma) => {
             const { cartId, userId, paymentMethod } = createOrderDto;
+            console.log(cartId, userId, paymentMethod);
             const cart = await this.cartService.getCartbyCartId(cartId);
 
             if (!cart || cart.items.length === 0) {
