@@ -38,14 +38,14 @@ async function main() {
         });
         console.log({ createdProduct });
     }
-    async function deleteAll() {
-        const deletedUsers = await prisma.product.deleteMany();
-        console.log(`Deleted ${deletedUsers.count} users`);
-        const deletedProducts = await prisma.product.deleteMany();
-        console.log(`Deleted ${deletedProducts.count} products`);
-    }
+    // async function deleteAll() {
+    //     const deletedUsers = await prisma.product.deleteMany();
+    //     console.log(`Deleted ${deletedUsers.count} users`);
+    //     const deletedProducts = await prisma.product.deleteMany();
+    //     console.log(`Deleted ${deletedProducts.count} products`);
+    // }
 
-    await deleteAll();
+    // await deleteAll();
 }
 
 main()

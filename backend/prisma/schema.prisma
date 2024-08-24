@@ -166,7 +166,7 @@ model Invoice {
     dueDate     DateTime
     createdAt   DateTime  @default(now())
     updatedAt   DateTime? @updatedAt
-
+    status      InvoiceStatus @default(PENDING)
     payment   Payment?
     paymentId String?
     orders    Order[]
@@ -199,4 +199,10 @@ enum OrderStatus {
     PENDING
     COMPLETED
     CANCELLED
+}
+
+enum InvoiceStatus {
+    PENDING
+    PAID
+    OVERDUE
 }

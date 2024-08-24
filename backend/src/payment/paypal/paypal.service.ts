@@ -5,7 +5,10 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { CartWithItemsDto } from 'src/cart/dto/cart.dto';
-
+import { Prisma } from '@prisma/client';
+import { Order } from '@prisma/client';
+import { BadRequestException } from '@nestjs/common';
+import { OrderStatus, PaymentMethod, PaymentStatus } from '@prisma/client';
 @Injectable()
 export class PaypalService {
     private readonly clientId: string = process.env.PAYPAL_CLIENT_ID;
@@ -129,5 +132,50 @@ export class PaypalService {
             });
             throw new Error('Payment not completed.');
         }
+    };
+
+    handlePayPalOrder = async (
+        prisma: Prisma.TransactionClient,
+        userId: string,
+        order: Order,
+        cart: CartWithItemsDto,
+    ): Promise<string> => {
+        const paypalOrder = await this.createOrder(cart);
+
+        if (paypalOrder.status === 'CANCELLED') {
+            await prisma.order.update({
+                where: { id: order.id },
+                data: { status: OrderStatus.CANCELLED },
+            });
+            throw new BadRequestException('Paypal order cancelled');
+        }
+
+        const payment = await prisma.payment.create({
+            data: {
+                userId: userId,
+                orderId: order.id,
+                amount: order.total,
+                method: PaymentMethod.PAYPAL,
+                status: PaymentStatus.PENDING,
+                paypalOrderId: paypalOrder.paypalOrderId,
+            },
+        });
+
+        await prisma.order.update({
+            where: { id: order.id },
+            data: { paymentId: payment.id },
+        });
+
+        await prisma.shoppingCart.update({
+            where: { id: cart.id },
+            data: {
+                items: {
+                    deleteMany: {},
+                },
+                total: 0,
+            },
+        });
+
+        return paypalOrder.paypalOrderId;
     };
 }

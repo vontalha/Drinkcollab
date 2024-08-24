@@ -4,6 +4,7 @@ import { OrderService } from './order.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { PaypalService } from 'src/payment/paypal/paypal.service';
+import { PaymentMethod } from '@prisma/client';
 @Controller('order')
 export class OrderController {
     constructor(
@@ -17,7 +18,11 @@ export class OrderController {
     async createOrder(
         @Body() createOrderDto: CreateOrderDto,
     ): Promise<{ orderId: string; paypalOrderId?: string }> {
-        return this.orderService.processCartOrder(createOrderDto);
+        const { paymentMethod } = createOrderDto;
+
+        if (paymentMethod === PaymentMethod.INVOICE) {
+            this.orderService.processCartOrder(createOrderDto);
+        } else return this.orderService.processCartOrder(createOrderDto);
     }
 
     @Post(':paypalOrderId/capture')
