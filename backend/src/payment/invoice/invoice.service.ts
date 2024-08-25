@@ -3,9 +3,11 @@ import { InvoiceStatus } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 import { Prisma } from '@prisma/client';
 import { OrderStatus } from '@prisma/client';
+import { PrismaService } from '../../prisma/prisma.service';
+import { DueInvoicesDto } from './dto/due-invoices.dto';
 @Injectable()
 export class InvoiceService {
-    constructor() {}
+    constructor(private readonly prismaService: PrismaService) {}
 
     createInvoice = async (
         userId: string,
@@ -61,6 +63,35 @@ export class InvoiceService {
             data: {
                 invoiceId: invoiceId,
                 status: OrderStatus.COMPLETED,
+            },
+        });
+    };
+
+    getDueInvoices = async (): Promise<DueInvoicesDto[]> => {
+        return await this.prismaService.invoice.findMany({
+            where: {
+                dueDate: {
+                    lte: new Date(),
+                },
+                status: InvoiceStatus.PENDING,
+            },
+            select: {
+                id: true,
+                dueDate: true,
+                createdAt: true,
+                totalAmount: true,
+                orders: {
+                    select: {
+                        createdAt: true,
+                        orderItems: true,
+                    },
+                },
+                user: {
+                    select: {
+                        id: true,
+                        email: true,
+                    },
+                },
             },
         });
     };
