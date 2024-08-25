@@ -83,7 +83,17 @@ export class InvoiceService {
                 orders: {
                     select: {
                         createdAt: true,
-                        orderItems: true,
+                        orderItems: {
+                            select: {
+                                quantity: true,
+                                price: true,
+                                product: {
+                                    select: {
+                                        name: true,
+                                    },
+                                },
+                            },
+                        },
                     },
                 },
                 user: {

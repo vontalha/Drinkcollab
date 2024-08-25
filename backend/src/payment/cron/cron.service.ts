@@ -12,6 +12,10 @@ export class CronService {
     @Cron(CronExpression.EVERY_10_SECONDS)
     async checkInvoiceDueDates() {
         const dueInvoices = await this.invoiceService.getDueInvoices();
-        console.log(dueInvoices);
+        if (dueInvoices.length > 0) {
+            for (const invoice of dueInvoices) {
+                console.log(invoice);
+            }
+        }
     }
 }
