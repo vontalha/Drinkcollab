@@ -161,7 +161,7 @@ model Invoice {
     user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId      String
     totalAmount Decimal   @db.Decimal(19, 4)
-    pdfLink     String
+    pdfLink     String?
     paid        Boolean   @default(false)
     dueDate     DateTime
     createdAt   DateTime  @default(now())

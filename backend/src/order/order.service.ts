@@ -6,14 +6,16 @@ import { OrderStatus } from '@prisma/client';
 import { PaymentMethod } from '@prisma/client';
 import { CartItemDto } from 'src/cart/dto/cart.dto';
 import { PaypalService } from 'src/payment/paypal/paypal.service';
-
 import { CreateOrderDto } from './dto/create-order.dto';
+import { InvoiceService } from 'src/payment/invoice/invoice.service';
+import { Prisma } from '@prisma/client';
 @Injectable()
 export class OrderService {
     constructor(
         private readonly prismaService: PrismaService,
         private readonly cartService: CartService,
         private readonly paypalService: PaypalService,
+        private readonly invoiceService: InvoiceService,
     ) {}
 
     processCartOrder = async (
@@ -33,26 +35,33 @@ export class OrderService {
                     'Shopping cart is empty or not found.',
                 );
             }
+            //check if invoice exists other wise null
+            const invoiceId =
+                paymentMethod === PaymentMethod.INVOICE
+                    ? await this.invoiceService.handleInvoice(
+                          userId,
+                          cart.total,
+                          prisma,
+                      )
+                    : null;
+            //create order for both cases
+            const order = await this.createOrder(
+                prisma,
+                userId,
+                cart,
+                invoiceId,
+            );
 
-            const order = await prisma.order.create({
-                data: {
-                    userId: userId,
-                    total: cart.total,
-                    quantity: cart.items.reduce(
-                        (sum: number, item: CartItemDto) => sum + item.quantity,
-                        0,
-                    ),
-                    status: OrderStatus.PENDING,
-                    orderItems: {
-                        create: cart.items.map((item: CartItemDto) => ({
-                            productId: item.productId,
-                            quantity: item.quantity,
-                            price: item.product.price,
-                        })),
-                    },
-                },
-            });
+            //add order to invoice if invoice exists
+            invoiceId &&
+                (await this.invoiceService.addOrderToInvoice(
+                    invoiceId,
+                    order.id,
+                    cart.total,
+                    prisma,
+                ));
 
+            //create paypal order if payment method is paypal
             const paypalOrderId =
                 paymentMethod === PaymentMethod.PAYPAL
                     ? await this.paypalService.handlePayPalOrder(
@@ -66,7 +75,35 @@ export class OrderService {
             return {
                 orderId: order.id,
                 paypalOrderId,
+                invoiceId,
             };
         });
     };
+
+    private async createOrder(
+        prisma: Prisma.TransactionClient,
+        userId: string,
+        cart: any,
+        invoiceId: string | null,
+    ) {
+        return await prisma.order.create({
+            data: {
+                userId: userId,
+                total: cart.total,
+                quantity: cart.items.reduce(
+                    (sum: number, item: CartItemDto) => sum + item.quantity,
+                    0,
+                ),
+                status: OrderStatus.PENDING,
+                orderItems: {
+                    create: cart.items.map((item: CartItemDto) => ({
+                        productId: item.productId,
+                        quantity: item.quantity,
+                        price: item.product.price,
+                    })),
+                },
+                invoiceId,
+            },
+        });
+    }
 }
