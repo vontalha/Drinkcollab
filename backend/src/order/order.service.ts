@@ -38,11 +38,7 @@ export class OrderService {
             //check if invoice exists other wise null
             const invoiceId =
                 paymentMethod === PaymentMethod.INVOICE
-                    ? await this.invoiceService.handleInvoice(
-                          userId,
-                          cart.total,
-                          prisma,
-                      )
+                    ? await this.invoiceService.handleInvoice(userId, prisma)
                     : null;
             //create order for both cases
             const order = await this.createOrder(
