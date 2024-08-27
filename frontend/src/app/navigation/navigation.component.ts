@@ -13,6 +13,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {Observable} from "rxjs";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
 import {map} from "rxjs/operators";
+import {ShopingCartComponent} from "../shoping-cart/shoping-cart.component";
 
 @Component({
   selector: 'app-navigation',
@@ -33,6 +34,7 @@ import {map} from "rxjs/operators";
     MatMenu,
     MatMenuItem,
     MatMenuTrigger,
+    ShopingCartComponent,
   ]
 })
 export class NavigationComponent implements OnInit{

@@ -1,0 +1,27 @@
+<h1 mat-dialog-title>Produkt {{ data.id ? 'bearbeiten' : 'hinzufügen' }}</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Name</mat-label>
+    <input matInput [(ngModel)]="data.name">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Bild-URL</mat-label>
+    <input matInput [(ngModel)]="data.imageUrl">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Beschreibung</mat-label>
+    <textarea matInput [(ngModel)]="data.description"></textarea>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Preis</mat-label>
+    <input matInput type="number" [(ngModel)]="data.price">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Anzahl</mat-label>
+    <input matInput type="number" [(ngModel)]="data.stock">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Abbrechen</button>
+  <button mat-button [mat-dialog-close]="data">Speichern</button>
+</div>

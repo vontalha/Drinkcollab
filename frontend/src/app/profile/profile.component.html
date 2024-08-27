@@ -1,0 +1,62 @@
+<div class="profile">
+  <mat-card>
+    <mat-card-header>
+
+    </mat-card-header>
+    <mat-card-content>
+      <mat-icon>profile</mat-icon>
+      <mat-form-field> First Name</mat-form-field>
+      <mat-form-field>Last Name</mat-form-field>
+      <mat-form-field>Email</mat-form-field>
+      <button mat-button>Edit Profile</button>
+
+      <form [formGroup]="form">
+        <mat-form-field floatLabel="always">
+          <mat-label>Last Name</mat-label>
+          <input type="text" matInput formControlName="name">
+          <mat-error *ngIf="form.controls['name'].errors?.['minlength']">Last name must be at least 2 characters long</mat-error>
+          <mat-error *ngIf="form.controls['name'].errors?.['maxlength']">Last name must not be more than 255 characters long</mat-error>
+          <mat-error *ngIf="form.controls['name'].errors?.['pattern']">Last Name can only contain letters</mat-error>
+        </mat-form-field>
+        <p></p>
+        <mat-form-field floatLabel="always">
+          <mat-label>First Name</mat-label>
+          <input type="text" matInput formControlName="firstname">
+          <mat-error *ngIf="form.controls['firstname'].errors?.['minlength']">First name must be at least 2 characters long</mat-error>
+          <mat-error *ngIf="form.controls['firstname'].errors?.['maxlength']">First name must not be more than 255 characters long</mat-error>
+          <mat-error *ngIf="form.controls['name'].errors?.['pattern']">First name can only contain letters</mat-error>
+        </mat-form-field>
+        <p></p>
+        <mat-form-field floatLabel="always">
+          <mat-label>Email Address</mat-label>
+          <input type="text" matInput formControlName="email">
+          <mat-error *ngIf="form.get('email')?.invalid">Please enter a valid Email Address</mat-error>
+        </mat-form-field>
+        <p></p>
+        <hr class="trenner">
+        <p></p>
+        <mat-form-field floatLabel="always">
+          <mat-label>Password</mat-label>
+          <input type="password" matInput formControlName="password">
+          <mat-error *ngIf="form.controls['password'].errors">Password invalid!</mat-error>
+        </mat-form-field>
+
+        <p class="password-hint">
+          Password must be at least 8 characters long and contain at least one uppercase Letter, one special character and one number.
+        </p>
+        <mat-form-field floatLabel="always">
+          <mat-label>Confirm Password</mat-label>
+          <input type="password" matInput formControlName="password1">
+          <mat-error *ngIf="form.get('password')!=form.get('password')">Confirm Password doesnt match Password</mat-error>
+        </mat-form-field>
+
+        <p *ngIf="error" class="error">
+          {{ error }}
+        </p>
+        <div class="button">
+          <button type="submit" mat-button (click)="editProfile()">Edit Profile</button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

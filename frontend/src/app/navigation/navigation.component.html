@@ -16,9 +16,9 @@
     <button *ngIf="!(isAuthenticated$ | async)"mat-button routerLink="request-account">Request Account</button>
     <button *ngIf="!(isAuthenticated$ | async)" mat-button routerLink="login">Login</button>
     <button *ngIf="(isAuthenticated$ | async)" mat-icon-button  (click)="rightDrawer.toggle()" aria-label="Warenkorb anzeigen">
-      <mat-icon>shopping_cart</mat-icon>
+      <mat-icon>shopping_basket</mat-icon>
     </button>
-    <button *ngIf="(isAuthenticated$ | async)" mat-button (click)="logout(); leftDrawer.toggle(); rightDrawer.toggle()">Logout</button>
+    <button *ngIf="(isAuthenticated$ | async)" mat-button (click)="logout(); leftDrawer.close(); rightDrawer.close()">Logout</button>
   </mat-toolbar>
 </header>
 
@@ -28,7 +28,7 @@
   <mat-sidenav #leftDrawer mode="side" class="example-sidenav">
     <mat-nav-list>
       <mat-list-item>
-        <span class="project"> Shop </span>
+        <span><u> Shop: </u></span>
       </mat-list-item>
       <mat-list-item>
         <mat-icon></mat-icon>
@@ -36,19 +36,19 @@
       </mat-list-item>
       <mat-list-item>
         <mat-icon></mat-icon>
-        <span class="project" [style.cursor]="'pointer'" routerLink="home"> Getränke </span>
+        <span class="project" [style.cursor]="'pointer'" routerLink="drinks"> Getränke </span>
       </mat-list-item>
       <mat-list-item>
         <mat-icon></mat-icon>
-        <span class="project" [style.cursor]="'pointer'" routerLink="home"> Snaks </span>
+        <span class="project" [style.cursor]="'pointer'" routerLink="snacks"> Snacks </span>
       </mat-list-item>
       <div *ngIf="(isAuthorized$ | async)">
         <mat-list-item>
-          <span> Admin </span>
+          <span><u> Admin: </u></span>
         </mat-list-item>
         <mat-list-item>
           <mat-icon></mat-icon>
-          <span class="project" [style.cursor]="'pointer'" routerLink="home"> Produktverwaltung </span>
+          <span class="project" [style.cursor]="'pointer'" routerLink="produkt-verwaltung"> Produktverwaltung </span>
         </mat-list-item>
         <mat-list-item>
           <mat-icon></mat-icon>
@@ -62,6 +62,10 @@
           <mat-icon></mat-icon>
           <span class="project" [style.cursor]="'pointer'" routerLink="home"> Abrechnungen </span>
         </mat-list-item>
+
+        <mat-list-item>
+          <span><u> Profile: </u></span>
+        </mat-list-item>
       </div>
 
     </mat-nav-list>
@@ -69,9 +73,7 @@
 
   <!-- Rechte Sidenav für den Warenkorb -->
   <mat-sidenav #rightDrawer mode="side" position="end" class="example-sidenav">
-    <!-- Inhalt des Warenkorbs -->
-    <h3>Warenkorb</h3>
-    <p>Ihr Warenkorb ist leer.</p>
+    <app-shoping-card></app-shoping-card>
   </mat-sidenav>
 
   <!-- Hauptinhalt -->

@@ -1,0 +1,33 @@
+.product-list {
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+}
+
+.product-list mat-form-field {
+  width: 100%;
+}
+
+.paginator {
+  width: 100%;
+  margin-top: 20px;
+  border: 1px solid #303030;
+  border-radius: 10px;
+}
+.search{
+  border: 1px solid #303030;
+  border-radius: 10px;
+}
+
+.sortby{
+  display: flex;
+  justify-content: flex-end;
+  max-width: 200px;
+  margin-left: 10px;
+  border: 1px solid #303030;
+  border-radius: 10px;
+}
+mat-card{
+  border: 1px solid #303030;
+  border-radius: 10px;
+}
