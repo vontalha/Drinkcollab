@@ -8,28 +8,21 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Decimal } from '@prisma/client/runtime/library';
-
-export class DueInvoicesDto {
+export class ProductDto {
     @IsString()
-    id: string;
+    name: string;
+}
 
-    @IsDate()
-    dueDate: Date;
-
-    @IsDate()
-    createdAt: Date;
+export class OrderItemDto {
+    @IsNumber()
+    quantity: number;
 
     @IsDecimal()
-    totalAmount: Decimal;
-
-    @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => OrderDto)
-    orders: OrderDto[];
+    price: Decimal;
 
     @ValidateNested()
-    @Type(() => UserDto)
-    user: UserDto;
+    @Type(() => ProductDto)
+    product: ProductDto;
 }
 
 export class OrderDto {
@@ -50,22 +43,25 @@ export class UserDto {
     email: string;
 }
 
-export class OrderItemDto {
+export class DueInvoiceDto {
     @IsString()
     id: string;
 
-    @IsString()
-    orderId: string;
-
-    @IsString()
-    productId: string;
-
-    @IsNumber()
-    quantity: number;
-
-    @ValidateNested()
-    price: Decimal;
+    @IsDate()
+    dueDate: Date;
 
     @IsDate()
     createdAt: Date;
+
+    @IsDecimal()
+    totalAmount: Decimal;
+
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => OrderDto)
+    orders: OrderDto[];
+
+    @ValidateNested()
+    @Type(() => UserDto)
+    user: UserDto;
 }

@@ -4,7 +4,8 @@ import { Decimal } from '@prisma/client/runtime/library';
 import { Prisma } from '@prisma/client';
 import { OrderStatus } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
-import { DueInvoicesDto } from './dto/due-invoices.dto';
+import { DueInvoiceDto } from './dto/due-invoices.dto';
+import { v4 as uuidv4 } from 'uuid';
 @Injectable()
 export class InvoiceService {
     constructor(private readonly prismaService: PrismaService) {}
@@ -67,7 +68,7 @@ export class InvoiceService {
         });
     };
 
-    getDueInvoices = async (): Promise<DueInvoicesDto[]> => {
+    getDueInvoices = async (): Promise<DueInvoiceDto[]> => {
         return await this.prismaService.invoice.findMany({
             where: {
                 dueDate: {
@@ -107,5 +108,22 @@ export class InvoiceService {
         });
     };
 
-    
+    createInvoiceToken = async (
+        invoiceId: string,
+        email: string,
+    ): Promise<string> => {
+        const token = uuidv4();
+        const expirationDate = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); //eine WOche
+        const invoiceToken = await this.prismaService.invoiceToken.create({
+            data: {
+                email,
+                token,
+                expires: expirationDate,
+                invoice: {
+                    connect: { id: invoiceId },
+                },
+            },
+        });
+        return invoiceToken.id;
+    };
 }
