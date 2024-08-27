@@ -74,6 +74,7 @@ export class InvoiceService {
                     lte: new Date(),
                 },
                 status: InvoiceStatus.PENDING,
+                mailSent: false,
             },
             select: {
                 id: true,
@@ -105,4 +106,6 @@ export class InvoiceService {
             },
         });
     };
+
+    
 }

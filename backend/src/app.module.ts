@@ -17,7 +17,7 @@ import { PaymentModule } from './payment/payment.module';
 import { OrderModule } from './order/order.module';
 import { CartModule } from './cart/cart.module';
 import { PaypalModule } from './payment/paypal/paypal.module';
-import { CronModule } from './cron/cron.module';
+import { CronModule } from './payment/cron/cron.module';
 import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({

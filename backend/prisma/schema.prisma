@@ -157,20 +157,33 @@ model Payment {
 }
 
 model Invoice {
-    id          String    @id @default(cuid())
-    user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId      String
-    totalAmount Decimal   @default(0) @db.Decimal(19, 4)
-    pdfLink     String?
-    dueDate     DateTime
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime? @updatedAt
-    status      InvoiceStatus @default(PENDING)
-    payment   Payment?
-    paymentId String?
-    orders    Order[]
+    id           String        @id @default(cuid())
+    user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId       String
+    totalAmount  Decimal       @default(0) @db.Decimal(19, 4)
+    pdfLink      String?
+    dueDate      DateTime
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime?     @updatedAt
+    status       InvoiceStatus @default(PENDING)
+    payment      Payment?
+    paymentId    String?
+    orders       Order[]
+    mailSent     Boolean       @default(false)
+    invoiceToken InvoiceToken?
 
     @@map("invoices")
+}
+
+model InvoiceToken {
+    id        String   @unique @default(cuid())
+    email     String
+    token     String   @unique
+    expires   DateTime
+    invoice   Invoice  @relation(fields: [invoiceId], references: [id])
+    invoiceId String   @unique
+
+    @@unique([email, token])
 }
 
 enum UserRole {
