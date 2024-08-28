@@ -114,8 +114,13 @@ export class PaypalService {
                 where: { paypalOrderId },
             });
 
-            await this.prisma.order.update({
-                where: { id: payment.orderId },
+            await this.prisma.order.updateMany({
+                where: {
+                    OR: [
+                        { id: payment.orderId },
+                        { invoiceId: payment.invoiceId },
+                    ],
+                },
                 data: { status: 'COMPLETED' },
             });
         } else {
@@ -128,8 +133,13 @@ export class PaypalService {
                 where: { paypalOrderId },
             });
 
-            await this.prisma.order.update({
-                where: { id: payment.orderId },
+            await this.prisma.order.updateMany({
+                where: {
+                    OR: [
+                        { id: payment.orderId },
+                        { invoiceId: payment.invoiceId },
+                    ],
+                },
                 data: { status: 'CANCELLED' },
             });
             throw new Error('Payment not completed.');
@@ -189,12 +199,10 @@ export class PaypalService {
         const paypalOrder = await this.createOrder(invoice.totalAmount);
 
         if (paypalOrder.status === 'CANCELLED') {
-            for (const order of invoice.orders) {
-                await this.prisma.order.update({
-                    where: { id: order.id },
-                    data: { status: OrderStatus.CANCELLED },
-                });
-            }
+            await this.prisma.order.updateMany({
+                where: { invoiceId: invoice.id },
+                data: { status: OrderStatus.CANCELLED },
+            });
             throw new BadRequestException('Paypal order cancelled');
         }
 
@@ -209,12 +217,10 @@ export class PaypalService {
             },
         });
 
-        for (const order of invoice.orders) {
-            await this.prisma.order.update({
-                where: { id: order.id },
-                data: { paymentId: payment.id },
-            });
-        }
+        await this.prisma.order.updateMany({
+            where: { invoiceId: invoice.id },
+            data: { paymentId: payment.id },
+        });
 
         return paypalOrder.paypalOrderId;
     };

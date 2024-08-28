@@ -21,7 +21,9 @@ export class OrderController {
     }
 
     @Post(':paypalOrderId/capture')
-    async captureOrder(@Param('paypalOrderId') paypalOrderId: string) {
+    async captureOrder(
+        @Param('paypalOrderId') paypalOrderId: string,
+    ): Promise<{ message: string }> {
         await this.paypalService.captureOrder(paypalOrderId);
         return {
             message: 'Payment captured successfully',
