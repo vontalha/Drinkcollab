@@ -6,6 +6,8 @@ import { OrderStatus } from '@prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { DueInvoiceDto } from './dto/due-invoices.dto';
 import { v4 as uuidv4 } from 'uuid';
+import { Invoice } from '@prisma/client';
+import { NotFoundException } from '@nestjs/common';
 @Injectable()
 export class InvoiceService {
     constructor(private readonly prismaService: PrismaService) {}
@@ -26,6 +28,27 @@ export class InvoiceService {
             },
         });
         return invoice.id;
+    };
+
+    getInvoiceById = async (invoiceId: string): Promise<Invoice> => {
+        const invoice = await this.prismaService.invoice.findUnique({
+            where: { id: invoiceId },
+        });
+
+        if (!invoice) {
+            throw new NotFoundException('Invoice not found');
+        }
+        return invoice;
+    };
+
+    getInvoiceByToken = async (token: string): Promise<Invoice> => {
+        const invoiceToken = await this.prismaService.invoiceToken.findUnique({
+            where: { token },
+        });
+        const invoice = await this.prismaService.invoice.findUnique({
+            where: { id: invoiceToken.invoiceId },
+        });
+        return invoice;
     };
 
     handleInvoice = async (
@@ -124,6 +147,6 @@ export class InvoiceService {
                 },
             },
         });
-        return invoiceToken.id;
+        return invoiceToken.token;
     };
 }

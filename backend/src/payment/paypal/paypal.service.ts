@@ -9,11 +9,14 @@ import { Prisma } from '@prisma/client';
 import { Order } from '@prisma/client';
 import { BadRequestException } from '@nestjs/common';
 import { OrderStatus, PaymentMethod, PaymentStatus } from '@prisma/client';
+import { Decimal } from '@prisma/client/runtime/library';
+import { InvoiceService } from '../invoice/invoice.service';
 @Injectable()
 export class PaypalService {
     private readonly clientId: string = process.env.PAYPAL_CLIENT_ID;
     private readonly clientSecret: string = process.env.PAYPAL_CLIENT_SECRET;
     private readonly baseUrl: string = process.env.PAYPAL_BASE_URL;
+    private readonly invoiceService: InvoiceService;
 
     constructor(
         private readonly prisma: PrismaService,
@@ -54,11 +57,10 @@ export class PaypalService {
     };
 
     createOrder = async (
-        cart: CartWithItemsDto,
+        total?: Decimal,
     ): Promise<{ status: string; paypalOrderId: string }> => {
         const accessToken = await this.generateAccessToken();
         const url = `${this.baseUrl}/v2/checkout/orders`;
-        console.log('createOrder:', cart);
         console.log('accessToken:', accessToken);
         console.log('url:', url);
 
@@ -68,7 +70,7 @@ export class PaypalService {
                 {
                     amount: {
                         currency_code: 'EUR',
-                        value: cart.total,
+                        value: total.toString(),
                     },
                 },
             ],
@@ -138,9 +140,14 @@ export class PaypalService {
         prisma: Prisma.TransactionClient,
         userId: string,
         order: Order,
-        cart: CartWithItemsDto,
+        cart?: CartWithItemsDto,
+        invoiceId?: string,
     ): Promise<string> => {
-        const paypalOrder = await this.createOrder(cart);
+        const total = invoiceId
+            ? (await this.invoiceService.getInvoiceById(invoiceId)).totalAmount
+            : cart?.total;
+
+        const paypalOrder = await this.createOrder(total);
 
         if (paypalOrder.status === 'CANCELLED') {
             await prisma.order.update({

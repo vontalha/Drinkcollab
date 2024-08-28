@@ -28,18 +28,18 @@ export class CronService {
     }
 
     sendInvoiceMail = async (dueInvoice: DueInvoiceDto) => {
-        const invoiceTokenId = await this.invoiceService.createInvoiceToken(
+        const invoiceToken = await this.invoiceService.createInvoiceToken(
             dueInvoice.id,
             dueInvoice.user.email,
         );
 
-        if (!invoiceTokenId) {
+        if (!invoiceToken) {
             throw new InternalServerErrorException(
                 'Failed to create invoice token',
             );
         }
 
-        const inviteLink = `Http://localhost:4200/payment/invoice/approved?token=${invoiceTokenId}`;
+        const inviteLink = `Http://localhost:4200/payment/invoice?token=${invoiceToken}`;
 
         const formatDate = (date: Date) => {
             return date.toLocaleDateString('de-DE', {
