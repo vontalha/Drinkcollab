@@ -129,11 +129,21 @@ export class InvoiceService {
                 },
             },
         });
-        await prisma.order.update({
+        const order = await prisma.order.update({
             where: { id: orderId },
             data: {
                 invoiceId: invoiceId,
                 status: OrderStatus.COMPLETED,
+            },
+        });
+
+        await prisma.shoppingCart.update({
+            where: { id: order.userId },
+            data: {
+                items: {
+                    deleteMany: {},
+                },
+                total: 0,
             },
         });
     };
