@@ -41,14 +41,61 @@ export class InvoiceService {
         return invoice;
     };
 
-    getInvoiceByToken = async (token: string): Promise<Invoice> => {
+    getInvoiceByToken = async (token: string): Promise<DueInvoiceDto> => {
         const invoiceToken = await this.prismaService.invoiceToken.findUnique({
             where: { token },
         });
+
+        if (!invoiceToken) {
+            throw new NotFoundException('Invoice not found');
+        }
+
+        return await this.getDueInvoice(invoiceToken.invoiceId);
+    };
+
+    getDueInvoice = async (invoiceId: string): Promise<DueInvoiceDto> => {
         const invoice = await this.prismaService.invoice.findUnique({
-            where: { id: invoiceToken.invoiceId },
+            where: { id: invoiceId },
         });
-        return invoice;
+
+        if (!invoice) {
+            throw new NotFoundException('Invoice not found');
+        }
+
+        return await this.prismaService.invoice.findUnique({
+            where: {
+                id: invoiceId,
+            },
+            select: {
+                id: true,
+                dueDate: true,
+                createdAt: true,
+                totalAmount: true,
+                orders: {
+                    select: {
+                        createdAt: true,
+                        id: true,
+                        orderItems: {
+                            select: {
+                                quantity: true,
+                                price: true,
+                                product: {
+                                    select: {
+                                        name: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                user: {
+                    select: {
+                        id: true,
+                        email: true,
+                    },
+                },
+            },
+        });
     };
 
     handleInvoice = async (
@@ -107,6 +154,7 @@ export class InvoiceService {
                 totalAmount: true,
                 orders: {
                     select: {
+                        id: true,
                         createdAt: true,
                         orderItems: {
                             select: {

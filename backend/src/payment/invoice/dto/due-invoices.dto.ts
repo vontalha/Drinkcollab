@@ -33,6 +33,9 @@ export class OrderDto {
     @ValidateNested({ each: true })
     @Type(() => OrderItemDto)
     orderItems: OrderItemDto[];
+
+    @IsString()
+    id: string;
 }
 
 export class UserDto {

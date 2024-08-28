@@ -57,7 +57,7 @@ export class PaypalService {
     };
 
     createOrder = async (
-        total?: Decimal,
+        total: Decimal,
     ): Promise<{ status: string; paypalOrderId: string }> => {
         const accessToken = await this.generateAccessToken();
         const url = `${this.baseUrl}/v2/checkout/orders`;
@@ -140,14 +140,9 @@ export class PaypalService {
         prisma: Prisma.TransactionClient,
         userId: string,
         order: Order,
-        cart?: CartWithItemsDto,
-        invoiceId?: string,
+        cart: CartWithItemsDto,
     ): Promise<string> => {
-        const total = invoiceId
-            ? (await this.invoiceService.getInvoiceById(invoiceId)).totalAmount
-            : cart?.total;
-
-        const paypalOrder = await this.createOrder(total);
+        const paypalOrder = await this.createOrder(cart.total);
 
         if (paypalOrder.status === 'CANCELLED') {
             await prisma.order.update({
@@ -182,6 +177,44 @@ export class PaypalService {
                 total: 0,
             },
         });
+
+        return paypalOrder.paypalOrderId;
+    };
+
+    handleInvoicePayPalOrder = async (
+        userId: string,
+        invoiceId: string,
+    ): Promise<string> => {
+        const invoice = await this.invoiceService.getDueInvoice(invoiceId);
+        const paypalOrder = await this.createOrder(invoice.totalAmount);
+
+        if (paypalOrder.status === 'CANCELLED') {
+            for (const order of invoice.orders) {
+                await this.prisma.order.update({
+                    where: { id: order.id },
+                    data: { status: OrderStatus.CANCELLED },
+                });
+            }
+            throw new BadRequestException('Paypal order cancelled');
+        }
+
+        const payment = await this.prisma.payment.create({
+            data: {
+                userId: userId,
+                invoiceId: invoice.id,
+                amount: invoice.totalAmount,
+                method: PaymentMethod.PAYPAL,
+                status: PaymentStatus.PENDING,
+                paypalOrderId: paypalOrder.paypalOrderId,
+            },
+        });
+
+        for (const order of invoice.orders) {
+            await this.prisma.order.update({
+                where: { id: order.id },
+                data: { paymentId: payment.id },
+            });
+        }
 
         return paypalOrder.paypalOrderId;
     };
