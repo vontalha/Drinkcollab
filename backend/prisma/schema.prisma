@@ -180,7 +180,7 @@ model InvoiceToken {
     email     String
     token     String   @unique
     expires   DateTime
-    invoice   Invoice  @relation(fields: [invoiceId], references: [id])
+    invoice   Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
     invoiceId String   @unique
 
     @@unique([email, token])
@@ -216,5 +216,4 @@ enum OrderStatus {
 enum InvoiceStatus {
     PENDING
     PAID
-    OVERDUE
 }

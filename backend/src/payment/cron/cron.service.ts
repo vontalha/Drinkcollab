@@ -5,20 +5,25 @@ import { DueInvoiceDto } from '../invoice/dto/due-invoices.dto';
 import { InternalServerErrorException } from '@nestjs/common';
 import { MailService } from '../../mail/mail.service';
 import { SendEmailDto } from '../../mail/dto/mail.dto';
+import { PrismaService } from '../../prisma/prisma.service';
 @Injectable()
 export class CronService {
     constructor(
         private readonly invoiceService: InvoiceService,
         private readonly mailService: MailService,
+        private readonly prismaService: PrismaService,
     ) {}
 
-    @Cron(CronExpression.EVERY_10_SECONDS)
+    @Cron(CronExpression.EVERY_10_MINUTES)
     async checkInvoiceDueDates() {
         const dueInvoices = await this.invoiceService.getDueInvoices();
         if (dueInvoices.length > 0) {
             for (const invoice of dueInvoices) {
+                console.log(invoice);
                 await this.sendInvoiceMail(invoice);
             }
+        } else {
+            console.log('No invoices due');
         }
     }
 
@@ -51,7 +56,7 @@ export class CronService {
             }).format(amount);
         };
 
-        let orderDetails: string;
+        let orderDetails = '';
         dueInvoice.orders.forEach((order, index) => {
             orderDetails += `
                 <h3>Order ${index + 1} (${formatDate(order.createdAt)})</h3>
@@ -85,6 +90,11 @@ export class CronService {
 
         try {
             await this.mailService.sendMail(mailOptions);
+            console.log('Email sent to ', dueInvoice.user.email);
+            await this.prismaService.invoice.update({
+                where: { id: dueInvoice.id },
+                data: { mailSent: true },
+            });
         } catch (error) {
             console.error('Error sending email:', error);
             throw new InternalServerErrorException(

@@ -52,7 +52,7 @@ export const seedData = async () => {
         {
             name: 'Product 1',
             description: 'Description for product 1',
-            price: 10.0,
+            price: 10.99,
             stock: 100,
             type: ProductType.DRINK,
         },

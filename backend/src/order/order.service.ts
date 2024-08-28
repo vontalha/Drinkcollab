@@ -9,6 +9,7 @@ import { PaypalService } from 'src/payment/paypal/paypal.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { InvoiceService } from 'src/payment/invoice/invoice.service';
 import { Prisma } from '@prisma/client';
+import { InternalServerErrorException } from '@nestjs/common';
 @Injectable()
 export class OrderService {
     constructor(
@@ -49,14 +50,24 @@ export class OrderService {
             );
 
             //add order to invoice if invoice exists
-            invoiceId &&
-                (await this.invoiceService.addOrderToInvoice(
-                    invoiceId,
-                    order.id,
-                    cart.total,
-                    prisma,
-                ));
-
+            try {
+                invoiceId &&
+                    (await this.invoiceService.addOrderToInvoice(
+                        invoiceId,
+                        order.id,
+                        cart.total,
+                        prisma,
+                    ));
+            } catch (error) {
+                prisma.order.update({
+                    where: { id: order.id },
+                    data: { status: OrderStatus.CANCELLED },
+                });
+                console.error('Error adding order to invoice:', error);
+                throw new InternalServerErrorException(
+                    'Failed to add order to invoice',
+                );
+            }
             //create paypal order if payment method is paypal
             const paypalOrderId =
                 paymentMethod === PaymentMethod.PAYPAL
