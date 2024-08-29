@@ -123,6 +123,9 @@ export class PaypalService {
                 },
                 data: { status: 'COMPLETED' },
             });
+            await this.prisma.invoiceToken.delete({
+                where: { invoiceId: payment.invoiceId },
+            });
         } else {
             await this.prisma.payment.update({
                 where: { paypalOrderId },

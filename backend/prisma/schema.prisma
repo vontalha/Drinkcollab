@@ -171,6 +171,7 @@ model Invoice {
     orders       Order[]
     mailSent     Boolean       @default(false)
     invoiceToken InvoiceToken?
+    reminder     Int           @default(0)
 
     @@map("invoices")
 }
