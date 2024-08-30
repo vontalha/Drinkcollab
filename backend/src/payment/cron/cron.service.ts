@@ -27,6 +27,19 @@ export class CronService {
         }
     }
 
+    @Cron(CronExpression.EVERY_10_MINUTES)
+    async checkInvoiceReminders() {
+        const dueInvoices = await this.invoiceService.getDueInvoices();
+        if (dueInvoices.length > 0) {
+            for (const invoice of dueInvoices) {
+                console.log(invoice);
+                await this.sendInvoiceMail(invoice);
+            }
+        }
+    }
+
+    
+
     sendInvoiceMail = async (dueInvoice: DueInvoiceDto) => {
         const invoiceToken = await this.invoiceService.createInvoiceToken(
             dueInvoice.id,

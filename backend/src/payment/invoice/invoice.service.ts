@@ -8,6 +8,7 @@ import { DueInvoiceDto } from './dto/due-invoices.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { Invoice } from '@prisma/client';
 import { NotFoundException } from '@nestjs/common';
+import { UpdateInvoiceDto } from './dto/update-invoice.dto';
 @Injectable()
 export class InvoiceService {
     constructor(private readonly prismaService: PrismaService) {}
@@ -145,6 +146,13 @@ export class InvoiceService {
                 },
                 total: 0,
             },
+        });
+    };
+
+    updateInvoice = async (invoiceId: string, data: UpdateInvoiceDto) => {
+        await this.prismaService.invoice.update({
+            where: { id: invoiceId },
+            data: data,
         });
     };
 

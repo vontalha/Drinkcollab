@@ -5,7 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { CartWithItemsDto } from 'src/cart/dto/cart.dto';
-import { Prisma } from '@prisma/client';
+import { Prisma, InvoiceStatus } from '@prisma/client';
 import { Order } from '@prisma/client';
 import { BadRequestException } from '@nestjs/common';
 import { OrderStatus, PaymentMethod, PaymentStatus } from '@prisma/client';
@@ -123,9 +123,16 @@ export class PaypalService {
                 },
                 data: { status: 'COMPLETED' },
             });
-            await this.prisma.invoiceToken.delete({
-                where: { invoiceId: payment.invoiceId },
-            });
+            //invoiceTOken loschen weilbezahlt && invoice auf bezahlt setzen
+            payment.invoiceId &&
+                (await this.prisma.invoiceToken.delete({
+                    where: { invoiceId: payment.invoiceId },
+                }) &&
+                (await this.invoiceService.updateInvoice(
+                    payment.invoiceId,
+                    { status: InvoiceStatus.PAID },
+                )));
+        
         } else {
             await this.prisma.payment.update({
                 where: { paypalOrderId },
