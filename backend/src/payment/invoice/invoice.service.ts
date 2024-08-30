@@ -197,6 +197,47 @@ export class InvoiceService {
         });
     };
 
+    getReminderInvoices = async (): Promise<DueInvoiceDto[]> => {
+        return await this.prismaService.invoice.findMany({
+            where: {
+                reminderDate: {
+                    lte: new Date(),
+                },
+                status: InvoiceStatus.PENDING,
+                reminderSent: false,
+            },
+            select: {
+                id: true,
+                dueDate: true,
+                createdAt: true,
+                totalAmount: true,
+                orders: {
+                    select: {
+                        id: true,
+                        createdAt: true,
+                        orderItems: {
+                            select: {
+                                quantity: true,
+                                price: true,
+                                product: {
+                                    select: {
+                                        name: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                user: {
+                    select: {
+                        id: true,
+                        email: true,
+                    },
+                },
+            },
+        });
+    };
+
     createInvoiceToken = async (
         invoiceId: string,
         email: string,

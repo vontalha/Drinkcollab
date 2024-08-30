@@ -5,6 +5,8 @@ import {
     ValidateNested,
     IsNumber,
     IsDecimal,
+    IsOptional,
+    IsBoolean,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Decimal } from '@prisma/client/runtime/library';
@@ -52,6 +54,14 @@ export class DueInvoiceDto {
 
     @IsDate()
     dueDate: Date;
+
+    @IsDate()
+    @IsOptional()
+    reminderDate?: Date;
+
+    @IsBoolean()
+    @IsOptional()
+    reminderSent?: boolean;
 
     @IsDate()
     createdAt: Date;
