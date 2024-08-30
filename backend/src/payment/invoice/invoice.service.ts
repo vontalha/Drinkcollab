@@ -197,14 +197,16 @@ export class InvoiceService {
         });
     };
 
-    getReminderInvoices = async (): Promise<DueInvoiceDto[]> => {
+    getReminderInvoices = async (
+        reminderSent: boolean,
+    ): Promise<DueInvoiceDto[]> => {
         return await this.prismaService.invoice.findMany({
             where: {
                 reminderDate: {
                     lte: new Date(),
                 },
                 status: InvoiceStatus.PENDING,
-                reminderSent: false,
+                reminderSent,
             },
             select: {
                 id: true,
@@ -232,6 +234,7 @@ export class InvoiceService {
                     select: {
                         id: true,
                         email: true,
+                        suspended: true,
                     },
                 },
             },

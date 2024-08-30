@@ -29,6 +29,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
         if (!user) {
             throw new UnauthorizedException('User does not exist!');
         }
+        if (user.suspended) {
+            throw new UnauthorizedException('User account is suspended.');
+        }
 
         console.log('Validated user:', user);
 

@@ -46,6 +46,10 @@ export class UserDto {
 
     @IsString()
     email: string;
+
+    @IsBoolean()
+    @IsOptional()
+    suspended?: boolean;
 }
 
 export class DueInvoiceDto {

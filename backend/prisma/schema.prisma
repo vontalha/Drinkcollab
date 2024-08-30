@@ -20,6 +20,7 @@ model User {
     email         String?       @unique
     password      String
     image         String?
+    suspended     Boolean       @default(false)
     likedDrinks   Like[]
     role          UserRole      @default(USER)
     createdAt     DateTime      @default(now())

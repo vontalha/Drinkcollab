@@ -32,11 +32,39 @@ export class CronService {
     @Cron(CronExpression.EVERY_10_MINUTES)
     async checkInvoiceReminders() {
         const reminderInvoices =
-            await this.invoiceService.getReminderInvoices();
+            await this.invoiceService.getReminderInvoices(false);
+        const secondReminderInvoices =
+            await this.invoiceService.getReminderInvoices(true);
         if (reminderInvoices.length > 0) {
             for (const invoice of reminderInvoices) {
                 console.log(invoice);
-                await this.sendReminderMail(invoice);
+                await this.sendReminderMail(invoice, false);
+            }
+        }
+        if (secondReminderInvoices.length > 0) {
+            for (const invoice of secondReminderInvoices) {
+                console.log(invoice);
+                await this.sendReminderMail(invoice, true);
+            }
+        }
+    }
+    //this shoukd be checked more infrequent since it doesnt happen that commonly
+    @Cron(CronExpression.EVERY_DAY_AT_10AM)
+    async checkOverdrawnInvoices() {
+        const overdrawnInvoices =
+            await this.invoiceService.getReminderInvoices(true);
+        if (overdrawnInvoices.length > 0) {
+            for (const invoice of overdrawnInvoices) {
+                const suspensionDate = new Date(invoice.reminderDate);
+                suspensionDate.setDate(suspensionDate.getDate() + 7);
+
+                if (suspensionDate >= suspensionDate) {
+                    await this.prismaService.user.update({
+                        where: { id: invoice.user.id },
+                        data: { suspended: true },
+                    });
+                    console.log('User suspended:', invoice.user.email);
+                }
             }
         }
     }
@@ -112,7 +140,10 @@ export class CronService {
         }
     };
 
-    sendReminderMail = async (reminderInvoice: DueInvoiceDto) => {
+    sendReminderMail = async (
+        reminderInvoice: DueInvoiceDto,
+        reminderSent: boolean,
+    ) => {
         const invoiceToken = await this.prismaService.invoiceToken.findUnique({
             where: { invoiceId: reminderInvoice.id },
         });
@@ -141,7 +172,20 @@ export class CronService {
             `;
         });
 
-        const emailContent = `
+        const suspensionDate = new Date();
+        suspensionDate.setDate(reminderInvoice.reminderDate.getDate() + 7);
+
+        const emailContent = reminderSent
+            ? `
+            <h1>Final Reminder: Your Invoice is Overdue!</h1>
+            <p>Total Amount to Pay: ${formatCurrency(Number(reminderInvoice.totalAmount))}</p>
+            <p>Due Date: ${formatDate(reminderInvoice.reminderDate)}</p>
+            <p><strong>Warning: Your account will be suspended if payment is not received by ${formatDate(suspensionDate)}.</strong></p>
+            <h2>Order Details:</h2>
+            ${orderDetails}
+            <p>Click <a href="${paymentLink}">here</a> to pay your invoice immediately</p>
+        `
+            : `
             <h1>This is a reminder for your invoice!</h1>
             <p>Total Amount to Pay: ${formatCurrency(Number(reminderInvoice.totalAmount))}</p>
             <p>Due Date: ${formatDate(reminderInvoice.reminderDate)}</p>

@@ -9,6 +9,7 @@ export class UserDto {
     lastName?: string;
     createdAt?: Date;
     updatedAt?: Date | null;
+    suspended?: boolean;
 }
 export class SearchUserDto {
     email?: string;

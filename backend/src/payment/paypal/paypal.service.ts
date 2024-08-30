@@ -127,12 +127,10 @@ export class PaypalService {
             payment.invoiceId &&
                 (await this.prisma.invoiceToken.delete({
                     where: { invoiceId: payment.invoiceId },
-                }) &&
-                (await this.invoiceService.updateInvoice(
-                    payment.invoiceId,
-                    { status: InvoiceStatus.PAID },
-                )));
-        
+                })) &&
+                (await this.invoiceService.updateInvoice(payment.invoiceId, {
+                    status: InvoiceStatus.PAID,
+                }));
         } else {
             await this.prisma.payment.update({
                 where: { paypalOrderId },
