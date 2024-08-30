@@ -150,7 +150,7 @@ export class InvoiceService {
     };
 
     updateInvoice = async (invoiceId: string, data: UpdateInvoiceDto) => {
-        await this.prismaService.invoice.update({
+        return await this.prismaService.invoice.update({
             where: { id: invoiceId },
             data: data,
         });

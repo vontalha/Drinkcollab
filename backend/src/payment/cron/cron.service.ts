@@ -6,6 +6,7 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { MailService } from '../../mail/mail.service';
 import { SendEmailDto } from '../../mail/dto/mail.dto';
 import { PrismaService } from '../../prisma/prisma.service';
+import { Invoice } from '@prisma/client';
 @Injectable()
 export class CronService {
     constructor(
@@ -38,8 +39,6 @@ export class CronService {
         }
     }
 
-    
-
     sendInvoiceMail = async (dueInvoice: DueInvoiceDto) => {
         const invoiceToken = await this.invoiceService.createInvoiceToken(
             dueInvoice.id,
@@ -51,6 +50,16 @@ export class CronService {
                 'Failed to create invoice token',
             );
         }
+
+        const reminderDate = new Date();
+        reminderDate.setDate(reminderDate.getDate() + 7);
+
+        const updatedInvoice = await this.invoiceService.updateInvoice(
+            dueInvoice.id,
+            {
+                reminderDate: reminderDate,
+            },
+        );
 
         const inviteLink = `Http://localhost:4200/payment/invoice?token=${invoiceToken}`;
 
@@ -88,7 +97,7 @@ export class CronService {
         const emailContent = `
             <h1>Your Invoice is due!</h1>
             <p>Total Amount to Pay: ${formatCurrency(Number(dueInvoice.totalAmount))}</p>
-            <p>Due Date: ${formatDate(dueInvoice.dueDate)}</p>
+            <p>Due Date: ${formatDate(updatedInvoice.reminderDate)}</p>
             <h2>Order Details:</h2>
             ${orderDetails}
             <p>Click <a href="${inviteLink}">here</a> to pay your invoice</p>
