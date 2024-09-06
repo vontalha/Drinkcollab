@@ -29,6 +29,10 @@ import {
 import { ProductType } from '@prisma/client';
 import { FilterDto } from 'src/dto/filter.dto';
 import { SearchUserDto, UpdateUserDto, UserDto } from 'src/user/dto/user.dto';
+import { InvoiceService } from 'src/payment/invoice/invoice.service';
+import { UpdateInvoiceDto } from 'src/payment/invoice/dto/update-invoice.dto';
+import { InvoiceStatus } from '@prisma/client';
+import { Invoice } from '@prisma/client';
 
 @Roles(Role.Admin)
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -38,6 +42,7 @@ export class AdminController {
         private accountRequestService: AccountRequestService,
         private productsService: ProductsService,
         private userService: UserService,
+        private invoiceService: InvoiceService,
     ) {}
 
     /**
@@ -217,6 +222,25 @@ export class AdminController {
         this.userService.deleteUser(userId);
         return {
             message: `User with id: ${userId} has been successfully deleted`,
+        };
+    }
+
+    @Get('invoices')
+    async getInvoices(
+        @Query('status') status?: InvoiceStatus,
+    ): Promise<Invoice[]> {
+        return this.invoiceService.getAllInvoices(status);
+    }
+
+    @Put('invoice/update/:id')
+    @HttpCode(HttpStatus.OK)
+    async updateInvoice(
+        @Param('id') invoiceId: string,
+        @Body() data: UpdateInvoiceDto,
+    ): Promise<{ message: string }> {
+        this.invoiceService.updateInvoice(invoiceId, data);
+        return {
+            message: `Invoice with id: ${invoiceId} has been successfully updated`,
         };
     }
 }
