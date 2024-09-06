@@ -14,4 +14,8 @@ export class UpdateInvoiceDto {
     @IsDate()
     @IsOptional()
     reminderDate?: Date;
+
+    @IsDate()
+    @IsOptional()
+    dueDate?: Date;
 }

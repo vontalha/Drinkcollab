@@ -31,6 +31,11 @@ export class InvoiceService {
         return invoice.id;
     };
 
+    getAllInvoices = async (status?: InvoiceStatus): Promise<Invoice[]> => {
+        const where = status ? { status } : {};
+        return await this.prismaService.invoice.findMany({ where });
+    };
+
     getInvoiceById = async (invoiceId: string): Promise<Invoice> => {
         const invoice = await this.prismaService.invoice.findUnique({
             where: { id: invoiceId },
