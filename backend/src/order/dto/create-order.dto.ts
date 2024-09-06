@@ -12,3 +12,11 @@ export class CreateOrderDto {
     @IsEnum(PaymentMethod)
     paymentMethod: PaymentMethod;
 }
+
+export class CreateInvoiceOrderDto {
+    @IsString()
+    userId: string;
+
+    @IsString()
+    invoiceId: string;
+}

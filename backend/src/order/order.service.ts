@@ -4,24 +4,28 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { NotFoundException } from '@nestjs/common';
 import { OrderStatus } from '@prisma/client';
 import { PaymentMethod } from '@prisma/client';
-import { CartItemDto, CartWithItemsDto } from 'src/cart/dto/cart.dto';
+import { CartItemDto } from 'src/cart/dto/cart.dto';
 import { PaypalService } from 'src/payment/paypal/paypal.service';
-import { BadRequestException } from '@nestjs/common';
-import { PaymentStatus } from '@prisma/client';
-import { Prisma } from '@prisma/client';
-import { Order } from '@prisma/client';
 import { CreateOrderDto } from './dto/create-order.dto';
+import { InvoiceService } from 'src/payment/invoice/invoice.service';
+import { Prisma } from '@prisma/client';
+import { InternalServerErrorException } from '@nestjs/common';
 @Injectable()
 export class OrderService {
     constructor(
         private readonly prismaService: PrismaService,
         private readonly cartService: CartService,
         private readonly paypalService: PaypalService,
+        private readonly invoiceService: InvoiceService,
     ) {}
 
     processCartOrder = async (
         createOrderDto: CreateOrderDto,
-    ): Promise<{ orderId: string; paypalOrderId?: string }> => {
+    ): Promise<{
+        orderId: string;
+        paypalOrderId?: string;
+        invoiceId?: string;
+    }> => {
         return await this.prismaService.$transaction(async (prisma) => {
             const { cartId, userId, paymentMethod } = createOrderDto;
             console.log('processCartorder:', cartId, userId, paymentMethod);
@@ -32,110 +36,81 @@ export class OrderService {
                     'Shopping cart is empty or not found.',
                 );
             }
+            //check if invoice exists other wise null
+            const invoiceId =
+                paymentMethod === PaymentMethod.INVOICE
+                    ? await this.invoiceService.handleInvoice(userId, prisma)
+                    : null;
+            //create order for both cases
+            const order = await this.createOrder(
+                prisma,
+                userId,
+                cart,
+                invoiceId,
+            );
 
-            const order = await prisma.order.create({
-                data: {
-                    userId: userId,
-                    total: cart.total,
-                    quantity: cart.items.reduce(
-                        (sum: number, item: CartItemDto) => sum + item.quantity,
-                        0,
-                    ),
-                    status: OrderStatus.PENDING,
-                    orderItems: {
-                        create: cart.items.map((item: CartItemDto) => ({
-                            productId: item.productId,
-                            quantity: item.quantity,
-                            price: item.product.price,
-                        })),
-                    },
-                },
-            });
-
-            // let paypalOrderId: string | null = null;
-            // if (paymentMethod === PaymentMethod.PAYPAL) {
-            //     const paypalOrder = await this.paypalService.createOrder(cart);
-
-            //     if (paypalOrder.status === 'CANCELLED') {
-            //         await prisma.order.update({
-            //             where: { id: order.id },
-            //             data: { status: OrderStatus.CANCELLED },
-            //         });
-            //         throw new BadRequestException('Payment failed');
-            //     } else {
-            //         const payment = await prisma.payment.create({
-            //             data: {
-            //                 userId: userId,
-            //                 orderId: order.id,
-            //                 amount: order.total,
-            //                 method: PaymentMethod.PAYPAL,
-            //                 status: PaymentStatus.PENDING,
-            //                 paypalOrderId: paypalOrder.paypalOrderId,
-            //             },
-            //         });
-
-            //         await prisma.order.update({
-            //             where: { id: order.id },
-            //             data: { paymentId: payment.id },
-            //         });
-
-            //         paypalOrderId = paypalOrder.paypalOrderId;
-            //     }
-            // }
+            //add order to invoice if invoice exists
+            try {
+                invoiceId &&
+                    (await this.invoiceService.addOrderToInvoice(
+                        invoiceId,
+                        order.id,
+                        cart.total,
+                        prisma,
+                    ));
+            } catch (error) {
+                prisma.order.update({
+                    where: { id: order.id },
+                    data: { status: OrderStatus.CANCELLED },
+                });
+                console.error('Error adding order to invoice:', error);
+                throw new InternalServerErrorException(
+                    'Failed to add order to invoice',
+                );
+            }
+            //create paypal order if payment method is paypal
             const paypalOrderId =
                 paymentMethod === PaymentMethod.PAYPAL
-                    ? await this.handlePayPalOrder(prisma, userId, order, cart)
+                    ? await this.paypalService.handlePayPalOrder(
+                          prisma,
+                          userId,
+                          order,
+                          cart,
+                      )
                     : null;
 
             return {
                 orderId: order.id,
                 paypalOrderId,
+                invoiceId,
             };
         });
     };
 
-    private async handlePayPalOrder(
+    private async createOrder(
         prisma: Prisma.TransactionClient,
         userId: string,
-        order: Order,
-        cart: CartWithItemsDto,
-    ): Promise<string> {
-        const paypalOrder = await this.paypalService.createOrder(cart);
-
-        if (paypalOrder.status === 'CANCELLED') {
-            await prisma.order.update({
-                where: { id: order.id },
-                data: { status: OrderStatus.CANCELLED },
-            });
-            throw new BadRequestException('Paypal order cancelled');
-        }
-
-        const payment = await prisma.payment.create({
+        cart: any,
+        invoiceId: string | null,
+    ) {
+        return await prisma.order.create({
             data: {
                 userId: userId,
-                orderId: order.id,
-                amount: order.total,
-                method: PaymentMethod.PAYPAL,
-                status: PaymentStatus.PENDING,
-                paypalOrderId: paypalOrder.paypalOrderId,
-            },
-        });
-
-        await prisma.order.update({
-            where: { id: order.id },
-            data: { paymentId: payment.id },
-        });
-
-        await prisma.shoppingCart.update({
-            where: { id: cart.id },
-            data: {
-                items: {
-                    deleteMany: {},
+                total: cart.total,
+                quantity: cart.items.reduce(
+                    (sum: number, item: CartItemDto) => sum + item.quantity,
+                    0,
+                ),
+                status: OrderStatus.PENDING,
+                orderItems: {
+                    create: cart.items.map((item: CartItemDto) => ({
+                        productId: item.productId,
+                        quantity: item.quantity,
+                        price: item.product.price,
+                    })),
                 },
-                total: 0,
+                invoiceId,
             },
         });
-
-        return paypalOrder.paypalOrderId;
     }
 }

@@ -33,6 +33,7 @@ export class UserService {
                 updatedAt: true,
                 likedDrinks: true,
                 shoppingCart: true,
+                suspended: true,
             },
         });
 
