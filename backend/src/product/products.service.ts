@@ -9,6 +9,7 @@ import { AddProductDto, UpdateProductDto } from './dto/product.dto';
 import { FilterDto } from 'src/dto/filter.dto';
 import { FilterService } from './filter.service';
 import { Prisma } from '@prisma/client';
+import { CartWithItemsDto } from 'src/cart/dto/cart.dto';
 
 @Injectable()
 export class ProductsService {
@@ -303,5 +304,29 @@ export class ProductsService {
             await this.prismaService.$queryRaw<Product[]>(rawQuery);
 
         return products;
+    };
+
+    updateProductsAfterOrder = async (cart: CartWithItemsDto) => {
+        for (const item of cart.items) {
+            await this.prismaService.product.update({
+                where: { id: item.productId },
+                data: {
+                    stock: { decrement: item.quantity },
+                    sales: { increment: item.quantity },
+                },
+            });
+        }
+    };
+
+    updateProductAfterCancel = async (cart: CartWithItemsDto) => {
+        for (const item of cart.items) {
+            await this.prismaService.product.update({
+                where: { id: item.productId },
+                data: {
+                    stock: { increment: item.quantity },
+                    sales: { decrement: item.quantity },
+                },
+            });
+        }
     };
 }

@@ -11,6 +11,7 @@ import { BadRequestException } from '@nestjs/common';
 import { OrderStatus, PaymentMethod, PaymentStatus } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 import { InvoiceService } from '../invoice/invoice.service';
+import { ProductsService } from 'src/product/products.service';
 @Injectable()
 export class PaypalService {
     private readonly clientId: string = process.env.PAYPAL_CLIENT_ID;
@@ -21,6 +22,7 @@ export class PaypalService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly httpService: HttpService,
+        private readonly productsService: ProductsService,
     ) {}
 
     generateAccessToken = async (): Promise<string> => {
@@ -167,6 +169,8 @@ export class PaypalService {
                 where: { id: order.id },
                 data: { status: OrderStatus.CANCELLED },
             });
+            await this.productsService.updateProductAfterCancel(cart);
+
             throw new BadRequestException('Paypal order cancelled');
         }
 
@@ -195,6 +199,7 @@ export class PaypalService {
                 total: 0,
             },
         });
+        await this.productsService.updateProductsAfterOrder(cart);
 
         return paypalOrder.paypalOrderId;
     };
