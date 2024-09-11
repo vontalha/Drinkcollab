@@ -20,6 +20,7 @@ model User {
     email         String?       @unique
     password      String
     image         String?
+    suspended     Boolean       @default(false)
     likedDrinks   Like[]
     role          UserRole      @default(USER)
     createdAt     DateTime      @default(now())
@@ -157,21 +158,35 @@ model Payment {
 }
 
 model Invoice {
-    id          String    @id @default(cuid())
-    user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId      String
-    totalAmount Decimal   @db.Decimal(19, 4)
-    pdfLink     String
-    paid        Boolean   @default(false)
-    dueDate     DateTime
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime? @updatedAt
-
-    payment   Payment?
-    paymentId String?
-    orders    Order[]
+    id           String        @id @default(cuid())
+    user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId       String
+    totalAmount  Decimal       @default(0) @db.Decimal(19, 4)
+    pdfLink      String?
+    dueDate      DateTime
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime?     @updatedAt
+    status       InvoiceStatus @default(PENDING)
+    payment      Payment?
+    paymentId    String?
+    orders       Order[]
+    mailSent     Boolean       @default(false)
+    invoiceToken InvoiceToken?
+    reminderSent Boolean       @default(false)
+    reminderDate DateTime?
 
     @@map("invoices")
+}
+
+model InvoiceToken {
+    id        String   @unique @default(cuid())
+    email     String
+    token     String   @unique
+    expires   DateTime
+    invoice   Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+    invoiceId String   @unique
+
+    @@unique([email, token])
 }
 
 enum UserRole {
@@ -199,4 +214,9 @@ enum OrderStatus {
     PENDING
     COMPLETED
     CANCELLED
+}
+
+enum InvoiceStatus {
+    PENDING
+    PAID
 }

@@ -24,28 +24,28 @@ async function main() {
             });
             console.log({ createdUser });
 
-            const createdShoppingCart = await prisma.shoppingCart.create({
-                data: {
-                    userId: createdUser.id,
-                },
-            });
-            console.log({ createdShoppingCart });
-        }
+        const createdShoppingCart = await prisma.shoppingCart.create({
+            data: {
+                userId: createdUser.id,
+            },
+        });
+        console.log({ createdShoppingCart });
+    }
 
-        for (const product of products) {
-            const createdProduct = await prisma.product.create({
-                data: product,
-            });
-            console.log({ createdProduct });
-        }
-    //     async function deleteAll() {
-    //         const deletedUsers = await prisma.user.deleteMany();
-    //         console.log(`Deleted ${deletedUsers.count} users`);
-    //         const deletedProducts = await prisma.product.deleteMany();
-    //         console.log(`Deleted ${deletedProducts.count} products`);
-    //     }
-    //
-    //      await deleteAll();
+    for (const product of products) {
+        const createdProduct = await prisma.product.create({
+            data: product,
+        });
+        console.log({ createdProduct });
+    }
+    // async function deleteAll() {
+    //     const deletedUsers = await prisma.product.deleteMany();
+    //     console.log(`Deleted ${deletedUsers.count} users`);
+    //     const deletedProducts = await prisma.product.deleteMany();
+    //     console.log(`Deleted ${deletedProducts.count} products`);
+    // }
+
+    // await deleteAll();
 }
 
 main()
