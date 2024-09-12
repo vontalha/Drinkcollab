@@ -79,7 +79,10 @@ export class AccountRequestService {
                 email: true,
             },
         });
-        return tokenIds.map((token) => token.id);
+        return tokenIds.map((token) => ({
+            id: token.id,
+            email: token.email,
+        }));
     };
 
     approveAccountRequest = async (tokenId: string) => {
