@@ -33,6 +33,8 @@ import { InvoiceService } from 'src/payment/invoice/invoice.service';
 import { UpdateInvoiceDto } from 'src/payment/invoice/dto/update-invoice.dto';
 import { InvoiceStatus } from '@prisma/client';
 import { Invoice } from '@prisma/client';
+import { AddCategoryDto } from 'src/product/dto/product.dto';
+import { Category } from '@prisma/client';
 
 @Roles(Role.Admin)
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -178,6 +180,18 @@ export class AdminController {
         return {
             status: HttpStatus.OK,
             message: 'Product successfully deleted!',
+        };
+    }
+
+    @Post('products/categories/add')
+    @HttpCode(HttpStatus.OK)
+    async addCategory(
+        @Body() data: AddCategoryDto,
+    ): Promise<{ status: HttpStatus; newCategory: Category }> {
+        const newCategory = await this.productsService.addCategory(data);
+        return {
+            status: HttpStatus.OK,
+            newCategory,
         };
     }
 
