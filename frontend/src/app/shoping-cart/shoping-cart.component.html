@@ -1,3 +1,42 @@
-<p>shoping-card works!</p>
+<div *ngIf="cart?.total ==0">
 
+  Cart is empty
+</div>
+<div class="cart-container">
+  <div *ngFor="let item of cart?.items" class="cart-item">
+    <div>{{ item.product.name }}</div>
+    <div>Anzahl: {{ item.quantity }}</div>
+    <div>Preis: {{ calculateTotalPrice(item) | currency:'EUR':'symbol':'1.0-2':'de-DE' }}</div>
+    <div>
+      <button mat-button (click)="decrement(item.productId)">
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined"
+            rel="stylesheet"/>
+      <mat-icon fontSet="material-icons-outlined">remove</mat-icon>
+      </button>
+      <button mat-button (click)="increment(item.productId)">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined"
+              rel="stylesheet"/>
+        <mat-icon fontSet="material-icons-outlined">add</mat-icon>
+      </button>
+      <button mat-button  color="primary" (click)="remove(item.productId)">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined"
+              rel="stylesheet"/>
+        <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+      </button>
+    </div>
+    <p></p>
+  </div>
+</div>
 
+<mat-divider *ngIf="cart?.total !=0"></mat-divider>
+<mat-divider *ngIf="cart?.total !=0"></mat-divider>
+<h3 *ngIf="cart?.total !=0">Gesamtbetrag: {{ cart?.total | currency:'EUR':'symbol':'1.0-2':'de-DE' }}</h3>
+<div>
+  <button mat-button (click)="getWarenkorb()">get warenkorb</button>
+</div>
+<div *ngIf="cart?.total !=0">
+  Checkout:
+  <p></p>
+  <button mat-raised-button color="primary" (click)="checkoutWithPayPal()">PayPal</button>
+  <button mat-button (click)="checkoutInvoice()">Auf Rechnung</button>
+</div>

@@ -1,0 +1,13 @@
+mat-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+mat-list-item div {
+  margin: 4px 0;
+}
+
+h2, h3 {
+  margin-top: 0;
+}

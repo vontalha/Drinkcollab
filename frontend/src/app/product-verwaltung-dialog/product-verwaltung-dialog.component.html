@@ -5,8 +5,12 @@
     <input matInput [(ngModel)]="data.name">
   </mat-form-field>
   <mat-form-field>
+    <mat-label>Brand</mat-label>
+    <input matInput [(ngModel)]="data.brand">
+  </mat-form-field>
+  <mat-form-field>
     <mat-label>Bild-URL</mat-label>
-    <input matInput [(ngModel)]="data.imageUrl">
+    <input matInput [(ngModel)]="data.image">
   </mat-form-field>
   <mat-form-field>
     <mat-label>Beschreibung</mat-label>
@@ -19,6 +23,14 @@
   <mat-form-field>
     <mat-label>Anzahl</mat-label>
     <input matInput type="number" [(ngModel)]="data.stock">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Category</mat-label>
+    <input matInput [(ngModel)]="data.categoryName">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Typ</mat-label>
+    <input matInput type="'DRINK'|'SNACK'" [(ngModel)]="data.type">
   </mat-form-field>
 </div>
 <div mat-dialog-actions>

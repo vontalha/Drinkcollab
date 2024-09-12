@@ -21,8 +21,7 @@ import {AuthService} from "../services/auth.service";
 
 export interface DataItem {
   id: number;
-  name: string;
-  value: string;
+  email: string;
 }
 
 @Component({

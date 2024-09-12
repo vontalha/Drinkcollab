@@ -27,7 +27,13 @@
   border: 1px solid #303030;
   border-radius: 10px;
 }
+
 mat-card{
   border: 1px solid #303030;
   border-radius: 10px;
+  max-width: 20%;
+  max-height: 20%;
+}
+mat-card-actions{
+  justify-content: end;
 }

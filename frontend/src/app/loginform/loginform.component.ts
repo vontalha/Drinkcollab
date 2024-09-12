@@ -6,9 +6,9 @@ import {MatInputModule} from "@angular/material/input";
 import {CommonModule} from "@angular/common";
 import {MatButton} from "@angular/material/button";
 import { FormBuilder } from '@angular/forms';
-import axios from 'axios';
 import { Router } from '@angular/router';
 import {AuthService} from "../services/auth.service";
+import {CartService} from "../services/CartService";
 
 @Component({
   selector: 'app-loginform',
@@ -35,7 +35,8 @@ export class LoginformComponent {
   constructor(
     private fB: FormBuilder,
     private router: Router,
-    private auth: AuthService
+    private auth: AuthService,
+    private cart: CartService
     ) {
   }
   form = this.fB.group({
@@ -50,23 +51,13 @@ export class LoginformComponent {
         // @ts-ignore
         //{"email": "admin@example.com" , "password": "ExamplePassword"}
         let password  = this.form.get('password')!.value.toString();
-
         let success = await this.auth.login(email, password)
         if (success) {
-          console.log("loginform navigate");
+          this.cart.setNewItemStatus(true);
           await this.router.navigate(['/', 'home']);
         }else{
 
         }
-
-        /*
-        this.auth.login(email, password).then((success)=> {
-          if (success) {
-            console.log("loginform navigate");
-            this.router.navigate(['/', 'home']);
-          }
-        })
-        //*/
 
         // axios.post('http://localhost:3000/auth/login',{'email': email , 'password': password},{ withCredentials: true }).then((response)=>{
         //   console.log(response.data);
@@ -74,13 +65,6 @@ export class LoginformComponent {
         //  });
     }
   }
-
-  table(){
-    axios.get('http://localhost:3000/admin/requests', { withCredentials: true }).then((response)=>{
-      console.log(response.data.toString());
-    });
-  }
-
   // @ts-ignore
   @Input() error: string | null;
 

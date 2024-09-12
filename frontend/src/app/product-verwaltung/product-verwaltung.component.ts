@@ -86,7 +86,7 @@ export class ProductVerwaltungComponent implements OnInit{
     });
   }
 
-  async deleteProduct(id: number) {
+  async deleteProduct(id: string) {
     await this.productService.deleteProduct(id);
     this.loadProducts();
   }

@@ -1,8 +1,12 @@
 export interface Product {
-  id: number;
+  id: string;
   name: string;
   description: string;
   price: number;
-  imageUrl: string;
+  image: string;
   stock: number;
+  brand: string;
+  size: number;
+  categoryName: string;
+  type: 'DRINK' | 'SNACK';
 }

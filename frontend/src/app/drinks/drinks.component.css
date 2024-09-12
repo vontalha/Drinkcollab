@@ -30,4 +30,7 @@
 mat-card{
   border: 1px solid #303030;
   border-radius: 10px;
+  flex-wrap: wrap;
+  max-width: 20%;
+  max-height: 20%;
 }

@@ -8,9 +8,18 @@ import {CurrencyPipe, NgForOf} from "@angular/common";
 import {ReactiveFormsModule} from "@angular/forms";
 import {ShopItemComponent} from "../shop-item/shop-item.component";
 import {FlexModule} from "@angular/flex-layout";
-import {MatCard, MatCardContent, MatCardImage, MatCardSubtitle, MatCardTitle} from "@angular/material/card";
+import {
+  MatCard,
+  MatCardActions,
+  MatCardContent,
+  MatCardImage,
+  MatCardSubtitle,
+  MatCardTitle
+} from "@angular/material/card";
 import {Product} from "../models/product.model";
 import {ProductService} from "../services/product.service";
+import {MatButton} from "@angular/material/button";
+import {MatIcon} from "@angular/material/icon";
 
 @Component({
   selector: 'app-drinks',
@@ -31,7 +40,10 @@ import {ProductService} from "../services/product.service";
     MatCardContent,
     MatCardImage,
     MatCardSubtitle,
-    MatCardTitle
+    MatCardTitle,
+    MatButton,
+    MatCardActions,
+    MatIcon
   ],
   templateUrl: './drinks.component.html',
   styleUrl: './drinks.component.css'
@@ -90,5 +102,15 @@ export class DrinksComponent {
     this.currentPage = event.pageIndex + 1;
     this.pageSize = event.pageSize;
     this.fetchProducts();
+  }
+
+  async addToCart(productId: string) {
+    try {
+      // @ts-ignore
+      this.cart.addToCart(this.id, productId);
+    } catch (error) {
+      console.error('Error adding product to cart', error);
+      alert('There was an error adding the product to the cart.');
+    }
   }
 }

@@ -92,17 +92,19 @@ export class ProductService {
   }
 
   async createProduct(product: Product): Promise<Product> {
-    const response = await axios.post('http://localhost:3000/products/add', product, {withCredentials:true});
+    const response = await axios.post('http://localhost:3000/admin/products/add', product, {withCredentials:true});
     console.log(response.data);
     return response.data;
   }
 
   async updateProduct(product: Product): Promise<Product> {
-    const response = await axios.put(`${this.apiUrl}/${product.id}`, product,{withCredentials:true});
+    const response = await axios.put(`http://localhost:3000/admin/products/update/${product.id}`, product,{withCredentials:true});
     return response.data;
   }
 
-  async deleteProduct(id: number): Promise<void> {
-    await axios.delete(`${this.apiUrl}/${id}`,{withCredentials:true});
+  async deleteProduct(id: string): Promise<void> {
+    await axios.delete(`http://localhost:3000/admin/products/delete/${id}`,{withCredentials:true}).then((response)=>{
+      console.log(response.data);
+    });
   }
 }

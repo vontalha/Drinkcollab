@@ -9,10 +9,8 @@ import {StorepageComponent} from "../storepage/storepage.component";
 import {RouterLink, RouterOutlet} from "@angular/router";
 import {AuthService} from "../services/auth.service";
 import axios from "axios";
-import {MatTableDataSource} from "@angular/material/table";
 import {Observable} from "rxjs";
 import {MatMenu, MatMenuItem, MatMenuTrigger} from "@angular/material/menu";
-import {map} from "rxjs/operators";
 import {ShopingCartComponent} from "../shoping-cart/shoping-cart.component";
 
 @Component({
@@ -53,7 +51,7 @@ export class NavigationComponent implements OnInit{
     this.isAuthorized$.subscribe(()=>{
       this.cd.detectChanges();
     })
-    // Optional: Manuelle Change Detection anstoßen
+    // Manuelle Change Detection anstoßen
     this.isAuthenticated$.subscribe(() => {
       this.cd.detectChanges();
     });
@@ -71,6 +69,4 @@ export class NavigationComponent implements OnInit{
       console.log(response.data.data.Product.toString());
     });
   }
-
-  protected readonly console = console;
 }
