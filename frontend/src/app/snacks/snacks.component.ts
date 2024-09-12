@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatOption} from "@angular/material/autocomplete";
@@ -21,6 +21,7 @@ import {ProductService} from "../services/product.service";
 import {MatButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
 import {CartService} from "../services/CartService";
+import {AuthService} from "../services/auth.service";
 
 @Component({
   selector: 'app-snacks',
@@ -49,7 +50,7 @@ import {CartService} from "../services/CartService";
   templateUrl: './snacks.component.html',
   styleUrl: './snacks.component.css'
 })
-export class SnacksComponent {
+export class SnacksComponent implements OnInit{
   //todo
   products: Product[] = [];
   totalProducts: number = 0;
@@ -59,10 +60,17 @@ export class SnacksComponent {
   searchQuery: string = '';
   sortBy: string = 'sales';
   sortOrder: 'asc' | 'desc' = 'desc';
+  // @ts-ignore
+  userId: string | null;
 
-  constructor(private productService: ProductService, private cart: CartService) {}
+  constructor(private productService: ProductService, private cart: CartService, private auth: AuthService, private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
+    this.auth.getUserID$().subscribe((value) => {
+      this.userId = value;
+      console.log(value);
+      this.cd.detectChanges();
+    });
     this.fetchProducts();
   }
 
@@ -109,7 +117,7 @@ export class SnacksComponent {
   async addToCart(productId: string) {
     try {
       // @ts-ignore
-      this.cart.addToCart(this.id, productId);
+      this.cart.addToCart(this.userId, productId);
     } catch (error) {
       console.error('Error adding product to cart', error);
       alert('There was an error adding the product to the cart.');
