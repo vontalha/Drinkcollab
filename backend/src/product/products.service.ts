@@ -10,7 +10,8 @@ import { FilterDto } from 'src/dto/filter.dto';
 import { FilterService } from './filter.service';
 import { Prisma } from '@prisma/client';
 import { CartWithItemsDto } from 'src/cart/dto/cart.dto';
-
+import { Category } from '@prisma/client';
+import { AddCategoryDto } from './dto/product.dto';
 @Injectable()
 export class ProductsService {
     constructor(
@@ -298,12 +299,31 @@ export class ProductsService {
 
         //this has to be part of the first execution to install pg_trgm for postgres
         //after first run comment out
-        // await this.prismaService
-        //     .$executeRaw`CREATE EXTENSION IF NOT EXISTS pg_trgm;`;
+        await this.prismaService
+            .$executeRaw`CREATE EXTENSION IF NOT EXISTS pg_trgm;`;
         const products =
             await this.prismaService.$queryRaw<Product[]>(rawQuery);
 
         return products;
+    };
+
+    addCategory = async (data: AddCategoryDto): Promise<Category> => {
+        const { name, type } = data;
+
+        const category = await this.prismaService.category.findFirst({
+            where: { name },
+        });
+
+        if (category) {
+            throw new BadRequestException('Category already exists');
+        }
+
+        return await this.prismaService.category.create({
+            data: {
+                name,
+                type,
+            },
+        });
     };
 
     updateProductsAfterOrder = async (cart: CartWithItemsDto) => {

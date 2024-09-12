@@ -77,3 +77,13 @@ export class UpdateProductDto {
     @IsIn(['DRINK', 'SNACK'])
     type?: 'DRINK' | 'SNACK';
 }
+
+export class AddCategoryDto {
+    @IsNotEmpty()
+    @IsString()
+    name: string;
+
+    @IsNotEmpty()
+    @IsIn(['DRINK', 'SNACK'])
+    type: 'DRINK' | 'SNACK';
+}
