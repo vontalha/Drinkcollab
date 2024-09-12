@@ -54,7 +54,7 @@ export interface DataItem {
   styleUrl: './new-user-list.component.css'
 })
 export class NewUserListComponent implements OnInit{
-  displayedColumns: string[] = ['id'];
+  displayedColumns: string[] = ['id', 'email', 'actions'];
   dataSource = new MatTableDataSource<any>();
   // @ts-ignore
   isAuthorized$: Observable<boolean>;
@@ -86,11 +86,12 @@ export class NewUserListComponent implements OnInit{
     }
   }
 
-  async approveUser(userId: string) {
+  async approveUser(userId: string, email:string) {
     try {
-      const response = await axios.post(`http://localhost:3000/admin/user/delete/${userId}`,{},{withCredentials:true});
+      const response = await axios.post(`http://localhost:3000/admin/requests/approve/${userId}`,{},{withCredentials:true});
       if(response){
         console.log("Approved User: ", userId);
+        alert("Approved User: "+ email);
       }
     } catch (error) {
       console.error('Fehler beim Freigeben des Benutzers!', error);

@@ -2,35 +2,37 @@
 <div mat-dialog-content>
   <mat-form-field>
     <mat-label>Name</mat-label>
-    <input matInput [(ngModel)]="data.name">
+    <input matInput [(ngModel)]="data.name" required>
   </mat-form-field>
   <mat-form-field>
     <mat-label>Brand</mat-label>
-    <input matInput [(ngModel)]="data.brand">
+    <input matInput [(ngModel)]="data.brand" required>
   </mat-form-field>
   <mat-form-field>
     <mat-label>Bild-URL</mat-label>
-    <input matInput [(ngModel)]="data.image">
+    <input matInput [(ngModel)]="data.image" required>
   </mat-form-field>
   <mat-form-field>
     <mat-label>Beschreibung</mat-label>
-    <textarea matInput [(ngModel)]="data.description"></textarea>
+    <textarea matInput [(ngModel)]="data.description" required></textarea>
   </mat-form-field>
   <mat-form-field>
     <mat-label>Preis</mat-label>
-    <input matInput type="number" [(ngModel)]="data.price">
+    <input matInput type="number" [(ngModel)]="data.price" required>
   </mat-form-field>
   <mat-form-field>
     <mat-label>Anzahl</mat-label>
-    <input matInput type="number" [(ngModel)]="data.stock">
+    <input matInput type="number" [(ngModel)]="data.stock" required>
   </mat-form-field>
   <mat-form-field>
     <mat-label>Category</mat-label>
-    <input matInput [(ngModel)]="data.categoryName">
+    <input matInput [(ngModel)]="data.categoryName" required>
   </mat-form-field>
   <mat-form-field>
     <mat-label>Typ</mat-label>
-    <input matInput type="'DRINK'|'SNACK'" [(ngModel)]="data.type">
+    <mat-select [(ngModel)]="data.type" required>
+      <mat-option *ngFor="let type of types" [value]="type">{{ type }}</mat-option>
+    </mat-select>
   </mat-form-field>
 </div>
 <div mat-dialog-actions>

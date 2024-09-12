@@ -43,7 +43,7 @@ import {MatSort, MatSortHeader} from "@angular/material/sort";
   styleUrl: './user-list.component.css'
 })
 export class UserListComponent implements OnInit{
-  displayedColumns: string[] = ['id', 'firstName', 'lastName', 'email', 'role', 'createdAt', 'actions'];
+  displayedColumns: string[] = [ 'firstName', 'lastName', 'email', 'role', 'actions'];
   dataSource = new MatTableDataSource<any>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -73,7 +73,7 @@ export class UserListComponent implements OnInit{
 
   async deleteUser(userId: string) {
     try {
-      const response = await axios.delete(`http://localhost:3000/admin/user/delete/${userId}`);
+      const response = await axios.delete(`http://localhost:3000/admin/user/delete/${userId}`, {withCredentials:true});
       if(response){
         this.dataSource.data = this.dataSource.data.filter(user => user.id !== userId);
       }
