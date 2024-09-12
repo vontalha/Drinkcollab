@@ -144,7 +144,7 @@ export class InvoiceService {
         });
 
         await prisma.shoppingCart.update({
-            where: { id: order.userId },
+            where: { userId: order.userId },
             data: {
                 items: {
                     deleteMany: {},
