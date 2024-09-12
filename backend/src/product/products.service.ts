@@ -309,6 +309,15 @@ export class ProductsService {
 
     addCategory = async (data: AddCategoryDto): Promise<Category> => {
         const { name, type } = data;
+
+        const category = await this.prismaService.category.findFirst({
+            where: { name },
+        });
+
+        if (category) {
+            throw new BadRequestException('Category already exists');
+        }
+
         return await this.prismaService.category.create({
             data: {
                 name,
