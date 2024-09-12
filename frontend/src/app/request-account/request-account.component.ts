@@ -35,9 +35,14 @@ export class RequestAccountComponent {
     email: ['', [Validators.required, Validators.email]]
   });
 
-  requestAccount() {
+  async requestAccount() {
     if (this.form.valid) {
-      this.auth.requestAccount(this.form.get('email')!.value!.toString());
+      let success = await this.auth.requestAccount(this.form.get('email')!.value!.toString());
+      if(success){
+        alert("Account Requested please wait until the Account is Approved");
+      }else{
+        alert("Account Request failed")
+      }
       // @ts-ignore
       // axios.post('http://localhost:3000/account-request',{email: email},{ withCredentials: true }).then((response)=>{
       //   console.log(response.status);

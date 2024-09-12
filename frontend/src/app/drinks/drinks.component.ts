@@ -20,6 +20,7 @@ import {Product} from "../models/product.model";
 import {ProductService} from "../services/product.service";
 import {MatButton} from "@angular/material/button";
 import {MatIcon} from "@angular/material/icon";
+import {CartService} from "../services/CartService";
 
 @Component({
   selector: 'app-drinks',
@@ -59,7 +60,7 @@ export class DrinksComponent {
   sortBy: string = 'sales';
   sortOrder: 'asc' | 'desc' = 'desc';
 
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService, private cart: CartService) {}
 
   ngOnInit(): void {
     this.fetchProducts();

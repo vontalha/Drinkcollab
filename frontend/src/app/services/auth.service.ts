@@ -34,9 +34,10 @@ export class AuthService {
     return this.userId.asObservable();
   }
 
-  requestAccount(email: string){
-    axios.post(this.apiUrl + '/account-request',{email: email},{withCredentials: true}).then((response)=>{
+  async requestAccount(email: string): Promise<boolean>{
+    return axios.post(this.apiUrl + '/account-request',{email: email},{withCredentials: true}).then((response)=>{
       console.log(response.status);
+      return true;
     });
   }
 
