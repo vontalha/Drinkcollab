@@ -10,6 +10,8 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { InvoiceService } from 'src/payment/invoice/invoice.service';
 import { Prisma } from '@prisma/client';
 import { InternalServerErrorException } from '@nestjs/common';
+import { CartWithItemsDto } from 'src/cart/dto/cart.dto';
+import { ProductsService } from 'src/product/products.service';
 @Injectable()
 export class OrderService {
     constructor(
@@ -17,6 +19,7 @@ export class OrderService {
         private readonly cartService: CartService,
         private readonly paypalService: PaypalService,
         private readonly invoiceService: InvoiceService,
+        private readonly productsService: ProductsService,
     ) {}
 
     processCartOrder = async (
@@ -58,11 +61,13 @@ export class OrderService {
                         cart.total,
                         prisma,
                     ));
+                await this.productsService.updateProductsAfterOrder(cart);
             } catch (error) {
                 prisma.order.update({
                     where: { id: order.id },
                     data: { status: OrderStatus.CANCELLED },
                 });
+                await this.productsService.updateProductAfterCancel(cart);
                 console.error('Error adding order to invoice:', error);
                 throw new InternalServerErrorException(
                     'Failed to add order to invoice',
@@ -90,7 +95,7 @@ export class OrderService {
     private async createOrder(
         prisma: Prisma.TransactionClient,
         userId: string,
-        cart: any,
+        cart: CartWithItemsDto,
         invoiceId: string | null,
     ) {
         return await prisma.order.create({

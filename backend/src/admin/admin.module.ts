@@ -11,6 +11,7 @@ import { ProductsModule } from 'src/product/products.module';
 import { ProductsService } from 'src/product/products.service';
 import { FilterService } from 'src/product/filter.service';
 import { UserService } from 'src/user/user.service';
+import { InvoiceService } from 'src/payment/invoice/invoice.service';
 @Module({
     providers: [
         AdminService,
@@ -19,6 +20,7 @@ import { UserService } from 'src/user/user.service';
         ProductsService,
         FilterService,
         UserService,
+        InvoiceService,
     ],
     controllers: [AdminController],
     imports: [
