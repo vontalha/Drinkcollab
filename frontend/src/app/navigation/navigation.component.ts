@@ -41,6 +41,8 @@ export class NavigationComponent implements OnInit{
   // @ts-ignore
   isAuthorized$: Observable<boolean>;
 
+  sidebarOpen: boolean = false;
+
   constructor(private auth: AuthService, private cd: ChangeDetectorRef) {
   }
 
@@ -52,8 +54,9 @@ export class NavigationComponent implements OnInit{
       this.cd.detectChanges();
     })
     // Manuelle Change Detection anstoßen
-    this.isAuthenticated$.subscribe(() => {
+    this.isAuthenticated$.subscribe((isAuthenticated) => {
       this.cd.detectChanges();
+      setTimeout(() => this.sidebarOpen = !this.sidebarOpen && isAuthenticated, 100)
     });
   }
   logout(){

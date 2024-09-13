@@ -34,5 +34,17 @@ mat-toolbar{
 }
 main {
   flex: 1;
-  min-height: calc(100vh - 100px - 64px);
+}
+footer {
+  background-color: #483D8B;
+  text-align:center;
+  justify-content: center;
+  width:100%;
+  height:50px;
+}
+.content {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }

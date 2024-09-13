@@ -31,6 +31,7 @@ import {CartService} from "../services/CartService";
   host: {ngSkipHydration: 'true'}
 })
 export class LoginformComponent {
+  @Output() onLogin = new EventEmitter<void>();
 
   constructor(
     private fB: FormBuilder,
@@ -53,6 +54,7 @@ export class LoginformComponent {
         let password  = this.form.get('password')!.value.toString();
         let success = await this.auth.login(email, password)
         if (success) {
+          this.onLogin.emit();
           await this.router.navigate(['/', 'home']).then(()=>{
             this.cart.setNewItemStatus(true)});
         }else{
