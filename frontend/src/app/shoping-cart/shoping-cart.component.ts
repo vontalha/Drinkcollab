@@ -67,16 +67,16 @@ export class ShopingCartComponent implements OnInit{
   ngOnInit() {
     this.isAuthenticated$ = this.auth.isAuthenticated$();
     this.userId = this.auth.getUserID$();
-    this.auth.isAuthenticated$().subscribe(status =>{
-      if(status){
-        this.getWarenkorb();
-        // this.cartService.getCart(this.userId.toString()).then((items)=>{
-        //   this.cartItems = items;
-        //   console.log("cart:");
-        //   console.log(this.cartItems);
-        // });
-      }
-    })
+    // this.auth.isAuthenticated$().subscribe(status =>{
+    //   if(status){
+    //     this.getWarenkorb();
+    //     // this.cartService.getCart(this.userId.toString()).then((items)=>{
+    //     //   this.cartItems = items;
+    //     //   console.log("cart:");
+    //     //   console.log(this.cartItems);
+    //     // });
+    //   }
+    // })
     this.cartService.getNewItemStatus().subscribe( status => {
       if (status){
         this.getWarenkorb();

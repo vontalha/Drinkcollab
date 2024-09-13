@@ -68,7 +68,6 @@ export class SnacksComponent implements OnInit{
   ngOnInit(): void {
     this.auth.getUserID$().subscribe((value) => {
       this.userId = value;
-      console.log(value);
       this.cd.detectChanges();
     });
     this.fetchProducts();
@@ -81,7 +80,6 @@ export class SnacksComponent implements OnInit{
         this.pageSize,
         this.sortBy,
         this.sortOrder
-
       );
       this.products = response.data;
       this.totalProducts = response.total;

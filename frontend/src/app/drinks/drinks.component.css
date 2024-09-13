@@ -34,3 +34,9 @@ mat-card{
   max-width: 20%;
   max-height: 20%;
 }
+mat-card img {
+  max-width: 100%;
+  max-height: 80%;
+  object-fit: scale-down;
+  justify-content: center;
+}

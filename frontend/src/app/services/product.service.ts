@@ -92,9 +92,17 @@ export class ProductService {
   }
 
   async createProduct(product: Product): Promise<Product> {
+    try{
+      const res = await axios.post('http://localhost:3000/admin/products/categories/add', {name: product.categoryName, type: product.type}, {withCredentials:true});
+      console.log(res.status);
+    }catch (error){
+
+    }
+
     const response = await axios.post('http://localhost:3000/admin/products/add', product, {withCredentials:true});
     console.log(response.data);
     return response.data;
+
   }
 
   async updateProduct(product: Product): Promise<Product> {

@@ -53,8 +53,8 @@ export class LoginformComponent {
         let password  = this.form.get('password')!.value.toString();
         let success = await this.auth.login(email, password)
         if (success) {
-          this.cart.setNewItemStatus(true);
-          await this.router.navigate(['/', 'home']);
+          await this.router.navigate(['/', 'home']).then(()=>{
+            this.cart.setNewItemStatus(true)});
         }else{
 
         }

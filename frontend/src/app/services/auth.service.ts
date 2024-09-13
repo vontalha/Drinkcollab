@@ -73,6 +73,7 @@ export class AuthService {
     return await axios.get(this.apiUrl + '/user/me', {withCredentials: true})
       .then((response) => {
         const item = JSON.parse(localStorage.getItem("accessToken") || "null");
+        console.log("me",response.data);
         if(item){
           localStorage.removeItem("accessToken");
           localStorage.setItem("accessToken",JSON.stringify({userId: response.data.id, role: response.data.role, TokenExpiringAt: Date.now() + 1000 * 3600 * 0.5}));

@@ -1,12 +1,23 @@
 import {Component, OnInit} from '@angular/core';
-import {MatCard, MatCardContent, MatCardHeader} from "@angular/material/card";
-import {MatIcon} from "@angular/material/icon";
 import axios from 'axios';
-import {MatButton} from "@angular/material/button";
-import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
-import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {MatInput} from "@angular/material/input";
-import {NgIf} from "@angular/common";
+import {MatCard, MatCardAvatar, MatCardHeader, MatCardSubtitle, MatCardTitle} from "@angular/material/card";
+import {MatIcon} from "@angular/material/icon";
+import {
+  MatAccordion,
+  MatExpansionPanel,
+  MatExpansionPanelHeader,
+  MatExpansionPanelTitle
+} from "@angular/material/expansion";
+import {
+  MatCell, MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
+  MatHeaderRow, MatHeaderRowDef,
+  MatRow, MatRowDef,
+  MatTable
+} from "@angular/material/table";
+import {CurrencyPipe, DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-profile',
@@ -14,45 +25,68 @@ import {NgIf} from "@angular/common";
   imports: [
     MatCard,
     MatCardHeader,
-    MatCardContent,
+    MatCardTitle,
+    MatCardSubtitle,
     MatIcon,
-    MatButton,
-    MatFormField,
-    FormsModule,
-    MatError,
-    MatInput,
-    MatLabel,
-    NgIf,
-    ReactiveFormsModule
+    MatAccordion,
+    MatExpansionPanel,
+    MatExpansionPanelTitle,
+    MatExpansionPanelHeader,
+    MatTable,
+    MatColumnDef,
+    MatHeaderCell,
+    MatCell,
+    MatHeaderRow,
+    MatRow,
+    CurrencyPipe,
+    DatePipe,
+    MatHeaderCellDef,
+    MatCellDef,
+    MatHeaderRowDef,
+    MatRowDef,
+    MatCardAvatar
   ],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
 export class ProfileComponent implements OnInit{
+  apiUrl: string = 'http://localhost:3000';
   //todo
-  form: FormGroup = new FormGroup({
-    email: new FormControl('',[Validators.required, Validators.email]),
-    name: new FormControl('', [Validators.required, Validators.minLength(2),Validators.maxLength(255), Validators.pattern(/^[a-zA-Z]+$/)]),
-    firstname: new FormControl('',[Validators.required, Validators.minLength(2),Validators.maxLength(255), Validators.pattern(/^[a-zA-Z]+$/)]),
-    password: new FormControl('',[Validators.required, Validators.minLength(8), Validators.maxLength(255),Validators.pattern(/[A-Z]/), Validators.pattern(/[\W_]/), Validators.pattern(/[0-9]/)]),
-    password1: new FormControl('', Validators.required),
-  });
+  profile = {
+    firstName: '',
+    lastName: '',
+    email: ''
+  };
+  invoices: any[] = [];
+
+  constructor() {}
+
   ngOnInit(): void {
-    this.getMe();
-  }
-  constructor() {
-  }
-
-  getMe(){
-    axios.get('http://localhost:3000/', {withCredentials:true}).then((response)=>{
-
-    });
+    this.getProfileData();
+   // this.getInvoices();
   }
 
+  getProfileData() {
+    axios.get(this.apiUrl + '/user/me', {withCredentials: true})
+      .then(response => {
+        this.profile.firstName=response.data.firstName;
+        this.profile.lastName=response.data.lastName;
+        this.profile.email=response.data.email;
+        this.profile = response.data;
+        console.log("profile",this.profile);
+      })
+      .catch(error => {
+        console.error('Error fetching profile data:', error);
+      });
+  }
 
-  editProfile(){
-    axios.post('http://localhost:3000/', {},{withCredentials:true}).then((response)=>{
-
-    })
+  getInvoices() {
+    axios.get('https://your-backend.com/api/invoices')
+      .then(response => {
+        this.invoices = response.data;
+      })
+      .catch(error => {
+        console.error('Error fetching invoices:', error);
+      });
   }
 }

@@ -12,6 +12,7 @@ import {ProductVerwaltungComponent} from "./product-verwaltung/product-verwaltun
 import {DrinksComponent} from "./drinks/drinks.component";
 import {SnacksComponent} from "./snacks/snacks.component";
 import {InvoiceComponent} from "./invoice/invoice.component";
+import {ProfileComponent} from "./profile/profile.component";
 
 export const routes: Routes = [
   {path:'login',component: LoginformComponent, canActivate:[NotAuthenticatedGuard]},
@@ -24,6 +25,7 @@ export const routes: Routes = [
   {path:'new-user', component: NewUserListComponent, canActivate:[AuthGuard]},
   {path:'produkt-verwaltung', component: ProductVerwaltungComponent, canActivate:[AuthGuard]},
   {path:'payment/invoice',component: InvoiceComponent, canActivate:[AuthGuard]},
+  {path:'profile',component: ProfileComponent, canActivate:[AuthGuard]},
   {path:'', redirectTo:'/login', pathMatch:'full'}
 ];
 //{path:'home',component: StorepageComponent, canActivate:[AuthGuard]},
