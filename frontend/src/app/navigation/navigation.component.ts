@@ -56,7 +56,7 @@ export class NavigationComponent implements OnInit{
     // Manuelle Change Detection anstoßen
     this.isAuthenticated$.subscribe((isAuthenticated) => {
       this.cd.detectChanges();
-      setTimeout(() => this.sidebarOpen = !this.sidebarOpen && isAuthenticated, 100)
+      setTimeout(() => this.sidebarOpen = !this.sidebarOpen && isAuthenticated, 100);
     });
   }
   logout(){

@@ -96,7 +96,6 @@ export class ProductService {
       const res = await axios.post('http://localhost:3000/admin/products/categories/add', {name: product.categoryName, type: product.type}, {withCredentials:true});
       console.log(res.status);
     }catch (error){
-
     }
 
     const response = await axios.post('http://localhost:3000/admin/products/add', product, {withCredentials:true});
@@ -106,6 +105,11 @@ export class ProductService {
   }
 
   async updateProduct(product: Product): Promise<Product> {
+    try{
+      const res = await axios.post('http://localhost:3000/admin/products/categories/add', {name: product.categoryName, type: product.type}, {withCredentials:true});
+      console.log(res.status);
+    }catch (error){
+    }
     const response = await axios.put(`http://localhost:3000/admin/products/update/${product.id}`, product,{withCredentials:true});
     return response.data;
   }
