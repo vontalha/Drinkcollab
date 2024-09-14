@@ -27,7 +27,10 @@
 
   <div fxLayout="row wrap" fxLayoutGap="16px" style="row-gap: 16px">
     <mat-card *ngFor="let product of products" fxFlex="calc(25% - 16px)" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%" fxFlex.lg="25%">
-      <img mat-card-image [src]="product.image" alt="{{ product.name }}"/>
+      <div fxFlex="0 0 50%">
+        <img mat-card-image [src]="product.image" alt="{{ product.name }}"/>
+      </div>
+
       <mat-card-title>{{ product.name }}</mat-card-title>
       <mat-card-subtitle style="color: #ffd700">{{ product.price | currency: 'EUR':'symbol':undefined:'de-DE' }}</mat-card-subtitle>
       <mat-card-content>{{ product.description }}</mat-card-content>

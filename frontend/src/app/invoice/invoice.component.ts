@@ -1,11 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import axios from "axios";
+import {PaypalButton2Component} from "../paypal-button2/paypal-button2.component";
 
 @Component({
   selector: 'app-invoice',
   standalone: true,
-  imports: [],
+  imports: [
+    PaypalButton2Component
+  ],
   templateUrl: './invoice.component.html',
   styleUrl: './invoice.component.css'
 })
@@ -26,6 +29,7 @@ export class InvoiceComponent implements OnInit {
     axios.get('https://localhost:3000/payment/invoice?token='+this.token,{withCredentials:true}).then((response)=>{
       console.log(response.data);
       this.invoiceId=response.data.invoiceId;
+      localStorage.setItem("invoice",JSON.stringify({invoiceId: response.data.invoiceId, TokenExpiringAt: Date.now() + 1000 * 3600 * 0.5})); //30 Minuten valid
     });
   }
 

@@ -24,6 +24,7 @@ export class CartService {
   async getCart(userId: string){
      return axios.get(this.cartUrl +'/'+ userId, {withCredentials:true}).then((response)=>{
        this.cartId = response.data.id;
+       localStorage.setItem("cart",JSON.stringify({cartId: response.data.id, TokenExpiringAt: Date.now() + 1000 * 3600 * 0.5})); //30 Minuten valid
        return response.data;
      }).catch( error => {
        //console.log(error);

@@ -10,6 +10,7 @@ import {Observable} from "rxjs";
 import {MatDivider} from "@angular/material/divider";
 import {MatSidenav, MatSidenavContainer} from "@angular/material/sidenav";
 import {MatLine} from "@angular/material/core";
+import {PaypalButtonComponent} from "../paypal-button/paypal-button.component";
 
 interface Product {
   id: string;
@@ -49,7 +50,8 @@ interface Cart {
     MatSidenavContainer,
     MatSidenav,
     MatLine,
-    NgIf
+    NgIf,
+    PaypalButtonComponent
   ],
   templateUrl: './shoping-cart.component.html',
   styleUrl: './shoping-cart.component.css'
@@ -117,11 +119,6 @@ export class ShopingCartComponent implements OnInit{
     // @ts-ignore
     let token = JSON.parse(localStorage.getItem('accessToken'));
     this.cartService.removeItem(token.userId, itemId);
-  }
-
-  checkoutWithPayPal() {
-
-    console.log('PayPal Checkout');
   }
 
   checkoutInvoice() {

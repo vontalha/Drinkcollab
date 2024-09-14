@@ -37,6 +37,7 @@
 <div *ngIf="cart?.total !=0">
   Checkout:
   <p></p>
-  <button mat-raised-button color="primary" (click)="checkoutWithPayPal()">PayPal</button>
   <button mat-button (click)="checkoutInvoice()">Auf Rechnung</button>
+
 </div>
+<div *ngIf="cart?.total !=0"><app-paypal-button></app-paypal-button></div>
