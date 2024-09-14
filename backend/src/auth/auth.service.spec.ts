@@ -11,6 +11,7 @@ import {
 import * as bcrypt from 'bcryptjs';
 import { UserRole } from '@prisma/client';
 import { SignupDto } from './dto/signup.dto';
+import { Decimal } from '@prisma/client/runtime/library';
 
 describe('AuthService', () => {
     let service: AuthService;
@@ -40,6 +41,9 @@ describe('AuthService', () => {
                         user: {
                             create: jest.fn(),
                         },
+                        shoppingCart: {
+                            create: jest.fn(),
+                        },
                     },
                 },
             ],
@@ -65,6 +69,7 @@ describe('AuthService', () => {
                 firstName: 'Test',
                 lastName: 'User',
                 image: '',
+                suspended: false,
                 createdAt: new Date(),
                 updatedAt: new Date(),
             };
@@ -118,6 +123,7 @@ describe('AuthService', () => {
                 firstName: 'Test',
                 lastName: 'User',
                 image: '',
+                suspended: false,
                 createdAt: new Date(),
                 updatedAt: new Date(),
             };
@@ -143,6 +149,7 @@ describe('AuthService', () => {
                 firstName: 'Test',
                 lastName: 'User',
                 image: '',
+                suspended: false,
                 createdAt: new Date(),
                 updatedAt: new Date(),
             };
@@ -161,6 +168,13 @@ describe('AuthService', () => {
             jest.spyOn(prismaService.user, 'create').mockResolvedValue(
                 mockUser,
             );
+            jest.spyOn(prismaService.shoppingCart, 'create').mockResolvedValue({
+                id: 'cart-id',
+                userId: mockUser.id,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                total: new Decimal(0),
+            });
             jest.spyOn(jwtService, 'signAsync').mockResolvedValue(
                 'valid_token',
             );
@@ -185,6 +199,7 @@ describe('AuthService', () => {
                 sub: mockUser.id,
                 email: mockUser.email,
                 role: mockUser.role,
+                shoppingCartId: 'cart-id',
             });
         });
 
@@ -197,6 +212,7 @@ describe('AuthService', () => {
                 firstName: 'Test',
                 lastName: 'User',
                 image: '',
+                suspended: false,
                 createdAt: new Date(),
                 updatedAt: new Date(),
             };

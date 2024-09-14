@@ -1,6 +1,5 @@
 import { PrismaModule } from './../prisma/prisma.module';
 import { Module } from '@nestjs/common';
-import { AdminService } from './admin.service';
 import { AdminController } from './admin.controller';
 import { AuthModule } from 'src/auth/auth.module';
 import { AccountRequestModule } from 'src/account-request/account-request.module';
@@ -14,7 +13,6 @@ import { UserService } from 'src/user/user.service';
 import { InvoiceService } from 'src/payment/invoice/invoice.service';
 @Module({
     providers: [
-        AdminService,
         AccountRequestService,
         MailService,
         ProductsService,

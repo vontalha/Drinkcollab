@@ -11,7 +11,11 @@ describe('AccountRequestService', () => {
     let prismaService: PrismaService;
     let mailService: MailService; // eslint-disable-line
 
+    const originalConsoleError = console.error;
+
     beforeEach(async () => {
+        jest.spyOn(console, 'error').mockImplementation(() => {});
+
         const module: TestingModule = await Test.createTestingModule({
             providers: [
                 AccountRequestService,
@@ -43,6 +47,7 @@ describe('AccountRequestService', () => {
 
     afterEach(() => {
         jest.clearAllMocks();
+        console.error = originalConsoleError;
     });
 
     describe('createRequestToken', () => {
@@ -210,20 +215,19 @@ describe('AccountRequestService', () => {
             expect(result).toBeNull();
         });
     });
-
     describe('getAllRequestTokens', () => {
-        it('should return an array of token IDs', async () => {
+        it('should return an array of token objects with id and email', async () => {
             const mockTokens = [
                 {
                     id: 'token-1',
                     email: 'test1@example.com',
-                    token: 'token1',
+                    token: 'mock-token-1',
                     expires: new Date(),
                 },
                 {
                     id: 'token-2',
                     email: 'test2@example.com',
-                    token: 'token2',
+                    token: 'mock-token-2',
                     expires: new Date(),
                 },
             ];
@@ -234,9 +238,14 @@ describe('AccountRequestService', () => {
 
             const result = await service.getAllRequestTokens();
 
-            expect(result).toEqual(['token-1', 'token-2']);
+            const expectedResult = mockTokens.map((token) => ({
+                id: token.id,
+                email: token.email,
+            }));
+
+            expect(result).toEqual(expectedResult);
             expect(prismaService.requestToken.findMany).toHaveBeenCalledWith({
-                select: { id: true },
+                select: { id: true, email: true },
             });
         });
     });

@@ -48,6 +48,7 @@ describe('UserService', () => {
                 password: 'hashedPassword',
                 image: 'default.jpg',
                 role: UserRole.USER,
+                suspended: false,
                 createdAt: new Date(),
                 updatedAt: new Date(),
             };
@@ -107,6 +108,8 @@ describe('UserService', () => {
                     createdAt: true,
                     updatedAt: true,
                     likedDrinks: true,
+                    shoppingCart: true,
+                    suspended: true,
                 },
             });
         });
@@ -148,6 +151,7 @@ describe('UserService', () => {
                 password: 'hashedPassword',
                 image: 'default.jpg',
                 role: UserRole.USER,
+                suspended: false,
                 createdAt: new Date(),
                 updatedAt: new Date(),
             };
@@ -195,6 +199,7 @@ describe('UserService', () => {
                 password: 'hashedPassword',
                 image: 'default.jpg',
                 role: UserRole.USER,
+                suspended: false,
                 createdAt: new Date(),
                 updatedAt: new Date(),
             };
