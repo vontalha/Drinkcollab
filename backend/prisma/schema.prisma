@@ -25,7 +25,6 @@ model User {
     role          UserRole      @default(USER)
     createdAt     DateTime      @default(now())
     updatedAt     DateTime?     @updatedAt
-    creditBalance Decimal       @default(0) @db.Decimal(19, 4)
     invoices      Invoice[]
     payments      Payment[]
     orders        Order[]

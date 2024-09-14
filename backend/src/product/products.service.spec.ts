@@ -7,6 +7,7 @@ import { ProductsService } from './products.service';
 import { UpdateProductDto } from './dto/product.dto';
 import { FilterDto } from 'src/dto/filter.dto';
 import { FilterService } from './filter.service';
+import { Decimal } from '@prisma/client/runtime/library';
 
 describe('ProductsService', () => {
     let service: ProductsService;
@@ -69,7 +70,7 @@ describe('ProductsService', () => {
                 brand: 'Test Brand',
                 type: 'DRINK',
                 description: 'Test Description',
-                price: 10,
+                price: new Decimal(10),
                 image: 'image',
                 size: 1,
                 stock: 0,
@@ -122,7 +123,7 @@ describe('ProductsService', () => {
                 type: 'DRINK',
                 description: 'Test Description',
                 categoryId: '1',
-                price: 10,
+                price: new Decimal(10),
                 image: 'image',
                 size: 1,
                 stock: 1,
@@ -170,7 +171,7 @@ describe('ProductsService', () => {
                 type: 'DRINK',
                 description: 'Test Description',
                 categoryId: '1',
-                price: 10,
+                price: new Decimal(10),
                 image: 'image',
                 size: 1,
                 stock: 1,
@@ -206,7 +207,7 @@ describe('ProductsService', () => {
                 type: 'DRINK',
                 description: 'Test Description',
                 categoryId: '1',
-                price: 10,
+                price: new Decimal(10),
                 image: 'image',
                 size: 1,
                 stock: 1,
@@ -244,7 +245,7 @@ describe('ProductsService', () => {
                     type: 'DRINK',
                     description: 'Description 1',
                     categoryId: '1',
-                    price: 10,
+                    price: new Decimal(10),
                     image: 'image',
                     size: 1,
                     stock: 1,
@@ -318,7 +319,7 @@ describe('ProductsService', () => {
                     type: 'DRINK',
                     description: 'Test Description',
                     categoryId: '1',
-                    price: 10,
+                    price: new Decimal(10),
                     image: 'image',
                     size: 1,
                     stock: 1,
