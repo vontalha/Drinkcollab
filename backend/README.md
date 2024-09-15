@@ -15,7 +15,7 @@ Set up a PostgreSQL database locally. Follow the instructions below.
 ### Option 2: Use PostgreSQL with Docker
 
 You can run PostgreSQL in a Docker container. The instructions for this are available in the [Docker Setup](#docker-setup) section.
-<br/>
+<br/><br/>
 
 
 ## 2. Install Node modules
