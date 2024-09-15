@@ -5,7 +5,6 @@ To set up and make use of the backend for Drinkcollab you have two options:
 1. **Local setup** (without Docker)
 2. **Dockerized setup**
 
----
 
 ## 1. Postgres
 
@@ -17,7 +16,6 @@ Set up a PostgreSQL database locally. Follow the instructions below.
 
 You can run PostgreSQL in a Docker container. The instructions for this are available in the [Docker Setup](#docker-setup) section.
 
----
 
 ## 2. Install Node modules
 
@@ -28,7 +26,6 @@ $ npm install
 ```
 to install the node modules required for the Drinkcollab backend
 
----
 
 ## 3. Setup Prisma ORM
 
@@ -74,7 +71,6 @@ $ npx prisma studio
 ```
 to view and edit the db.
 
----
 
 ## 4. Authentication
 
@@ -90,7 +86,6 @@ You can generate a secret key using:
 $ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
----
 
 ## 5. Mail
 
@@ -103,18 +98,16 @@ MAIL_PASSWORD=your_mail_password  # Your SMTP password or authentication token
 MAIL_FROM=your_mail_from_address  # The email address that will appear in the "From" field
 ```
 
----
 
 ## 6. Payment
 
-Drinkcollab integrates PayPal for processing payments. To set up PayPal in the application you will ll need to configure the following environment variables in your `.env` file:
+Drinkcollab integrates PayPal for processing payments. To set up PayPal in the application you will need to configure the following environment variables in your `.env` file:
 ```
 PAYPAL_CLIENT_ID=your_paypal_client_id          # Your PayPal REST API client ID
 PAYPAL_CLIENT_SECRET=your_paypal_client_secret  # Your PayPal REST API client secret
 PAYPAL_BASE_URL=https://api-m.sandbox.paypal.com  # The PayPal API URL (use sandbox for testing, in case of production use https://api-m.paypal.com)
 ```
 
----
 
 ## 7. Running the backend
 
@@ -156,7 +149,6 @@ To stop the services run:
 $ docker-compose down
 ```
 
----
 
 ## 8. Test
 
@@ -171,7 +163,6 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
----
 
 ## 9. License
 
