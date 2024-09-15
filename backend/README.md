@@ -158,9 +158,6 @@ $ docker-compose down
 # unit tests
 $ npm run test
 
-# e2e tests
-$ npm run test:e2e
-
 # test coverag
 $ npm run test:cov
 ```
