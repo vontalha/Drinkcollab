@@ -14,6 +14,7 @@ import { InvoiceService } from 'src/payment/invoice/invoice.service';
 import { PaymentService } from 'src/payment/payment.service';
 import { PaymentDashboardDto } from 'src/payment/dto/admin-dashboard-payments.dto';
 import { OrderService } from 'src/order/order.service';
+import { DirectCheckoutOrderDto } from 'src/order/dto/user-direct-checkout-orders.dto';
 
 type UserInfo = {
     id: string;
@@ -61,7 +62,9 @@ export class UserController {
     }
 
     @Get('directCheckout/:userId')
-    async getDirectCheckoutOrders(@Param('userId') userId: string) {
+    async getDirectCheckoutOrders(
+        @Param('userId') userId: string,
+    ): Promise<DirectCheckoutOrderDto[]> {
         return this.orderService.getAllDirectCheckoutOrders(userId);
     }
 }
