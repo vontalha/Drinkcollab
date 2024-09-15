@@ -3,11 +3,9 @@
   flex-direction: column;
   margin: 20px;
 }
-
 .product-list mat-form-field {
   width: 100%;
 }
-
 .paginator {
   width: 100%;
   margin-top: 20px;
@@ -18,7 +16,6 @@
   border: 1px solid #303030;
   border-radius: 10px;
 }
-
 .sortby{
   display: flex;
   justify-content: flex-end;
@@ -34,9 +31,13 @@ mat-card{
   max-width: 20%;
   max-height: 20%;
 }
+mat-card-actions{
+  justify-content: end;
+}
 mat-card img {
   max-width: 100%;
-  max-height: 80%;
+  max-height: 240px;
+  height: 240px;
   object-fit: scale-down;
   justify-content: center;
 }

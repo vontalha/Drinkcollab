@@ -69,14 +69,17 @@
           </mat-list-item>
           <mat-list-item>
             <mat-icon></mat-icon>
-            <span class="project" [style.cursor]="'pointer'" routerLink="home"> Abrechnungen </span>
+            <span class="project" [style.cursor]="'pointer'" routerLink="invoices"> Invoices </span>
           </mat-list-item>
-
           <mat-list-item>
-            <span class="project" [style.cursor]="'pointer'" routerLink="profile"><u> Profile: </u></span>
+            <mat-icon></mat-icon>
+            <span class="project" [style.cursor]="'pointer'" routerLink="payments"> Payments </span>
           </mat-list-item>
         </div>
 
+        <mat-list-item>
+          <span class="project" [style.cursor]="'pointer'" routerLink="profile"><u> Profile: </u></span>
+        </mat-list-item>
       </mat-nav-list>
     </mat-sidenav>
 
@@ -94,7 +97,7 @@
   </mat-sidenav-container>
   <footer>
     <div>
-      <h2>Projektseminar Softwaresysteme</h2>
+      <h2 style="color: #d0d0d0;padding-top: 8px">Projektseminar Softwaresysteme</h2>
     </div>
   </footer>
 </div>

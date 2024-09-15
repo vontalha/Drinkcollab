@@ -30,14 +30,12 @@
 
 <mat-divider *ngIf="cart?.total !=0"></mat-divider>
 <mat-divider *ngIf="cart?.total !=0"></mat-divider>
-<h3 *ngIf="cart?.total !=0">Gesamtbetrag: {{ cart?.total | currency:'EUR':'symbol':'1.0-2':'de-DE' }}</h3>
-<div>
-  <button mat-button (click)="getWarenkorb()">get warenkorb</button>
-</div>
+<h3 *ngIf="cart?.total !=0" style="margin-top: 10px">Gesamtbetrag: {{ cart?.total | currency:'EUR':'symbol':'1.0-2':'de-DE' }}</h3>
+
 <div *ngIf="cart?.total !=0">
   Checkout:
   <p></p>
-  <button mat-button (click)="checkoutInvoice()">Auf Rechnung</button>
-
+  <button mat-button (click)="checkoutInvoice()" style="background-color: rgba(72,61,139,0.74)">Auf Rechnung</button>
 </div>
+<div *ngIf="cart?.total !=0" style="margin-top: 10px">Direct Checkout with Paypal:</div>
 <div *ngIf="cart?.total !=0"><app-paypal-button></app-paypal-button></div>

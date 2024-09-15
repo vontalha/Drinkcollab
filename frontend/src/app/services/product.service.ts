@@ -91,6 +91,22 @@ export class ProductService {
     }
   }
 
+  async searchProduct(query:string): Promise<ProductResponse>{
+    try {
+      const response: AxiosResponse<ProductResponse> = await axios.get('http://localhost:3000/products/search', {
+        params: {
+          q: query
+        },
+        withCredentials:true
+      });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching products', error);
+      throw error;
+    }
+  }
+
   async createProduct(product: Product): Promise<Product> {
     try{
       const res = await axios.post('http://localhost:3000/admin/products/categories/add', {name: product.categoryName, type: product.type}, {withCredentials:true});

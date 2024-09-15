@@ -51,12 +51,11 @@ import {AuthService} from "../services/auth.service";
   styleUrl: './snacks.component.css'
 })
 export class SnacksComponent implements OnInit{
-  //todo
   products: Product[] = [];
   totalProducts: number = 0;
   totalPages: number = 0;
   currentPage: number = 1;
-  pageSize: number = 10;
+  pageSize: number = 6;
   searchQuery: string = '';
   sortBy: string = 'sales';
   sortOrder: 'asc' | 'desc' = 'desc';

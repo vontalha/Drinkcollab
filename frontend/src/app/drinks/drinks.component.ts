@@ -52,12 +52,13 @@ import {AuthService} from "../services/auth.service";
   styleUrl: './drinks.component.css'
 })
 export class DrinksComponent implements OnInit{
-  //todo
+
   products: Product[] = [];
+  productsSearch: Product[] = [];
   totalProducts: number = 0;
   totalPages: number = 0;
   currentPage: number = 1;
-  pageSize: number = 10;
+  pageSize: number = 6;
   searchQuery: string = '';
   sortBy: string = 'sales';
   sortOrder: 'asc' | 'desc' = 'desc';
@@ -80,9 +81,10 @@ export class DrinksComponent implements OnInit{
         this.currentPage,
         this.pageSize,
         this.sortBy,
-        this.sortOrder
+        this.sortOrder,
       );
       this.products = response.data;
+      console.log(this.products);
       this.totalProducts = response.total;
       this.totalPages = response.totalPages;
     } catch (error) {
@@ -90,11 +92,23 @@ export class DrinksComponent implements OnInit{
     }
   }
 
-  onSearchChange(event: Event): void {
+  // @ts-ignore
+  onSearchChange(event: Event): Promise<void> {
     const inputElement = event.target as HTMLInputElement;
     this.searchQuery = inputElement.value;
     this.currentPage = 1;
-    this.fetchProducts();
+    this.search();
+  }
+  async search(){
+    try {
+      await this.productService.searchProduct(
+        this.searchQuery
+      ).then((response)=>{
+        this.productsSearch = response.data;
+      });
+    } catch (error) {
+      console.error('Error fetching products', error);
+    }
   }
 
   onSortChange(sort: string): void {

@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import {CreateAccountComponent} from "./create-account/create-account.component";
-import {StorepageComponent} from "./storepage/storepage.component";
 import {LoginformComponent} from "./loginform/loginform.component";
 import {RequestAccountComponent} from "./request-account/request-account.component";
 import {UserListComponent} from "./user-list/user-list.component";
@@ -13,6 +12,8 @@ import {DrinksComponent} from "./drinks/drinks.component";
 import {SnacksComponent} from "./snacks/snacks.component";
 import {InvoiceComponent} from "./invoice/invoice.component";
 import {ProfileComponent} from "./profile/profile.component";
+import {InvoiceListComponent} from "./invoice-list/invoice-list.component";
+import {PaymentListComponent} from "./payment-list/payment-list.component";
 
 export const routes: Routes = [
   {path:'login',component: LoginformComponent, canActivate:[NotAuthenticatedGuard]},
@@ -26,6 +27,7 @@ export const routes: Routes = [
   {path:'produkt-verwaltung', component: ProductVerwaltungComponent, canActivate:[AuthGuard]},
   {path:'payment/invoice',component: InvoiceComponent, canActivate:[AuthGuard]},
   {path:'profile',component: ProfileComponent, canActivate:[AuthGuard]},
+  {path:'invoices',component: InvoiceListComponent, canActivate:[AuthGuard]},
+  {path:'payments',component: PaymentListComponent, canActivate:[AuthGuard]},
   {path:'', redirectTo:'/login', pathMatch:'full'}
 ];
-//{path:'home',component: StorepageComponent, canActivate:[AuthGuard]},

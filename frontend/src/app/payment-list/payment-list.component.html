@@ -1,0 +1,48 @@
+<mat-table [dataSource]="payments" class="mat-elevation-z8">
+
+  <!-- ID Column -->
+  <ng-container matColumnDef="id">
+    <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+    <mat-cell *matCellDef="let payment"> {{payment.id}} </mat-cell>
+  </ng-container>
+
+  <!-- Status Column -->
+  <ng-container matColumnDef="status">
+    <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+    <mat-cell *matCellDef="let payment"> {{payment.status}} </mat-cell>
+  </ng-container>
+
+  <!-- Created At Column -->
+  <ng-container matColumnDef="createdAt">
+    <mat-header-cell *matHeaderCellDef> Created At </mat-header-cell>
+    <mat-cell *matCellDef="let payment"> {{payment.createdAt | date}} </mat-cell>
+  </ng-container>
+
+  <!-- Due Date Column -->
+  <ng-container matColumnDef="dueDate">
+    <mat-header-cell *matHeaderCellDef> Due Date </mat-header-cell>
+    <mat-cell *matCellDef="let payment"> {{payment.dueDate | date}} </mat-cell>
+  </ng-container>
+
+  <!-- Method Column -->
+  <ng-container matColumnDef="method">
+    <mat-header-cell *matHeaderCellDef> Payment Method </mat-header-cell>
+    <mat-cell *matCellDef="let payment"> {{payment.method}} </mat-cell>
+  </ng-container>
+
+  <!-- Amount Column -->
+  <ng-container matColumnDef="amount">
+    <mat-header-cell *matHeaderCellDef> Amount </mat-header-cell>
+    <mat-cell *matCellDef="let payment"> {{payment.amount | currency: 'EUR':'symbol':undefined:'de-DE'}} </mat-cell>
+  </ng-container>
+
+  <!-- User Column -->
+  <ng-container matColumnDef="user">
+    <mat-header-cell *matHeaderCellDef> User </mat-header-cell>
+    <mat-cell *matCellDef="let payment"> {{payment.user.firstName}} {{payment.user.lastName}} ({{payment.user.email}}) </mat-cell>
+  </ng-container>
+
+  <!-- Table Header and Rows -->
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>

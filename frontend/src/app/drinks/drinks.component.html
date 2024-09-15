@@ -1,15 +1,10 @@
 <div class="product-list">
   <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px">
-    <mat-form-field class="search" appearance="fill" fxFlex>
-      <mat-label>Search</mat-label>
-      <input matInput (input)="onSearchChange($event)" />
-    </mat-form-field>
 
     <div fxLayout="row" fxLayoutGap="8px">
       <mat-form-field class="sortby" appearance="fill" fxFlex="none">
         <mat-label>Sort by</mat-label>
         <mat-select [(value)]="sortBy" (selectionChange)="onSortChange($event.value)">
-          <mat-option value="name">Name</mat-option>
           <mat-option value="price">Price</mat-option>
           <mat-option value="sales">Sales</mat-option>
         </mat-select>
@@ -27,15 +22,29 @@
 
   <div fxLayout="row wrap" fxLayoutGap="16px" style="row-gap: 16px">
     <mat-card *ngFor="let product of products" fxFlex="calc(25% - 16px)" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%" fxFlex.lg="25%">
-      <div fxFlex="0 0 50%">
-        <img mat-card-image [src]="product.image" alt="{{ product.name }}"/>
-      </div>
+
+      <img mat-card-image [src]="product.image" alt="{{ product.name }}"/>
 
       <mat-card-title>{{ product.name }}</mat-card-title>
       <mat-card-subtitle style="color: #ffd700">{{ product.price | currency: 'EUR':'symbol':undefined:'de-DE' }}</mat-card-subtitle>
       <mat-card-content>{{ product.description }}</mat-card-content>
+      <mat-card-actions style="color: #483D8B">
+        <button mat-raised-button  style="background-color: #483D8B" (click)="addToCart(product.id)">
+          <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined"
+                rel="stylesheet"/>
+          <mat-icon fontSet="material-icons-outlined">add_shopping_cart</mat-icon> Add to Cart
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  <div fxLayout="row wrap" fxLayoutGap="16px" style="row-gap: 16px">
+    <mat-card *ngFor="let product of productsSearch" fxFlex="calc(25% - 16px)" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%" fxFlex.lg="25%">
+      <img mat-card-image [src]="product.image" alt="{{ product.name }}" />
+      <mat-card-title>{{ product.name }}</mat-card-title>
+      <mat-card-subtitle style="color: #ffd700">{{ product.price | currency: 'EUR':'symbol':undefined:'de-DE'  }}</mat-card-subtitle>
+      <mat-card-content>{{ product.description }}</mat-card-content>
       <mat-card-actions>
-        <button mat-raised-button  color="primary" (click)="addToCart(product.id)">
+        <button mat-raised-button  style="background-color: #483D8B" (click)="addToCart(product.id)">
           <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined"
                 rel="stylesheet"/>
           <mat-icon fontSet="material-icons-outlined">add_shopping_cart</mat-icon> Add to Cart
@@ -47,7 +56,7 @@
   <mat-paginator
     [length]="totalProducts"
     [pageSize]="pageSize"
-    [pageSizeOptions]="[4, 10, 25, 50]"
+    [pageSizeOptions]="[6, 12, 24, 48]"
     (page)="onPageChange($event)"
     class="paginator"
   >

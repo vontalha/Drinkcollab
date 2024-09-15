@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/material/card";
 import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
-import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {CommonModule} from "@angular/common";
 import {MatButton} from "@angular/material/button";
@@ -58,7 +58,7 @@ export class LoginformComponent {
           await this.router.navigate(['/', 'home']).then(()=>{
             this.cart.setNewItemStatus(true)});
         }else{
-
+          alert("login was not successful");
         }
 
         // axios.post('http://localhost:3000/auth/login',{'email': email , 'password': password},{ withCredentials: true }).then((response)=>{

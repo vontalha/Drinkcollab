@@ -26,8 +26,8 @@ export class CartService {
        this.cartId = response.data.id;
        localStorage.setItem("cart",JSON.stringify({cartId: response.data.id, TokenExpiringAt: Date.now() + 1000 * 3600 * 0.5})); //30 Minuten valid
        return response.data;
-     }).catch( error => {
-       //console.log(error);
+     }).catch( (error) => {
+       console.log(error);
      });
   }
 
@@ -66,6 +66,7 @@ export class CartService {
   createInvoice(userID: string){
     axios.post(this.orderUrl+ '/create',{userId: userID, cartId: this.cartId, paymentMethod: 'INVOICE'},{withCredentials:true}).then((response)=>{
       console.log(response.data);
+      this.newItem$.next(true);
     }).catch((error) => {
       console.error('Fehler beim Erstellen der Invoice:', error);
     });

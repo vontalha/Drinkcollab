@@ -13,23 +13,171 @@
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
-          Rechnungen
+          Invoices
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <table mat-table [dataSource]="invoices" class="mat-elevation-z8">
-        <ng-container matColumnDef="date">
-          <th mat-header-cell *matHeaderCellDef> Datum </th>
-          <td mat-cell *matCellDef="let invoice"> {{ invoice.date | date }} </td>
+      <mat-table [dataSource]="invoices" class="mat-elevation-z8">
+
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
+          <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+          <mat-cell *matCellDef="let invoice"> {{invoice.id}} </mat-cell>
         </ng-container>
 
+        <!-- Created At Column -->
+        <ng-container matColumnDef="createdAt">
+          <mat-header-cell *matHeaderCellDef> Created At </mat-header-cell>
+          <mat-cell *matCellDef="let invoice"> {{invoice.createdAt | date}} </mat-cell>
+        </ng-container>
+
+        <!-- Due Date Column -->
+        <ng-container matColumnDef="dueDate">
+          <mat-header-cell *matHeaderCellDef> Due Date </mat-header-cell>
+          <mat-cell *matCellDef="let invoice"> {{invoice.dueDate | date}} </mat-cell>
+        </ng-container>
+
+        <!-- Total Amount Column -->
+        <ng-container matColumnDef="totalAmount">
+          <mat-header-cell *matHeaderCellDef> Total Amount </mat-header-cell>
+          <mat-cell *matCellDef="let invoice"> {{invoice.totalAmount | currency}} </mat-cell>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+          <mat-cell *matCellDef="let invoice"> {{invoice.status}} </mat-cell>
+        </ng-container>
+
+        <!-- Table Header and Rows -->
+        <mat-header-row *matHeaderRowDef="displayedColumnsInvoice"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsInvoice;">
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Orders</mat-panel-title>
+            </mat-expansion-panel-header>
+
+            <div *ngFor="let order of row.orders">
+              <h4>Order ID: {{order.id}}</h4>
+              <ul>
+                <li *ngFor="let item of order.orderItems">
+                  {{item.product.name}} (x{{item.quantity}}) - {{item.price | currency: 'EUR':'symbol':undefined:'de-DE'}}
+                </li>
+              </ul>
+            </div>
+          </mat-expansion-panel>
+        </mat-row>
+      </mat-table>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Payments
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-table [dataSource]="payments" class="mat-elevation-z8">
+
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
+          <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+          <mat-cell *matCellDef="let payment"> {{payment.id}} </mat-cell>
+        </ng-container>
+
+        <!-- Status Column -->
+        <ng-container matColumnDef="status">
+          <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+          <mat-cell *matCellDef="let payment"> {{payment.status}} </mat-cell>
+        </ng-container>
+
+        <!-- Created At Column -->
+        <ng-container matColumnDef="createdAt">
+          <mat-header-cell *matHeaderCellDef> Created At </mat-header-cell>
+          <mat-cell *matCellDef="let payment"> {{payment.createdAt | date}} </mat-cell>
+        </ng-container>
+
+        <!-- Due Date Column -->
+        <ng-container matColumnDef="dueDate">
+          <mat-header-cell *matHeaderCellDef> Due Date </mat-header-cell>
+          <mat-cell *matCellDef="let payment"> {{payment.dueDate | date}} </mat-cell>
+        </ng-container>
+
+        <!-- Method Column -->
+        <ng-container matColumnDef="method">
+          <mat-header-cell *matHeaderCellDef> Payment Method </mat-header-cell>
+          <mat-cell *matCellDef="let payment"> {{payment.method}} </mat-cell>
+        </ng-container>
+
+        <!-- Amount Column -->
         <ng-container matColumnDef="amount">
-          <th mat-header-cell *matHeaderCellDef> Betrag </th>
-          <td mat-cell *matCellDef="let invoice"> {{ invoice.amount | currency }} </td>
+          <mat-header-cell *matHeaderCellDef> Amount </mat-header-cell>
+          <mat-cell *matCellDef="let payment"> {{payment.amount | currency: 'EUR':'symbol':undefined:'de-DE'}} </mat-cell>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="['date', 'amount']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['date', 'amount'];"></tr>
-      </table>
+        <!-- User Column -->
+        <ng-container matColumnDef="user">
+          <mat-header-cell *matHeaderCellDef> User </mat-header-cell>
+          <mat-cell *matCellDef="let payment"> {{payment.user.firstName}} {{payment.user.lastName}} ({{payment.user.email}}) </mat-cell>
+        </ng-container>
+
+        <!-- Table Header and Rows -->
+        <mat-header-row *matHeaderRowDef="displayedColumnsPayment"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsPayment;"></mat-row>
+
+      </mat-table>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Direct Checkouts
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-table [dataSource]="directCheckouts" class="mat-elevation-z8">
+
+        <!-- ID Column -->
+        <ng-container matColumnDef="id">
+          <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+          <mat-cell *matCellDef="let checkout"> {{checkout.id}} </mat-cell>
+        </ng-container>
+
+        <!-- Created At Column -->
+        <ng-container matColumnDef="createdAt">
+          <mat-header-cell *matHeaderCellDef> Created At </mat-header-cell>
+          <mat-cell *matCellDef="let checkout"> {{checkout.createdAt | date}} </mat-cell>
+        </ng-container>
+
+        <!-- Payment Method Column -->
+        <ng-container matColumnDef="paymentMethod">
+          <mat-header-cell *matHeaderCellDef> Payment Method </mat-header-cell>
+          <mat-cell *matCellDef="let checkout"> {{checkout.payment.method}} </mat-cell>
+        </ng-container>
+
+        <!-- Payment Status Column -->
+        <ng-container matColumnDef="paymentStatus">
+          <mat-header-cell *matHeaderCellDef> Payment Status </mat-header-cell>
+          <mat-cell *matCellDef="let checkout"> {{checkout.payment.status}} </mat-cell>
+        </ng-container>
+
+        <!-- Table Header and Rows -->
+        <mat-header-row *matHeaderRowDef="displayedColumnsDirect"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumnsDirect;"></mat-row>
+
+      </mat-table>
+
+      <!-- Expansion Panel for Order Items -->
+      <mat-accordion>
+        <mat-expansion-panel *ngFor="let checkout of directCheckouts">
+          <mat-expansion-panel-header>
+            <mat-panel-title>Order Items for {{ checkout.id }}</mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <div *ngFor="let item of checkout.orderItems" class="order-item">
+            <img [src]="item.product.image" alt="{{ item.product.name }}" width="50" height="50">
+            <p>Product: {{ item.product.name }}</p>
+            <p>Quantity: {{ item.quantity }}</p>
+            <p>Price: {{ item.price | currency: 'EUR':'symbol':undefined:'de-DE' }}</p>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+
     </mat-expansion-panel>
   </mat-accordion>
 </div>

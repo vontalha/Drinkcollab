@@ -1,2 +1,19 @@
-Pay Invoice
+<div *ngFor="let invoice of invoices" class="invoice-card">
+  <h3>Invoice ID: {{ invoice.id }}</h3>
+  <p>Due Date: {{ invoice.dueDate | date }}</p>
+  <p>Created At: {{ invoice.createdAt | date }}</p>
+  <p>Total Amount: {{ invoice.totalAmount | currency: 'EUR':'symbol':undefined:'de-DE' }}</p>
+  <p>User Email: {{ invoice.user.email }}</p>
+
+  <h4>Orders:</h4>
+  <div *ngFor="let order of invoice.orders">
+    <p>Order Created At: {{ order.createdAt | date }}</p>
+    <ul>
+      <li *ngFor="let item of order.orderItems">
+        Product ID: {{ item.productId }} - Quantity: {{ item.quantity }} - Price: {{ item.price | currency: 'EUR':'symbol':undefined:'de-DE' }}
+      </li>
+    </ul>
+  </div>
+</div>
+
 <app-paypal-button2></app-paypal-button2>

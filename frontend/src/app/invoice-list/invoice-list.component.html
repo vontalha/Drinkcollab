@@ -1,0 +1,37 @@
+<mat-table [dataSource]="invoices" class="mat-elevation-z8">
+
+  <!-- ID Column -->
+  <ng-container matColumnDef="id">
+    <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+    <mat-cell *matCellDef="let invoice"> {{invoice.id}} </mat-cell>
+  </ng-container>
+
+  <!-- Due Date Column -->
+  <ng-container matColumnDef="dueDate">
+    <mat-header-cell *matHeaderCellDef> Due Date </mat-header-cell>
+    <mat-cell *matCellDef="let invoice"> {{invoice.dueDate | date}} </mat-cell>
+  </ng-container>
+
+  <!-- Total Amount Column -->
+  <ng-container matColumnDef="totalAmount">
+    <mat-header-cell *matHeaderCellDef> Total Amount </mat-header-cell>
+    <mat-cell *matCellDef="let invoice"> {{invoice.totalAmount | currency: 'EUR':'symbol':undefined:'de-DE'}} </mat-cell>
+  </ng-container>
+
+  <!-- Status Column -->
+  <ng-container matColumnDef="status">
+    <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+    <mat-cell *matCellDef="let invoice"> {{invoice.status}} </mat-cell>
+  </ng-container>
+
+  <!-- User Column -->
+  <ng-container matColumnDef="user">
+    <mat-header-cell *matHeaderCellDef> User </mat-header-cell>
+    <mat-cell *matCellDef="let invoice"> {{invoice.user.firstName}} {{invoice.user.lastName}} ({{invoice.user.email}}) </mat-cell>
+  </ng-container>
+
+  <!-- Table Header and Rows -->
+  <mat-header-row *matHeaderRowDef="displayedColumnsInvoice"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumnsInvoice;">
+  </mat-row>
+</mat-table>

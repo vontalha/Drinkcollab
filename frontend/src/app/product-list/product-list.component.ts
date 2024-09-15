@@ -10,7 +10,6 @@ import {FlexLayoutModule} from "@angular/flex-layout";
 import {MatButtonModule} from "@angular/material/button";
 import {AsyncPipe, CurrencyPipe, NgForOf, NgIf} from "@angular/common";
 import {AuthService} from "../services/auth.service";
-import {Observable} from "rxjs";
 import {CartService} from "../services/CartService";
 import {MatIcon} from "@angular/material/icon";
 
@@ -42,7 +41,7 @@ export class ProductListComponent implements OnInit{
   totalProducts: number = 0;
   totalPages: number = 0;
   currentPage: number = 1;
-  pageSize: number = 10;
+  pageSize: number = 6;
   searchQuery: string = '';
   sortBy: string = 'sales';
   sortOrder: 'asc' | 'desc' = 'desc';
