@@ -87,8 +87,7 @@ You can generate a secret key using:
 ```bash
 $ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
-<br/><br/>
-
+<br/>
 
 ## 5. Mail
 
@@ -100,8 +99,7 @@ MAIL_USER=your_mail_user      # Your SMTP user (username or authentication key)
 MAIL_PASSWORD=your_mail_password  # Your SMTP password or authentication token
 MAIL_FROM=your_mail_from_address  # The email address that will appear in the "From" field
 ```
-<br/><br/>
-
+<br/>
 
 ## 6. Payment
 
@@ -111,8 +109,7 @@ PAYPAL_CLIENT_ID=your_paypal_client_id          # Your PayPal REST API client ID
 PAYPAL_CLIENT_SECRET=your_paypal_client_secret  # Your PayPal REST API client secret
 PAYPAL_BASE_URL=https://api-m.sandbox.paypal.com  # The PayPal API URL (use sandbox for testing, in case of production use https://api-m.paypal.com)
 ```
-<br/><br/>
-
+<br/>
 
 ## 7. Running the backend
 
@@ -153,8 +150,7 @@ To stop the services run:
 ```bash
 $ docker-compose down
 ```
-<br/><br/>
-
+<br/>
 
 ## 8. Test
 
@@ -168,7 +164,7 @@ $ npm run test:e2e
 # test coverag
 $ npm run test:cov
 ```
-<br/><br/>
+<br/>
 
 
 ## 9. License
