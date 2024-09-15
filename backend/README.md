@@ -4,7 +4,6 @@ To set up and make use of the backend for Drinkcollab you have two options:
 
 1. **Local setup** (without Docker)
 2. **Dockerized setup**
-
 <br/>
 
 ## 1. Postgres
