@@ -12,6 +12,7 @@ import { Prisma } from '@prisma/client';
 import { InternalServerErrorException } from '@nestjs/common';
 import { CartWithItemsDto } from 'src/cart/dto/cart.dto';
 import { ProductsService } from 'src/product/products.service';
+import { DirectCheckoutOrderDto } from './dto/user-direct-checkout-orders.dto';
 @Injectable()
 export class OrderService {
     constructor(
@@ -118,4 +119,39 @@ export class OrderService {
             },
         });
     }
+
+    getAllDirectCheckoutOrders = async (
+        userId: string,
+    ): Promise<DirectCheckoutOrderDto[]> => {
+        return this.prismaService.order.findMany({
+            where: {
+                userId: userId,
+                payment: {
+                    method: PaymentMethod.PAYPAL,
+                },
+            },
+            select: {
+                createdAt: true,
+                id: true,
+                orderItems: {
+                    select: {
+                        quantity: true,
+                        price: true,
+                        product: {
+                            select: {
+                                name: true,
+                                image: true,
+                            },
+                        },
+                    },
+                },
+                payment: {
+                    select: {
+                        method: true,
+                        status: true,
+                    },
+                },
+            },
+        });
+    };
 }
