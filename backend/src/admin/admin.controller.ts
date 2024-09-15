@@ -32,10 +32,12 @@ import { SearchUserDto, UpdateUserDto, UserDto } from 'src/user/dto/user.dto';
 import { InvoiceService } from 'src/payment/invoice/invoice.service';
 import { UpdateInvoiceDto } from 'src/payment/invoice/dto/update-invoice.dto';
 import { InvoiceStatus } from '@prisma/client';
-import { Invoice } from '@prisma/client';
 import { AddCategoryDto } from 'src/product/dto/product.dto';
 import { Category } from '@prisma/client';
-
+import { PaymentService } from 'src/payment/payment.service';
+import { PaymentStatus } from '@prisma/client';
+import { PaymentDashboardDto } from 'src/payment/dto/admin-dashboard-payments.dto';
+import { AdminDashboardInvoiceDto } from 'src/payment/invoice/dto/admin-dashboard-invoices.dto';
 @Roles(Role.Admin)
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('admin')
@@ -45,6 +47,7 @@ export class AdminController {
         private productsService: ProductsService,
         private userService: UserService,
         private invoiceService: InvoiceService,
+        private paymentService: PaymentService,
     ) {}
 
     /**
@@ -242,8 +245,8 @@ export class AdminController {
     @Get('invoices')
     async getInvoices(
         @Query('status') status?: InvoiceStatus,
-    ): Promise<Invoice[]> {
-        return this.invoiceService.getAllInvoices(status);
+    ): Promise<AdminDashboardInvoiceDto[]> {
+        return this.invoiceService.getAllInvoicesAdminDashboard(status);
     }
 
     @Put('invoice/update/:id')
@@ -256,5 +259,12 @@ export class AdminController {
         return {
             message: `Invoice with id: ${invoiceId} has been successfully updated`,
         };
+    }
+
+    @Get('payments')
+    async getPayments(
+        @Query('status') status?: PaymentStatus,
+    ): Promise<PaymentDashboardDto[]> {
+        return this.paymentService.getAllPaymentsAdminDashboard(status);
     }
 }

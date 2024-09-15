@@ -11,6 +11,7 @@ import { ProductsService } from 'src/product/products.service';
 import { FilterService } from 'src/product/filter.service';
 import { UserService } from 'src/user/user.service';
 import { InvoiceService } from 'src/payment/invoice/invoice.service';
+import { PaymentService } from 'src/payment/payment.service';
 @Module({
     providers: [
         AccountRequestService,
@@ -19,6 +20,7 @@ import { InvoiceService } from 'src/payment/invoice/invoice.service';
         FilterService,
         UserService,
         InvoiceService,
+        PaymentService,
     ],
     controllers: [AdminController],
     imports: [

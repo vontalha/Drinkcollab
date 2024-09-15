@@ -9,6 +9,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { Invoice } from '@prisma/client';
 import { NotFoundException } from '@nestjs/common';
 import { UpdateInvoiceDto } from './dto/update-invoice.dto';
+import { AdminDashboardInvoiceDto } from './dto/admin-dashboard-invoices.dto';
+import { InvoiceUserDashboardDto } from './dto/user-dashboard-invoice.dto';
 @Injectable()
 export class InvoiceService {
     constructor(private readonly prismaService: PrismaService) {}
@@ -31,9 +33,61 @@ export class InvoiceService {
         return invoice.id;
     };
 
-    getAllInvoices = async (status?: InvoiceStatus): Promise<Invoice[]> => {
+    getAllInvoicesAdminDashboard = async (
+        status?: InvoiceStatus,
+    ): Promise<AdminDashboardInvoiceDto[]> => {
         const where = status ? { status } : {};
-        return await this.prismaService.invoice.findMany({ where });
+        return await this.prismaService.invoice.findMany({
+            where,
+            select: {
+                id: true,
+                dueDate: true,
+                totalAmount: true,
+                status: true,
+                user: {
+                    select: {
+                        firstName: true,
+                        lastName: true,
+                        email: true,
+                    },
+                },
+            },
+        });
+    };
+
+    getAllInvoicesUserDashboard = async (
+        userId: string,
+    ): Promise<InvoiceUserDashboardDto[]> => {
+        return await this.prismaService.invoice.findMany({
+            where: {
+                userId,
+            },
+            select: {
+                id: true,
+                dueDate: true,
+                createdAt: true,
+                totalAmount: true,
+                status: true,
+                orders: {
+                    select: {
+                        createdAt: true,
+                        id: true,
+                        orderItems: {
+                            select: {
+                                quantity: true,
+                                price: true,
+                                product: {
+                                    select: {
+                                        name: true,
+                                        image: true,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        });
     };
 
     getInvoiceById = async (invoiceId: string): Promise<Invoice> => {
@@ -112,6 +166,9 @@ export class InvoiceService {
             where: {
                 userId: userId,
                 status: InvoiceStatus.PENDING,
+                dueDate: {
+                    lte: new Date(),
+                },
             },
         });
 
