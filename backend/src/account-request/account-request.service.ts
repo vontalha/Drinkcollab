@@ -74,6 +74,7 @@ export class AccountRequestService {
 
     getAllRequestTokens = async () => {
         const tokenIds = await this.prismaService.requestToken.findMany({
+            where: { approved: false },
             select: {
                 id: true,
                 email: true,
