@@ -1,5 +1,6 @@
 import { Component, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import axios from 'axios';
+import {environment} from "../../environments/environment";
 
 @Component({
   selector: 'app-paypal-button2',
@@ -55,8 +56,8 @@ export class PaypalButton2Component implements AfterViewInit{
     return new Promise((resolve, reject) => {
       if (typeof window !== 'undefined' && !(window as any).paypal) {
         const script = document.createElement('script');
-        //paypal client id anpassen zum verwenden
-        script.src = "https://www.paypal.com/sdk/js?client-id=&currency=EUR";
+
+        script.src = 'https://www.paypal.com/sdk/js?client-id='+environment.PAYPAL_CLIENT_ID+'&currency=EUR';
         script.onload = () => resolve();
         script.onerror = () => reject(new Error('PayPal SDK konnte nicht geladen werden.'));
         document.body.appendChild(script);
