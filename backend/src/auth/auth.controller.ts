@@ -122,8 +122,7 @@ export class AuthController {
             sameSite: 'lax',
             expires: new Date(Date.now() + 1 * 24 * 60 * 1000),
         })
-            .send({ status: 'ok' })
-            .redirect('/auth/profile');
+            .send({ status: 'ok' });
     }
 
     @Post('logout')

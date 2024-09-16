@@ -5,7 +5,7 @@ import {MatCard, MatCardContent, MatCardHeader, MatCardTitle} from "@angular/mat
 import {MatError, MatFormField, MatHint, MatLabel} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {NgIf} from "@angular/common";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import axios from "axios";
 import {MatIcon} from "@angular/material/icon";
 
@@ -33,17 +33,16 @@ import {MatIcon} from "@angular/material/icon";
   styleUrl: './create-account.component.css'
 })
 export class CreateAccountComponent implements OnInit{
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute,private router: Router) {}
   token ='';
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.token = params['token'];
     });
+    axios.get(`http://localhost:3000/account-request/approved?token=${this.token}`, {withCredentials:true});
   }
 
-
   form: FormGroup = new FormGroup({
-    email: new FormControl('',[Validators.required, Validators.email]),
     name: new FormControl('', [Validators.required, Validators.minLength(2),Validators.maxLength(255), Validators.pattern(/^[a-zA-Z]+$/)]),
     firstname: new FormControl('',[Validators.required, Validators.minLength(2),Validators.maxLength(255), Validators.pattern(/^[a-zA-Z]+$/)]),
     password: new FormControl('',[Validators.required, Validators.minLength(8), Validators.maxLength(255),Validators.pattern(/[A-Z]/), Validators.pattern(/[\W_]/), Validators.pattern(/[0-9]/)]),
@@ -52,19 +51,19 @@ export class CreateAccountComponent implements OnInit{
 
   createAccount(): void {
     if (this.form.valid) {
-      axios.post('https://localhost:3000/auth/signup/', {
-        headers: {
-          Cookie: 'token='+this.token,
-        },
-        data: {
-          email: this.form.get('email')?.value,
-          password: this.form.get('password1')?.value,
-          firstName: this.form.get('firstname')?.value,
-          lastName: this.form.get('name')?.value,
-        }
-      },{withCredentials:true}).then((response)=>{
+      axios.post('http://localhost:3000/auth/signup', {
+        firstName: this.form.get('firstname')?.value,
+        lastName: this.form.get('name')?.value,
+        password: this.form.get('password1')?.value,
+      },{withCredentials:true, headers:{'Content-Type': 'application/json',}}).then((response)=>{
         console.log(response.status);
         console.log(response.data);
+        if(response.status==200){
+          this.router.navigate(['/', 'home']);
+        }
+
+      }).catch((error) => {
+        console.error('Signup error:', error.response?.data || error.message);
       });
     }
   }

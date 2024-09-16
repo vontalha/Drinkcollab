@@ -91,6 +91,7 @@ export class NewUserListComponent implements OnInit{
       const response = await axios.post(`http://localhost:3000/admin/requests/approve/${userId}`,{},{withCredentials:true});
       if(response){
         console.log("Approved User: ", userId);
+        this.getRequests();
         alert("Approved User: "+ email);
       }
     } catch (error) {

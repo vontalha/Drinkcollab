@@ -52,6 +52,5 @@ export class AccountRequestController {
             secure: false,
             sameSite: 'lax',
         });
-        res.redirect('/auth/signup');
     }
 }

@@ -20,12 +20,6 @@
         <mat-error *ngIf="form.controls['name'].errors?.['pattern']">First name can only contain letters</mat-error>
       </mat-form-field>
       <p></p>
-      <mat-form-field floatLabel="always">
-        <mat-label>Email Address</mat-label>
-        <input type="text" matInput formControlName="email">
-        <mat-error *ngIf="form.get('email')?.invalid">Please enter a valid Email Address</mat-error>
-      </mat-form-field>
-      <p></p>
       <hr class="trenner">
       <p></p>
       <mat-form-field floatLabel="always">

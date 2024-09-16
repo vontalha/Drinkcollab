@@ -36,49 +36,49 @@
     <!-- Linke Sidenav -->
     <mat-sidenav #leftDrawer mode="side" class="example-sidenav" [(opened)]="sidebarOpen">
       <mat-nav-list>
-        <mat-list-item>
-          <span [style.cursor]="'pointer'" routerLink="home"><u> Shop: </u></span>
+        <mat-list-item routerLink="home">
+          <span><u> Shop: </u></span>
         </mat-list-item>
-        <mat-list-item>
+        <mat-list-item routerLink="home">
           <mat-icon></mat-icon>
-          <span class="project" [style.cursor]="'pointer'" routerLink="home"> Alle Produkte </span>
+          <span class="project"> Alle Produkte </span>
         </mat-list-item>
-        <mat-list-item>
+        <mat-list-item routerLink="drinks">
           <mat-icon></mat-icon>
-          <span class="project" [style.cursor]="'pointer'" routerLink="drinks"> Getränke </span>
+          <span class="project"> Getränke </span>
         </mat-list-item>
-        <mat-list-item>
+        <mat-list-item routerLink="snacks">
           <mat-icon></mat-icon>
-          <span class="project" [style.cursor]="'pointer'" routerLink="snacks"> Snacks </span>
+          <span class="project"> Snacks </span>
         </mat-list-item>
         <div *ngIf="(isAuthorized$ | async)">
           <mat-list-item>
             <span><u> Admin: </u></span>
           </mat-list-item>
-          <mat-list-item>
+          <mat-list-item routerLink="produkt-verwaltung">
             <mat-icon></mat-icon>
-            <span class="project" [style.cursor]="'pointer'" routerLink="produkt-verwaltung"> Produktverwaltung </span>
+            <span class="project"> Produktverwaltung </span>
           </mat-list-item>
-          <mat-list-item>
+          <mat-list-item routerLink="admin">
             <mat-icon></mat-icon>
-            <span class="project" [style.cursor]="'pointer'" routerLink="admin"> Nutzerverwaltung </span>
+            <span class="project"> Nutzerverwaltung </span>
           </mat-list-item>
-          <mat-list-item>
+          <mat-list-item routerLink="new-user">
             <mat-icon></mat-icon>
-            <span class="project" [style.cursor]="'pointer'" routerLink="new-user"> Account Requests </span>
+            <span class="project"> Account Requests </span>
           </mat-list-item>
-          <mat-list-item>
+          <mat-list-item routerLink="invoices">
             <mat-icon></mat-icon>
-            <span class="project" [style.cursor]="'pointer'" routerLink="invoices"> Invoices </span>
+            <span class="project"> Invoices </span>
           </mat-list-item>
-          <mat-list-item>
+          <mat-list-item routerLink="payments">
             <mat-icon></mat-icon>
-            <span class="project" [style.cursor]="'pointer'" routerLink="payments"> Payments </span>
+            <span class="project"> Payments </span>
           </mat-list-item>
         </div>
 
-        <mat-list-item>
-          <span class="project" [style.cursor]="'pointer'" routerLink="profile"><u> Profile: </u></span>
+        <mat-list-item routerLink="profile">
+          <span class="project" > Profile: </span>
         </mat-list-item>
       </mat-nav-list>
     </mat-sidenav>
