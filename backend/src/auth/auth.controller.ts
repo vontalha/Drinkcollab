@@ -94,13 +94,16 @@ export class AuthController {
             throw new NotFoundException('Token does not exist!');
         }
 
-        if (existingToken.email !== credentials.email) {
-            throw new NotFoundException(
-                'The signup email must match the account request email!',
-            );
-        }
+        // if (existingToken.email !== credentials.email) {
+        //     throw new NotFoundException(
+        //         'The signup email must match the account request email!',
+        //     );
+        // }
 
-        const { access_token } = await this.authService.signup(credentials);
+        const { access_token } = await this.authService.signup(
+            credentials,
+            existingToken.email,
+        );
 
         await this.prismaService.requestToken.delete({
             where: { token: existingToken.token },

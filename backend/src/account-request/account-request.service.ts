@@ -77,6 +77,7 @@ export class AccountRequestService {
             select: {
                 id: true,
                 email: true,
+                approved: true,
             },
         });
         return tokenIds.map((token) => ({
@@ -93,6 +94,11 @@ export class AccountRequestService {
         if (!existingToken) {
             throw new NotFoundException('Token not found!');
         }
+
+        await this.prismaService.requestToken.update({
+            where: { id: tokenId },
+            data: { approved: true },
+        });
 
         const inviteLink = `Http://localhost:4200/account-request/approved?token=${existingToken.token}`;
 

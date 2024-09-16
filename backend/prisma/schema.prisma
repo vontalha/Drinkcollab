@@ -80,6 +80,7 @@ model RequestToken {
     email   String
     token   String   @unique
     expires DateTime
+    approved Boolean @default(false)
 
     @@unique([email, token])
 }
