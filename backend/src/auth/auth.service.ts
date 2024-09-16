@@ -46,14 +46,16 @@ export class AuthService {
         return { access_token, userId: user.id, role: user.role };
     };
 
-    signup = async (credentials: SignupDto): Promise<AuthEntity> => {
+    signup = async (
+        credentials: SignupDto,
+        email: string,
+    ): Promise<AuthEntity> => {
         const hashedPassword = await bcrypt.hash(credentials.password, 10);
-        const lowercaseEmail = credentials.email.toLowerCase();
+        const lowercaseEmail = email.toLowerCase();
         const lowercaseFirstName = credentials.firstName.toLowerCase();
         const lowercaseLastName = credentials.lastName.toLowerCase();
 
-        const existingUser =
-            await this.userService.getUserByEmail(lowercaseEmail);
+        const existingUser = await this.userService.getUserByEmail(email);
 
         if (existingUser) {
             throw new ConflictException('Email already in use!');

@@ -25,10 +25,6 @@ export const SignupSchema = z
                 message: 'Last Name must not be more than 255 characters long',
             }),
 
-        email: z
-            .string()
-            .email({ message: 'Please enter a valid email address' }),
-
         password: z
             .string({ required_error: 'Password is required' })
             .trim()
