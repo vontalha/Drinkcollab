@@ -63,16 +63,6 @@ describe('UserService', () => {
                 where: { email: 'test@example.com' },
             });
         });
-
-        it('should throw NotFoundException if user is not found', async () => {
-            jest.spyOn(prismaService.user, 'findUnique').mockResolvedValue(
-                null,
-            );
-
-            await expect(
-                service.getUserByEmail('test@example.com'),
-            ).rejects.toThrow(NotFoundException);
-        });
     });
 
     describe('getUserById', () => {

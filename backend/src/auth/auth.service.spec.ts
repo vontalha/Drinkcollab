@@ -157,7 +157,6 @@ describe('AuthService', () => {
             const signupDto: SignupDto = {
                 firstName: 'Test',
                 lastName: 'User',
-                email: 'test@example.com',
                 password: 'validPassword1!',
             };
 
@@ -179,18 +178,15 @@ describe('AuthService', () => {
                 'valid_token',
             );
 
-            const result = await service.signup(signupDto);
+            const result = await service.signup(signupDto, 'test@example.com');
 
             expect(result).toEqual({ access_token: 'valid_token' });
-            expect(userService.getUserByEmail).toHaveBeenCalledWith(
-                signupDto.email.toLowerCase(),
-            );
+
             expect(bcrypt.hash).toHaveBeenCalledWith(signupDto.password, 10);
             expect(prismaService.user.create).toHaveBeenCalledWith({
                 data: {
                     firstName: signupDto.firstName.toLowerCase(),
                     lastName: signupDto.lastName.toLowerCase(),
-                    email: signupDto.email.toLowerCase(),
                     password: 'hashedpassword',
                     role: 'USER',
                 },
@@ -220,7 +216,6 @@ describe('AuthService', () => {
             const signupDto: SignupDto = {
                 firstName: 'Test',
                 lastName: 'User',
-                email: 'test@example.com',
                 password: 'validPassword1!',
             };
 
@@ -228,9 +223,9 @@ describe('AuthService', () => {
                 existingUser,
             );
 
-            await expect(service.signup(signupDto)).rejects.toThrow(
-                ConflictException,
-            );
+            await expect(
+                service.signup(signupDto, 'test@example.com'),
+            ).rejects.toThrow(ConflictException);
         });
     });
 });

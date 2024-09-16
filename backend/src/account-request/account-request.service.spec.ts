@@ -60,6 +60,7 @@ describe('AccountRequestService', () => {
                 id: 'existing-token-id',
                 email: 'test@example.com',
                 token: 'existing-token',
+                approved: false,
                 expires: new Date(),
             };
             jest.spyOn(service, 'getRequestTokenByMail').mockResolvedValue(
@@ -126,6 +127,7 @@ describe('AccountRequestService', () => {
                 email: 'test@example.com',
                 token: 'mock-token',
                 expires: new Date(),
+                approved: false,
             };
             jest.spyOn(
                 prismaService.requestToken,
@@ -176,6 +178,7 @@ describe('AccountRequestService', () => {
                 email: 'test@example.com',
                 token: 'mock-token',
                 expires: new Date(),
+                approved: false,
             };
             jest.spyOn(
                 prismaService.requestToken,
@@ -223,12 +226,14 @@ describe('AccountRequestService', () => {
                     email: 'test1@example.com',
                     token: 'mock-token-1',
                     expires: new Date(),
+                    approved: false,
                 },
                 {
                     id: 'token-2',
                     email: 'test2@example.com',
                     token: 'mock-token-2',
                     expires: new Date(),
+                    approved: false,
                 },
             ];
             jest.spyOn(
@@ -245,7 +250,8 @@ describe('AccountRequestService', () => {
 
             expect(result).toEqual(expectedResult);
             expect(prismaService.requestToken.findMany).toHaveBeenCalledWith({
-                select: { id: true, email: true },
+                where: { approved: false },
+                select: { id: true, email: true, approved: true },
             });
         });
     });
