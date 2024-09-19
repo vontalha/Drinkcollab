@@ -250,7 +250,14 @@ export class ProductsService {
         return { data, total, totalPages };
     }
 
-    searchProducts = async (query: string): Promise<Product[]> => {
+    searchProducts = async (
+        query: string,
+        page: number,
+        pageSize: number,
+    ): Promise<{ data: Product[]; total: number; totalPages: number }> => {
+        const skip = (page - 1) * pageSize;
+        const take = pageSize;
+
         const queryTerms = query
             .split(' ')
             .map((term) => term.trim())
@@ -292,19 +299,33 @@ export class ProductsService {
             FROM "Product"
             WHERE ${whereConditions}
             ORDER BY similarity_score DESC
-            LIMIT 20;
+            LIMIT ${take} OFFSET ${skip};
         `;
 
-        console.log(rawQuery);
+        const countQuery = Prisma.sql`
+            SELECT COUNT(*)::INTEGER AS count
+            FROM "Product"
+            WHERE ${whereConditions};
+        `;
+        // console.log(rawQuery);
 
         //this has to be part of the first execution to install pg_trgm for postgres
         //after first run comment out
-        // await this.prismaService
-        //     .$executeRaw`CREATE EXTENSION IF NOT EXISTS pg_trgm;`;
-        const products =
-            await this.prismaService.$queryRaw<Product[]>(rawQuery);
+        await this.prismaService
+            .$executeRaw`CREATE EXTENSION IF NOT EXISTS pg_trgm;`;
+        const [products, totalResult] = await this.prismaService.$transaction([
+            this.prismaService.$queryRaw<Product[]>(rawQuery),
+            this.prismaService.$queryRaw<{ count: number }>(countQuery),
+        ]);
 
-        return products;
+        const total = totalResult[0].count;
+        const totalPages = Math.ceil(total / pageSize);
+
+        if (page > totalPages && totalPages > 0) {
+            throw new BadRequestException('Page number exceeds total pages.');
+        }
+
+        return { data: products, total, totalPages };
     };
 
     addCategory = async (data: AddCategoryDto): Promise<Category> => {

@@ -1,4 +1,4 @@
-import { IsOptional, IsIn, IsInt, Min } from 'class-validator';
+import { IsOptional, IsIn, IsInt, Min, IsString } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class PaginationProductDto {
@@ -43,4 +43,21 @@ export class PaginationUserDto {
     @IsOptional()
     @IsIn(['asc', 'desc'])
     sortOrder: 'asc' | 'desc' = 'desc';
+}
+
+export class PaginationProdcuctSearchDto {
+    @IsString()
+    query: string;
+
+    @IsOptional()
+    @Type(() => Number)
+    @IsInt()
+    @Min(1)
+    page: number = 1;
+
+    @IsOptional()
+    @Type(() => Number)
+    @IsInt()
+    @Min(1)
+    pageSize: number = 20;
 }

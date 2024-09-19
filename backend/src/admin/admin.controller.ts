@@ -38,6 +38,7 @@ import { PaymentService } from 'src/payment/payment.service';
 import { PaymentStatus } from '@prisma/client';
 import { PaymentDashboardDto } from 'src/payment/dto/admin-dashboard-payments.dto';
 import { AdminDashboardInvoiceDto } from 'src/payment/invoice/dto/admin-dashboard-invoices.dto';
+import { PaginationProdcuctSearchDto } from 'src/dto/pagination.dto';
 @Roles(Role.Admin)
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('admin')
@@ -95,10 +96,14 @@ export class AdminController {
             filterDto,
         );
     }
-
     @Get('products/search')
-    async searchProducts(@Query('q') query: string): Promise<Product[]> {
-        return this.productsService.searchProducts(query);
+    @UsePipes(new ValidationPipe({ transform: true }))
+    async search(
+        @Query() paginationProdcuctSearchDto: PaginationProdcuctSearchDto,
+    ): Promise<{ data: Product[]; total: number; totalPages: number }> {
+        const { query, page, pageSize } = paginationProdcuctSearchDto;
+
+        return this.productsService.searchProducts(query, page, pageSize);
     }
 
     @Get('products/categories')
