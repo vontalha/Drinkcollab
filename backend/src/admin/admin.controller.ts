@@ -38,7 +38,7 @@ import { PaymentService } from 'src/payment/payment.service';
 import { PaymentStatus } from '@prisma/client';
 import { PaymentDashboardDto } from 'src/payment/dto/admin-dashboard-payments.dto';
 import { AdminDashboardInvoiceDto } from 'src/payment/invoice/dto/admin-dashboard-invoices.dto';
-import { PaginationProdcuctSearchDto } from 'src/dto/pagination.dto';
+import { PaginationSearchDto } from 'src/dto/pagination.dto';
 @Roles(Role.Admin)
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('admin')
@@ -98,8 +98,8 @@ export class AdminController {
     }
     @Get('products/search')
     @UsePipes(new ValidationPipe({ transform: true }))
-    async search(
-        @Query() paginationProdcuctSearchDto: PaginationProdcuctSearchDto,
+    async searchProducts(
+        @Query() paginationProdcuctSearchDto: PaginationSearchDto,
     ): Promise<{ data: Product[]; total: number; totalPages: number }> {
         const { query, page, pageSize } = paginationProdcuctSearchDto;
 
@@ -214,8 +214,13 @@ export class AdminController {
     }
 
     @Get('users/search')
-    async searchUsers(@Query('q') query: string): Promise<SearchUserDto[]> {
-        return this.userService.searchUsers(query);
+    @UsePipes(new ValidationPipe({ transform: true }))
+    async searchUsersarch(
+        @Query() paginationSearch: PaginationSearchDto,
+    ): Promise<{ data: SearchUserDto[]; total: number; totalPages: number }> {
+        const { query, page, pageSize } = paginationSearch;
+
+        return this.userService.searchUsers(query, page, pageSize);
     }
 
     @Get('user/:id')

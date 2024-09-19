@@ -45,7 +45,7 @@ export class PaginationUserDto {
     sortOrder: 'asc' | 'desc' = 'desc';
 }
 
-export class PaginationProdcuctSearchDto {
+export class PaginationSearchDto {
     @IsString()
     query: string;
 

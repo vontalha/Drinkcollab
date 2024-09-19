@@ -311,8 +311,8 @@ export class ProductsService {
 
         //this has to be part of the first execution to install pg_trgm for postgres
         //after first run comment out
-        await this.prismaService
-            .$executeRaw`CREATE EXTENSION IF NOT EXISTS pg_trgm;`;
+        // await this.prismaService
+        //     .$executeRaw`CREATE EXTENSION IF NOT EXISTS pg_trgm;`;
         const [products, totalResult] = await this.prismaService.$transaction([
             this.prismaService.$queryRaw<Product[]>(rawQuery),
             this.prismaService.$queryRaw<{ count: number }>(countQuery),
