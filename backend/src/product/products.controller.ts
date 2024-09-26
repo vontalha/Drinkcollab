@@ -15,6 +15,7 @@ import { ProductsService } from './products.service';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { PaginationProductDto } from 'src/dto/pagination.dto';
 import { FilterDto } from 'src/dto/filter.dto';
+import { PaginationSearchDto } from 'src/dto/pagination.dto';
 
 @Controller('products')
 export class ProductController {
@@ -46,8 +47,13 @@ export class ProductController {
     }
 
     @Get('search')
-    async search(@Query('q') query: string): Promise<Product[]> {
-        return this.productsService.searchProducts(query);
+    @UsePipes(new ValidationPipe({ transform: true }))
+    async search(
+        @Query() paginationProdcuctSearchDto: PaginationSearchDto,
+    ): Promise<{ data: Product[]; total: number; totalPages: number }> {
+        const { query, page, pageSize } = paginationProdcuctSearchDto;
+
+        return this.productsService.searchProducts(query, page, pageSize);
     }
 
     @UseGuards(JwtAuthGuard)

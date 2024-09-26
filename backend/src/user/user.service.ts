@@ -126,9 +126,20 @@ export class UserService {
         return { data, total, totalPages };
     }
 
-    searchUsers = async (query: string): Promise<SearchUserDto[]> => {
-        await this.prismaService
-            .$executeRaw`CREATE EXTENSION IF NOT EXISTS pg_trgm;`;
+    searchUsers = async (
+        query: string,
+        page: number,
+        pageSize: number,
+    ): Promise<{
+        data: SearchUserDto[];
+        total: number;
+        totalPages: number;
+    }> => {
+        const skip = (page - 1) * pageSize;
+        const take = pageSize;
+
+        // await this.prismaService
+        //     .$executeRaw`CREATE EXTENSION IF NOT EXISTS pg_trgm;`;
         const queryTerms = query
             .split(' ')
             .map((term) => term.trim())
@@ -166,18 +177,32 @@ export class UserService {
             FROM "users"
             WHERE ${whereConditions}
             ORDER BY similarity_score DESC
-            LIMIT 20;
+            LIMIT ${take} OFFSET ${skip};
         `;
 
-        console.log(rawQuery);
+        const countQuery = Prisma.sql`
+            SELECT COUNT(*)::INTEGER AS count
+            FROM "users"
+            WHERE ${whereConditions};
+        `;
+        // console.log(rawQuery);
 
         //this has to be part of the first execution to install pg_trgm for postgres
         //after first run comment out
         // await this.prismaService
         //     .$executeRaw`CREATE EXTENSION IF NOT EXISTS pg_trgm;`;
-        const users =
-            await this.prismaService.$queryRaw<SearchUserDto[]>(rawQuery);
+        const [products, totalResult] = await this.prismaService.$transaction([
+            this.prismaService.$queryRaw<SearchUserDto[]>(rawQuery),
+            this.prismaService.$queryRaw<{ count: number }>(countQuery),
+        ]);
 
-        return users;
+        const total = totalResult[0].count;
+        const totalPages = Math.ceil(total / pageSize);
+
+        if (page > totalPages && totalPages > 0) {
+            throw new BadRequestException('Page number exceeds total pages.');
+        }
+
+        return { data: products, total, totalPages };
     };
 }
