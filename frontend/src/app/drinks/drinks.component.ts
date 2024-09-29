@@ -102,9 +102,11 @@ export class DrinksComponent implements OnInit{
   async search(){
     try {
       await this.productService.searchProduct(
-        this.searchQuery
+        this.searchQuery, this.currentPage, this.pageSize
       ).then((response)=>{
-        this.productsSearch = response.data;
+        this.products = response.data;
+        this.totalProducts = response.total;
+        this.totalPages = response.totalPages;
       });
     } catch (error) {
       console.error('Error fetching products', error);

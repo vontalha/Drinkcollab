@@ -91,11 +91,13 @@ export class ProductService {
     }
   }
 
-  async searchProduct(query:string): Promise<ProductResponse>{
+  async searchProduct(query:string, page: number, pageSize: number): Promise<ProductResponse>{
     try {
       const response: AxiosResponse<ProductResponse> = await axios.get('http://localhost:3000/products/search', {
         params: {
-          q: query
+          query,
+          page,
+          pageSize,
         },
         withCredentials:true
       });

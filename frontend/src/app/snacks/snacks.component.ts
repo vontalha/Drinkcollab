@@ -88,11 +88,26 @@ export class SnacksComponent implements OnInit{
     }
   }
 
-  onSearchChange(event: Event): void {
+  // @ts-ignore
+  onSearchChange(event: Event): Promise<void> {
     const inputElement = event.target as HTMLInputElement;
     this.searchQuery = inputElement.value;
     this.currentPage = 1;
-    this.fetchProducts();
+    this.search();
+  }
+
+  async search(){
+    try {
+      await this.productService.searchProduct(
+        this.searchQuery, this.currentPage, this.pageSize
+      ).then((response)=>{
+        this.products = response.data;
+        this.totalProducts = response.total;
+        this.totalPages = response.totalPages;
+      });
+    } catch (error) {
+      console.error('Error fetching products', error);
+    }
   }
 
   onSortChange(sort: string): void {

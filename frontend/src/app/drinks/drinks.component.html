@@ -1,8 +1,12 @@
 <div class="product-list">
   <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px">
+    <mat-form-field class="search" appearance="outline" fxFlex>
+      <mat-label>Search</mat-label>
+      <input matInput (input)="onSearchChange($event)"/>
+    </mat-form-field>
 
     <div fxLayout="row" fxLayoutGap="8px">
-      <mat-form-field class="sortby" appearance="fill" fxFlex="none">
+      <mat-form-field class="sortby" appearance="outline" fxFlex="none">
         <mat-label>Sort by</mat-label>
         <mat-select [(value)]="sortBy" (selectionChange)="onSortChange($event.value)">
           <mat-option value="price">Price</mat-option>
@@ -10,7 +14,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field class="sortby" appearance="fill" fxFlex="none">
+      <mat-form-field class="sortby" appearance="outline" fxFlex="none">
         <mat-label>Sort order</mat-label>
         <mat-select [(value)]="sortOrder" (selectionChange)="onSortOrderChange($event.value)">
           <mat-option value="asc">Ascending</mat-option>
@@ -41,7 +45,7 @@
     <mat-card *ngFor="let product of productsSearch" fxFlex="calc(25% - 16px)" fxFlex.xs="100%" fxFlex.sm="50%" fxFlex.md="33%" fxFlex.lg="25%">
       <img mat-card-image [src]="product.image" alt="{{ product.name }}" />
       <mat-card-title>{{ product.name }}</mat-card-title>
-      <mat-card-subtitle style="color: #ffd700">{{ product.price | currency: 'EUR':'symbol':undefined:'de-DE'  }}</mat-card-subtitle>
+      <mat-card-subtitle style="color: #400608">{{ product.price | currency: 'EUR':'symbol':undefined:'de-DE'  }}</mat-card-subtitle>
       <mat-card-content>{{ product.description }}</mat-card-content>
       <mat-card-actions>
         <button mat-raised-button  style="background-color: #483D8B" (click)="addToCart(product.id)">

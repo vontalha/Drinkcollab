@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, HostBinding, OnInit} from '@angular/core';
 import {AsyncPipe, NgIf} from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -44,6 +44,12 @@ export class NavigationComponent implements OnInit{
   sidebarOpen: boolean = false;
 
   constructor(private auth: AuthService, private cd: ChangeDetectorRef) {
+  }
+
+  @HostBinding('class') className = '';
+
+  toggleDarkMode(isDarkMode: boolean) {
+    this.className = isDarkMode ? 'dark-theme' : 'light-theme';
   }
 
   ngOnInit() {

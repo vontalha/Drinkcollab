@@ -11,17 +11,17 @@
       <button mat-button (click)="decrement(item.productId)">
       <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined"
             rel="stylesheet"/>
-      <mat-icon fontSet="material-icons-outlined">remove</mat-icon>
+      <mat-icon fontSet="material-icons-outlined" color="warning">remove</mat-icon>
       </button>
       <button mat-button (click)="increment(item.productId)">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined"
               rel="stylesheet"/>
         <mat-icon fontSet="material-icons-outlined">add</mat-icon>
       </button>
-      <button mat-button  color="primary" (click)="remove(item.productId)">
+      <button mat-button (click)="remove(item.productId)">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined"
               rel="stylesheet"/>
-        <mat-icon fontSet="material-icons-outlined">delete</mat-icon>
+        <mat-icon class="red-icon" fontSet="material-icons-outlined">delete</mat-icon>
       </button>
     </div>
     <p></p>
