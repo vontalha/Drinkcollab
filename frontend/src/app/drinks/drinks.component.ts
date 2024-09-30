@@ -60,8 +60,8 @@ export class DrinksComponent implements OnInit{
   currentPage: number = 1;
   pageSize: number = 6;
   searchQuery: string = '';
-  sortBy: string = 'sales';
-  sortOrder: 'asc' | 'desc' = 'desc';
+  sortBy: string = 'price';
+  sortOrder: 'asc' | 'desc' = 'asc';
   // @ts-ignore
   userId: string | null;
 
@@ -97,7 +97,12 @@ export class DrinksComponent implements OnInit{
     const inputElement = event.target as HTMLInputElement;
     this.searchQuery = inputElement.value;
     this.currentPage = 1;
-    this.search();
+    if(this.searchQuery == ''){
+      this.fetchProducts();
+    }else{
+      this.search();
+    }
+
   }
   async search(){
     try {

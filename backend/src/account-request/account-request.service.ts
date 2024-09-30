@@ -58,16 +58,19 @@ export class AccountRequestService {
 
     getRequestTokenByToken = async (token: string) => {
         try {
-            const requestToken =
-                await this.prismaService.requestToken.findUnique({
-                    where: { token },
-                });
+            const requestToken = await this.prismaService.requestToken.findUnique({
+                where: { token },
+            });
+
+            if (!requestToken) {
+                console.error('No request token found for the provided token:', token);
+                return null;
+            }
+
+            console.log('Request token found:', requestToken);
             return requestToken;
         } catch (error) {
-            console.error(
-                'Error fetching request token by given token:',
-                error,
-            );
+            console.error('Error fetching request token by given token:', error);
             return null;
         }
     };

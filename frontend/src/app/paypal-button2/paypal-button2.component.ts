@@ -24,7 +24,9 @@ export class PaypalButton2Component implements AfterViewInit{
               let token = JSON.parse(localStorage.getItem('accessToken'));
               // @ts-ignore
               let invoicetoken = JSON.parse(localStorage.getItem('invoice'));
-              const response = await axios.post('https://localhost:3000/payment/invoice/paypal-order/create', {
+              console.log(token.userId);
+              console.log(invoicetoken.invoiceId);
+              const response = await axios.post('http://localhost:3000/payment/invoice/paypal-order/create', {
                 userId: token.userId, invoiceId: invoicetoken.invoiceId,
               }, {withCredentials:true});
 
@@ -34,8 +36,8 @@ export class PaypalButton2Component implements AfterViewInit{
               return paypalOrderId;
             },
             onApprove: async (data: any, actions: any) => {
-              await actions.order.capture();
-              await axios.post(`http://localhost:3000/payment/invoice7paypal-order/capture/${this.paypalOrderId}`,{}, {withCredentials:true});
+              //await actions.order.capture();
+              await axios.post(`http://localhost:3000/payment/invoice/paypal-order/capture/${this.paypalOrderId}`,{}, {withCredentials:true});
               alert('Transaction completed successfully!');
             },
             onError: (err: any) => {

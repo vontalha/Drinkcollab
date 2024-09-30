@@ -39,7 +39,7 @@
         <!-- Total Amount Column -->
         <ng-container matColumnDef="totalAmount">
           <mat-header-cell *matHeaderCellDef> Total Amount </mat-header-cell>
-          <mat-cell *matCellDef="let invoice"> {{invoice.totalAmount | currency}} </mat-cell>
+          <mat-cell *matCellDef="let invoice"> {{invoice.totalAmount | currency: 'EUR':'symbol':undefined:'de-DE'}} </mat-cell>
         </ng-container>
 
         <!-- Status Column -->

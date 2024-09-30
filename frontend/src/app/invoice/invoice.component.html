@@ -1,19 +1,41 @@
-<div *ngFor="let invoice of invoices" class="invoice-card">
-  <h3>Invoice ID: {{ invoice.id }}</h3>
-  <p>Due Date: {{ invoice.dueDate | date }}</p>
-  <p>Created At: {{ invoice.createdAt | date }}</p>
-  <p>Total Amount: {{ invoice.totalAmount | currency: 'EUR':'symbol':undefined:'de-DE' }}</p>
-  <p>User Email: {{ invoice.user.email }}</p>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Invoice Details</mat-card-title>
+    <mat-card-subtitle>Invoice ID: {{ invoice.id }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <p><strong>Email:</strong> {{ invoice.user.email }}</p>
+    <p><strong>Total Amount:</strong> {{ invoice.totalAmount }} €</p>
+    <p><strong>Due Date:</strong> {{ invoice.dueDate | date: 'short' }}</p>
+    <p><strong>Created At:</strong> {{ invoice.createdAt | date: 'short' }}</p>
 
-  <h4>Orders:</h4>
-  <div *ngFor="let order of invoice.orders">
-    <p>Order Created At: {{ order.createdAt | date }}</p>
-    <ul>
-      <li *ngFor="let item of order.orderItems">
-        Product ID: {{ item.productId }} - Quantity: {{ item.quantity }} - Price: {{ item.price | currency: 'EUR':'symbol':undefined:'de-DE' }}
-      </li>
-    </ul>
-  </div>
-</div>
+    <h3>Orders</h3>
+    <div *ngFor="let order of invoice.orders">
+      <p><strong>Order ID:</strong> {{ order.id }}</p>
+      <p><strong>Order Created At:</strong> {{ order.createdAt | date: 'short' }}</p>
+
+      <table mat-table [dataSource]="order.orderItems" class="mat-elevation-z8">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> Product Name </th>
+          <td mat-cell *matCellDef="let item"> {{ item.product.name }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell *matHeaderCellDef> Quantity </th>
+          <td mat-cell *matCellDef="let item"> {{ item.quantity }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef> Price </th>
+          <td mat-cell *matCellDef="let item"> {{ item.price }} € </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['name', 'quantity', 'price']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['name', 'quantity', 'price'];"></tr>
+      </table>
+    </div>
+  </mat-card-content>
+</mat-card>
+
 
 <app-paypal-button2></app-paypal-button2>

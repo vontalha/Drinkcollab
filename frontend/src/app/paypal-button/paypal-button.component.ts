@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
 import axios from 'axios';
 import {environment} from "../../environments/environment";
+import {CartService} from "../services/CartService";
 
 @Component({
   selector: 'app-paypal-button',
@@ -11,6 +12,8 @@ import {environment} from "../../environments/environment";
 export class PaypalButtonComponent implements AfterViewInit{
   @ViewChild('paypal', { static: true }) paypalElement: ElementRef | undefined;
 
+  constructor(private cartService: CartService) {
+  }
   paypalOrderId: string = '';
 
   ngAfterViewInit(): void {
@@ -27,17 +30,19 @@ export class PaypalButtonComponent implements AfterViewInit{
               const response = await axios.post('http://localhost:3000/order/create', {
                 userId: token.userId, cartId: carttoken.cartId, paymentMethod: 'PAYPAL'
               }, {withCredentials:true});
-
               const { orderId, paypalOrderId } = response.data;
               this.paypalOrderId = paypalOrderId;
 
               return paypalOrderId;
             },
             onApprove: async (data: any, actions: any) => {
-              await actions.order.capture();
+              console.log(data);
+              //await actions.order.capture();
+              console.log(this.paypalOrderId);
               await axios.post(`http://localhost:3000/order/${this.paypalOrderId}/capture`,{}, {withCredentials:true});
+              this.cartService.setNewItemStatus(true);
               alert('Transaction completed successfully!');
-            },
+              },
             onError: (err: any) => {
               console.error('PayPal Fehler:', err);
             }

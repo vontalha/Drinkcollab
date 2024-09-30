@@ -55,11 +55,11 @@ export class AuthService {
         const lowercaseFirstName = credentials.firstName.toLowerCase();
         const lowercaseLastName = credentials.lastName.toLowerCase();
 
-        const existingUser = await this.userService.getUserByEmail(email);
-
-        if (existingUser) {
-            throw new ConflictException('Email already in use!');
-        }
+        // const existingUser = await this.userService.getUserByEmail(email);
+        //
+        // if (existingUser) {
+        //     throw new ConflictException('Email already in use!');
+        // }
 
         const newUser = await this.prismaService.user.create({
             data: {

@@ -71,7 +71,7 @@ export class ProductVerwaltungComponent implements OnInit{
   openDialog(product?: Product): void {
     const dialogRef = this.dialog.open(ProductVerwaltungDialogComponent, {
       width: '400px',
-      data: product || { name: '', image: '', description: '', price: 0 , stock:0, brand:'', type:'DRINK', categoryName:'' },
+      data: product || { name: '', image: '', description: '', price: 0 , stock:0, brand:'',categoryName:'', type:'DRINK' },
     });
 
     dialogRef.afterClosed().subscribe(async (result) => {
